@@ -1,0 +1,19 @@
+html {
+  font-size: 10vw;
+}
+body {
+  font-size: 12px;
+}
+p {
+  margin: 0;
+}
+.vh100 {
+  height: 100vh;
+}
+.bg {
+  background: url(~@/assets/images/bg.png) no-repeat;
+  background-size: contain;
+}
+.van-nav-bar {
+  background: transparent;
+}
