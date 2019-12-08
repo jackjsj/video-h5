@@ -4,7 +4,7 @@ const instance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  baseURL: '/',
+  baseURL: 'http://60.169.78.55:9292/openapi/',
   timeout: 60000,
 });
 // 添加响应拦截器

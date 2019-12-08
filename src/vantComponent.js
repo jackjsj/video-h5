@@ -28,6 +28,9 @@ import {
   ActionSheet,
   Slider,
   Uploader,
+  Loading,
+  Overlay,
+  Image,
 } from 'vant';
 
 window.Toast = Toast;
@@ -52,7 +55,11 @@ Vue.use(NavBar)
   .use(Switch)
   .use(DatetimePicker)
   .use(Swipe)
-  .use(SwipeItem);
+  .use(SwipeItem)
+  .use(Overlay)
+  .use(Search)
+  .use(Image)
+  .use(Loading);
 // Vue.use(Panel);
 // Vue.use(List);
 // Vue.use(Search);

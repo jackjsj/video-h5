@@ -12,8 +12,78 @@ p {
 }
 .bg {
   background: url(~@/assets/images/bg.png) no-repeat;
-  background-size: contain;
+  // background-size: 100% 100%;
+  background-size: cover;
 }
 .van-nav-bar {
   background: transparent;
+}
+.van-nav-bar__title {
+  font-size: 19px;
+  color: #fff;
+  font-weight: 400;
+}
+.van-nav-bar__text {
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+}
+.van-nav-bar__right {
+  .van-icon {
+    font-size: 18px;
+    color: #fff;
+  }
+}
+.cb9 {
+  color: #b9b9b9;
+}
+.fw400 {
+  font-weight: 400;
+}
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 1s ease;
+}
+.slide-leave-active,
+.slide-leave-active {
+  opacity: 0 !important;
+}
+.slide-enter,
+.slide-leave-to {
+  opacity: 0;
+}
+.van-tabbar {
+  background: #161616;
+}
+.van-tab {
+  font-size: 15px;
+  color: #fff;
+  line-height: 47px;
+  &.van-tab--active {
+    background-image: linear-gradient(#e95aa0, #a769ff);
+    border-radius: 20px 20px 0 0;
+    background-color: transparent;
+  }
+}
+.van-tabs__nav {
+  background: rgba(255, 255, 255, 0.2);
+}
+.van-tabs--line .van-tabs__wrap {
+  height: 47px;
+  width: 346px;
+  margin: auto;
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+}
+.van-search__content {
+  background: rgba(255, 255, 255, 0.2);
+}
+.van-swipe__indicators {
+  right: 9px;
+  bottom: 9px;
+  left: unset;
+  transform: unset;
+}
+.fw500 {
+  font-weight: 500;
 }
