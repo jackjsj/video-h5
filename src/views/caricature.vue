@@ -144,7 +144,7 @@ export default {
         classifyId,
         orderType,
       }).then(resp => {
-        if (resp.httpCode === 200) {
+        if (resp.retCode === '1') {
           const { data } = resp;
           this.types = data.classifyList;
           this.orders = data.orderTypes;

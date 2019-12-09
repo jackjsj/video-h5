@@ -75,7 +75,7 @@ export default {
         duration: 0,
       });
       const resp = await selectTagType();
-      if (resp.httpCode === 200) {
+      if (resp.retCode === '1') {
         this.types = resp.data;
         //默认查第一个类型
         const first = this.types[0];
@@ -92,7 +92,7 @@ export default {
         duration: 0,
       });
       const resp = await selectTagsByType(id);
-      if (resp.httpCode === 200) {
+      if (resp.retCode === '1') {
         this.list = resp.data;
         Toast.clear();
         this.overlayVisible = false;

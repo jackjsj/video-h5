@@ -52,7 +52,7 @@ export function findMonthlyPays() {
 }
 
 /**
- * 登录接口
+ * 8. 自动登录接口
  */
 export function deviceInfo() {
   return post('/deviceInfo', {
@@ -63,4 +63,18 @@ export function deviceInfo() {
     version: '1.1.0',
     versionType: '2',
   });
+}
+
+/**
+ * 9. 手机号注册
+ */
+export function register(options) {
+  return post('/regedit', options);
+}
+
+/**
+ * 10. 获取验证码
+ */
+export function getSmsCode(options) {
+  return post('/getSmsCode', options);
 }

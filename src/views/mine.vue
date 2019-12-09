@@ -58,7 +58,6 @@
         <div class="swiper-wrapper">
           <van-swipe
             :autoplay="3000"
-            :width="300"
             indicator-color="#FF7AC8">
             <van-swipe-item v-for="item in 3"
               :key="item">
@@ -205,13 +204,7 @@ export default {
   height: 84px;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.1);
-  margin: auto;
-}
-.van-swipe-item {
-  width: 289px;
-}
-.van-swipe {
-  padding-left: 43px;
+  margin:auto;
 }
 .item {
   width: 33%;
@@ -241,6 +234,7 @@ export default {
     width: 100%;
   }
 }
+
 </style>
 <style lang="scss">
 .mine {

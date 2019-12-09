@@ -194,7 +194,7 @@ export default {
     });
     indexInfo().then(resp => {
       console.log(resp);
-      if (resp.httpCode === 200) {
+      if (resp.retCode === '1') {
         const { data } = resp;
         this.newVideoList = data.newVideoList;
         this.mostVideoList = data.mostVideoList;

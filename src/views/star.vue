@@ -99,12 +99,11 @@ export default {
     };
   },
   mounted() {
-    deviceInfo().then(resp => {
-      if (resp.httpCode === 200) {
-        // 登录成功
-
-      }
-    });
+    // deviceInfo().then(resp => {
+    //   if (resp.retCode === '1') {
+    //     // 登录成功
+    //   }
+    // });
   },
   methods: {
     rank(index) {

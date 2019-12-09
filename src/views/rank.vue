@@ -128,7 +128,7 @@ export default {
         duration: 0,
       });
       const resp = await apis[index]();
-      if (resp.httpCode === 200) {
+      if (resp.retCode === '1') {
         this.list = resp.data;
         Toast.clear();
         this.overlayVisible = false;

@@ -15,8 +15,18 @@ p {
   // background-size: 100% 100%;
   background-size: cover;
 }
+.bg-1 {
+  background-color: #21203c;
+  background-image: url(~@/assets/images/bg-1.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
 .van-nav-bar {
   background: transparent;
+}
+.van-nav-bar .van-icon {
+  color: #fff;
+  font-size: 19px;
 }
 .van-nav-bar__title {
   font-size: 19px;
@@ -33,6 +43,11 @@ p {
     font-size: 18px;
     color: #fff;
   }
+}
+.van-field__control {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 400;
 }
 .cb9 {
   color: #b9b9b9;
@@ -86,4 +101,58 @@ p {
 }
 .fw500 {
   font-weight: 500;
+}
+.mt38 {
+  margin-top: 38px;
+}
+.reg,
+.login,
+.forget-pwd {
+  .btn {
+    width: 305px;
+    height: 50px;
+    background: linear-gradient(
+      90deg,
+      rgba(232, 86, 157, 1) 0%,
+      rgba(147, 72, 255, 1) 100%
+    );
+    border-radius: 25px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 400;
+    border: none;
+    outline: none;
+    margin-top: 10px;
+    &:active {
+      opacity: 0.7;
+    }
+  }
+
+  .van-cell:not(:last-child)::after {
+    border: none;
+  }
+  .van-cell {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    margin-bottom: 15px;
+    font-size: 15px;
+    font-weight: 400;
+    border-radius: 4px;
+  }
+  .van-checkbox__label {
+    color: #999;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+  }
+  .van-checkbox__icon {
+    font-size: 16px;
+  }
+  .vcode-btn {
+    border: none;
+    color: #e8569d;
+    font-size: 15px;
+    font-weight: 400;
+    background: transparent;
+  }
 }
