@@ -17,9 +17,22 @@
           :title="type.name">
         </van-tab>
         <!-- 排名列表 -->
-        <div>
+        <div class="mt20">
           <!-- 前三 -->
-          <div class="mb25"></div>
+          <div class="mb25 flex">
+            <div class="first-3 flex1 flex-col aic"
+              v-for="item in first3"
+              :key="item">
+              <div class="first-3-image flex jcc">
+                <van-image fit="contain" :src="rank(item.index).video_cover" />
+              </div>
+              <p class="mc-gray f14 fw400 ell video-name tc">{{rank(item.index).video_name}}</p>
+              <div class="platform"></div>
+              <div class="platform-front flex jcc">
+                <div class="badge"></div>
+              </div>
+            </div>
+          </div>
           <!-- 前三名外 -->
           <div>
             <div
@@ -70,13 +83,26 @@ const types = [
     name: '月榜',
   },
 ];
-
+const first3 = [
+  {
+    class: 'rank2',
+    index: 1,
+  },
+  {
+    class: 'rank1',
+    index: 0,
+  },
+  {
+    class: 'rank3',
+    index: 2,
+  },
+];
 const list = new Array(10).fill().map((item, index) => ({
-  name: '锦衣喋血',
+  video_name: '锦衣喋血',
   id: index,
-  playNum: 1000,
+  payNum: 1000,
   likeRate: '100%',
-  img: '',
+  video_cover: '',
 }));
 
 const apis = [findEverydayPays, findWeeklyPays, findMonthlyPays];
@@ -87,6 +113,7 @@ export default {
       types,
       list: [],
       overlayVisible: false,
+      first3,
     };
   },
   mounted() {
@@ -111,12 +138,12 @@ export default {
       return this.list[index]
         ? this.list[index]
         : {
-            name: '虚位以待',
-            playNum: 0,
-            likeRate: '0%',
-            id: index,
-            img: '',
-          };
+          video_name: '虚位以待',
+          payNum: 0,
+          cent: '0%',
+          id: index,
+          video_cover: '',
+        };
     },
     last() {
       const listCopy = this.list.concat();
@@ -170,5 +197,54 @@ export default {
 }
 .video-name {
   width: 150px;
+}
+.first-3-image {
+  width: 113px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+.first-3 {
+  .video-name {
+    width: 125px;
+  }
+  .platform {
+    width: 125px;
+    height: 13px;
+    background: #3d3466;
+    transform: perspective(100px) rotateX(20deg);
+    margin-top: 6px;
+  }
+  .badge {
+    width: 26px;
+    height: 33.5px;
+    background-size: cover;
+  }
+  &:nth-child(1) {
+    margin-top: 41px;
+    .badge {
+      background-image: url(~@/assets/images/rankBadge2.png);
+    }
+  }
+  &:nth-child(2) {
+    .badge {
+      background-image: url(~@/assets/images/rankBadge1.png);
+    }
+  }
+  &:nth-child(3) {
+    margin-top: 41px;
+    .badge {
+      background-image: url(~@/assets/images/rankBadge3.png);
+    }
+  }
+  .platform-front {
+    height: 34px;
+    width: 125px;
+    background: linear-gradient(
+      180deg,
+      rgba(49, 42, 82, 1) 0%,
+      rgba(49, 42, 82, 0) 100%
+    );
+  }
 }
 </style>
