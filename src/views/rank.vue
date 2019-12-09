@@ -19,10 +19,10 @@
         <!-- 排名列表 -->
         <div class="mt20">
           <!-- 前三 -->
-          <div class="mb25 flex">
+          <div class="mb25 flex jcc">
             <div class="first-3 flex1 flex-col aic"
               v-for="item in first3"
-              :key="item">
+              :key="item.index">
               <div class="first-3-image flex jcc">
                 <van-image fit="contain" :src="rank(item.index).video_cover" />
               </div>
@@ -205,11 +205,13 @@ export default {
   border-radius: 12px;
 }
 .first-3 {
+  flex: none;
+  width: 33%;
   .video-name {
-    width: 125px;
+    width: 100%;
   }
   .platform {
-    width: 125px;
+    width: 100%;
     height: 13px;
     background: #3d3466;
     transform: perspective(100px) rotateX(20deg);
@@ -239,7 +241,7 @@ export default {
   }
   .platform-front {
     height: 34px;
-    width: 125px;
+    width: 100%;
     background: linear-gradient(
       180deg,
       rgba(49, 42, 82, 1) 0%,
