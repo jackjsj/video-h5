@@ -1,96 +1,74 @@
 <template>
-  <div class="ExtendUserContainer">
-    <div>
-      <x-header :left-options="{backText: ''}">我的推广</x-header>
-    </div>
-    <div class="extendUser">
-      <div><span>用户名</span></div>
-      <div><span>手机号</span></div>
-      <div><span>注册时间</span></div>
-    </div>
-    <div class="userNameContainer" >
-      <div  class="userInformation"  v-for="(item,index)  in extensions" :key="index">
-        <div><span>{{item.nickName}}</span></div>
-        <div><span>{{item.tel}}</span></div>
-        <div><span>{{item.regeditTime}}</span></div>
+  <div class="bg-2 flex-col vh100 vip-info-detail">
+    <van-nav-bar
+      class="flex-none bgwh1"
+      title="我的推广"
+      left-arrow
+      :border="false"
+      @click-left="$router.back()">
+    </van-nav-bar>
+    <div class="flex-auto wh p15 flex-col ova">
+      <div class="flex aic f16 mb10 flex-none">
+        <div class="flex1 tc"><span>用户名</span></div>
+        <div class="flex1 tc"><span>手机号</span></div>
+        <div class="flex1 tc"><span>注册时间</span></div>
+      </div>
+      <div class="flex-auto ova">
+        <div class="flex aic f14 record"
+          style="border-width:1px;"
+          v-for="(item,index) in extensions" :key="index">
+          <div class="flex1 tc"><span>{{item.nickName}}</span></div>
+          <div class="flex1 tc"><span>{{item.tel}}</span></div>
+          <div class="flex1 tc"><span>{{item.regeditTime}}</span></div>
+        </div>
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
-  import {XHeader} from 'vux'
+import { getExtensionHistory } from '@/api';
 
-
-  import {getExtensionHistory} from '../../api'
-
-  export default {
-    name: "ExtendUser",
-    data(){
-      return {
-        extensions: []
+export default {
+  name: 'ExtendUser',
+  data() {
+    return {
+      extensions: [],
+    };
+  },
+  mounted() {
+    this.getExtensionHistory();
+  },
+  methods: {
+    async getExtensionHistory() {
+      Toast.loading({
+        message: '加载中...',
+        loadingType: 'spinner',
+        duration: 0,
+        forbidClick: true,
+        overlay: true,
+      });
+      const result = await getExtensionHistory();
+      if (result.retCode === '1') {
+        this.extensions = result.data;
+        Toast.clear();
+      } else {
+        Toast(result.retMsg);
       }
     },
-    components: {
-      XHeader
-    },
-    mounted() {
-      this.getExtensionHistory();
-    },
-    methods: {
-      async getExtensionHistory() {
-        const result = await getExtensionHistory();
-
-        if (result.retCode === '1') {
-          this.extensions = result.data;
-        }else{
-          this.$vux.toast.text(result.retMsg, 'bottom')
-        }
-
-      }
-    }
-  }
+  },
+};
 </script>
 
-<style scoped>
-  .extendUser {
-    width: 100%;
-    height: 3rem;
-    text-align: center;
-    background: #EDEDED;
+<style lang="scss" scoped>
+.record {
+  height: 66px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  &:active {
+    opacity: 0.7;
   }
-
-  .extendUser div {
-    width: 30%;
-    display: inline-block;
-    margin: 0 auto;
-    background: #EDEDED;
-
+  &:nth-child(even) {
+    background: rgba(255, 255, 255, 0.1);
   }
-
-  .extendUser span {
-    line-height: 3rem;
-  }
-
-
-  .userInformation {
-    width: 100%;
-    height: 3rem;
-    text-align: center;
-    border-bottom-style: solid;
-    border-width: 0.05rem;
-  }
-
-  .userInformation div {
-    width: 30%;
-    display: inline-block;
-    margin: 0 auto;
-
-  }
-
-  .userInformation span {
-    line-height: 3rem;
-  }
-
+}
 </style>

@@ -363,6 +363,7 @@ export default {
       const result = await setCareTimess(params);
       if (result.retCode === '1') {
         this.videoDetails.isLike = '1';
+        this.videoDetails.careNum = this.videoDetails.careNum+1;
         Toast('点赞成功');
       } else {
         Toast(result.retMsg);
@@ -459,7 +460,7 @@ export default {
 .mc-purple {
   color: #9348ff;
 }
-.van-nav-bar{
+.van-nav-bar {
   z-index: 10 !important;
 }
 </style>

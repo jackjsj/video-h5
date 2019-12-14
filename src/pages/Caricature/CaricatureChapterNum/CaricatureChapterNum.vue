@@ -1,23 +1,28 @@
 <template>
-  <div>
-    <x-header title="章节" />
-    <scroller lock-x>
-      <div class="chapter">
-        <div class="first" v-for="(item,index) in chapterList" @click="toCaricaturePicturePage(item.id)" :key="index">{{item.name}}</div>
+  <div class="bg-2 flex-col vh100 vip-info-detail">
+    <van-nav-bar
+      class="flex-none bgwh1"
+      title="章节"
+      left-arrow
+      :border="false"
+      @click-left="$router.back()">
+    </van-nav-bar>
+    <div class="pl20 pr20 flex-auto ova">
+      <div
+        class="record wh flex-col jcc"
+        v-for="(item,index) in chapterList"
+        :key="index"
+        @click="toCaricaturePicturePage(item.id)">
+        <p class="f14 fw400 mb5">{{item.name}}</p>
       </div>
-    </scroller>
+    </div>
   </div>
 </template>
 
 <script>
-import { XHeader, Scroller } from 'vux';
 import { getCaricatureChapterInfo } from '@/api';
 
 export default {
-  components: {
-    XHeader,
-    Scroller,
-  },
   data() {
     return {
       id: null,
@@ -37,53 +42,23 @@ export default {
       this.$router.push(`/caricaturePictureList/${id}`);
     },
     async getCaricatureChapterInfo() {
-      this.$vux.loading.show({
-        text: '',
-      });
       const result = await getCaricatureChapterInfo(this.id);
       console.log(result);
       if (result.retCode === '1') {
         console.log(result);
         this.chapterList = result.data.chapterMapList;
       } else {
-        this.$vux.toast.text(result.retMsg, 'bottom');
       }
-
-      this.$vux.loading.hide();
     },
   },
 };
 </script>
-
-<style scoped>
-* {
-  margin: 0;
-  padding: 0;
-}
-.header {
-  width: 98%;
-  line-height: 2.5rem;
-  margin: 0 auto;
-  border: 0.1rem solid;
-}
-.header > .back {
-  float: left;
-}
-.header > .tap {
-  text-align: center;
-}
-.chapter {
-  line-height: 3rem;
-  margin: 1rem auto;
-}
-.chapter .first {
-  width: 94%;
-  height: 2rem;
-  line-height: 2rem;
-  margin: 1rem auto;
-  border: 0.2rem solid;
-  border-radius: 0.6rem;
-  padding-left: 0.1rem;
-  color: yellowgreen;
+<style lang="scss" scoped>
+.record {
+  height: 66px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  &:active {
+    opacity: 0.7;
+  }
 }
 </style>

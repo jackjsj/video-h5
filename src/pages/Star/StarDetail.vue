@@ -59,7 +59,8 @@
           <div
             class="item flex aic mb15"
             v-for="item in movieList"
-            :key="item.id">
+            :key="item.id"
+            @click="$router.push(`/video/${item.id}`)">
             <div class="flex aic">
               <div class="item-cover flex jcc mr13 flex-none">
                 <van-image
