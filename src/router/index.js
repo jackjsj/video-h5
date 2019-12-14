@@ -178,6 +178,11 @@ const router = new Router({
       component: () => import('@/pages/AccountManage/AccountManage'),
     },
     {
+      path: '/integralDetail',
+      name: 'integralDetail',
+      component: () => import('@/pages/VipInfoDetails/IntegralDetail'),
+    },
+    {
       path: '/register',
       name: 'register',
       component: Register,

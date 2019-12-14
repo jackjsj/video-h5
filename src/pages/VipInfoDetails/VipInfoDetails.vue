@@ -20,7 +20,8 @@
             <p class="f17 fw400 mb5">{{memberInfo.nickName}}</p>
             <div class="flex aic">
               <p class="flex1 g9">{{isVip === 0?'尚未':'已'}}开通VIP</p>
-              <p class="flex flex1 aic">
+              <p class="flex flex1 aic"
+              @click="$router.push('/integralDetail')">
                 <span class="f14 mr5">{{integralNumber}}</span>
                 <span class="g9">积分详情</span>
                 <van-icon class="g9" name="arrow" />

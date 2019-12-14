@@ -51,7 +51,9 @@ p {
   background: transparent;
   opacity: 0.7;
 }
-
+.van-cell--clickable:active{
+  background:transparent;
+}
 .van-nav-bar__right {
   .van-icon {
     font-size: 18px;

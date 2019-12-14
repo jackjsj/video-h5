@@ -12,7 +12,7 @@
       <!-- 基本信息 -->
       <div class="flex-col aic">
         <div class="star-avatar flex jcc">
-          <van-image fit="cover" :src="detail.headpic"></van-image>
+          <van-image :src="detail.headpic"></van-image>
         </div>
         <p class="mb8 f20 fw400">{{detail.name}}</p>
         <button class="fav-btn"
@@ -63,7 +63,6 @@
             <div class="flex aic">
               <div class="item-cover flex jcc mr13 flex-none">
                 <van-image
-                  fit="cover"
                   :src="item.videoCover" />
               </div>
               <div class="flex-col jca">

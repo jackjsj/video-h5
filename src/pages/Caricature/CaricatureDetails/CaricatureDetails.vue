@@ -34,7 +34,7 @@
               :key="item.id"
               @click="onSwiperClick(index)">
               <div class="swiper-item flex jcc">
-                <van-image fit="cover" :src="item.picUrl"></van-image>
+                <van-image :src="item.picUrl"></van-image>
               </div>
             </van-swipe-item>
           </van-swipe>

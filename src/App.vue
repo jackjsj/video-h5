@@ -3,6 +3,7 @@
     <transition name="slide">
       <router-view v-if="$store.state.isAuthLogin" />
     </transition>
+
   </div>
 </template>
 <script>
@@ -12,12 +13,14 @@ import { genLoginParams } from '@/utils/loginUtils';
 
 export default {
   data() {
-    return {};
+    return {
+    };
   },
   mounted() {
     this.autoLogin();
   },
   methods: {
+
     /**
      * 自动登录
      */

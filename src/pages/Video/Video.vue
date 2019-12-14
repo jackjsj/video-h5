@@ -1,198 +1,189 @@
 <template>
-  <div class="video">
-    <!--<scroller  lock-x scrollbar-y ref="scroller"  style="margin-bottom: 6rem">-->
-    <div class="item" style="background-color: aliceblue ">
-      <div class="returnContainer">
-        <i class="iconfont" style="font-size: 2rem ;margin: 1rem;color: #18b4ed" @click="back">&#xe629;</i>
-        <span></span>
-
-      </div>
-      <div class="player">
-        <video-player id="broadcast" class="vjs-custom-skin" style="width: 100% ;height: 30%"
-          ref="videoPlayer"
-          :options="playerOptions"
-          :playsinline="true"
-          @timeupdate="onPlayerTimeupdate($event)">
-        </video-player>
-      </div>
+  <div class="bg flex-col vh100 video">
+    <van-nav-bar
+      class="flex-none"
+      left-arrow
+      @click-left="$router.back()"
+      :border="false">
+    </van-nav-bar>
+    <!-- 视频 -->
+    <div class="video-wrapper flex-none">
+      <video-player id="broadcast" class="vjs-custom-skin" style="width: 100%; height:100%;"
+        ref="videoPlayer"
+        :options="playerOptions"
+        :playsinline="true"
+        @timeupdate="onPlayerTimeupdate($event)">
+      </video-player>
     </div>
-
-    <div class="" style="background-color: #ffffff;">
-      <flexbox>
-        <flexbox-item :span="3/5">
-          <span class="filmName">{{this.videoDetails.videoName}}</span>
-        </flexbox-item>
-
-        <flexbox-item :span="1/10">
-          <span @click="upPraise" v-show="!isUpPraise" class="icon iconfont fabulousSymbolLeft" style="font-size: 1.5rem">&#xe7b6;</span>
-          <!--点击红色的赞-->
-          <span @click="upPraise" v-show="isUpPraise" class="icon iconfont fabulousSymbolLeft" style="font-size: 1.5rem">&#xe633;</span>
-        </flexbox-item>
-        <flexbox-item :span="1/7" class="fabulous">
-          <x-progress style="width: 4rem ;margin: 0 auto" :percent="videoDetails.cent.substring(0,videoDetails.cent.length-1)>0?videoDetails.cent.substring(0,videoDetails.cent.length-1):0" :show-cancel="false"></x-progress>
-          <span class="fabulousNumber">{{videoDetails.cent}}满意</span>
-        </flexbox-item>
-        <flexbox-item :span="1/11">
-          <!--点击灰色的赞-->
-          <span @click="DownPraise" v-show="isDownPraise" class="icon iconfont fabulousSymbolRight" style="font-size: 1.5rem">&#xe7b8;</span>
-          <span @click="DownPraise" v-show="!isDownPraise" class="icon iconfont fabulousSymbolRight" style="font-size: 1.5rem">&#xe7b7;</span>
-        </flexbox-item>
-      </flexbox>
-      <div class="time">
-        <span>{{videoDetails.pushTime}}</span>
-        <span>{{videoDetails.playNum}}次播放</span>
-      </div>
-    </div>
-    <div class="briefIntroduction">
-      <span>{{videoDetails.briefContent.substring(0,17)}}</span>
-      <button @click="show = !show"> 简介 ></button>
-    </div>
-
-    <div class="commentStatistics">
-      <span>热门评论</span>
-      <span @click="share" class="icon iconfont commentStatisticsRight" style="font-size: 2rem;">&#xe66a;</span>
-      <span @click="collection(videoId)" v-show="isAlreadyCollection" class="icon iconfont commentStatisticsRight" style="font-size: 2rem;color:#DA6263">&#xe64b;</span>
-      <span @click="collection(videoId)" v-show="!isAlreadyCollection" class="icon iconfont commentStatisticsRight" style="font-size: 2rem;">&#xe64b;</span>
-      <span class="icon iconfont commentStatisticsRight" style="font-size: 2rem;">&#xe665;</span>
-    </div>
-    <div class="advertisement">
-      <img :src="banner.picUrl" @click="handlerBanner" alt="">
-    </div>
-    <div class="like">
-      <span>猜你喜欢</span>
-    </div>
-    <div class="filmContainer" @click="changeMovie(item)" v-for="(item,index) in videoDetails.likeVideoList" :key="index">
-      <a href="javaScript:" v-show="isShowMoreMovie||(index>=0&&index<3)">
-        <div class="film">
-          <img :src="item.videoCover" alt="">
+    <div class="flex-auto ova bg-2">
+      <!-- 信息 -->
+      <div class="wh video-info">
+        <p class="f18 fw500 mb10">{{videoDetails.videoName}}</p>
+        <!-- 热度 时间 -->
+        <div class="flex aic f14 fw400 mb20">
+          <div class="flex aic mr18">
+            <van-icon name="fire" color="#9348FF" />
+            <p class="ml5 opa7">热度{{videoDetails.playNum}}</p>
+          </div>
+          <div class="flex aic opa7">
+            <van-icon name="clock-o" />
+            <p class="ml5">{{videoDetails.pushTime}}</p>
+          </div>
         </div>
-        <div class="ranking">
-          <span>{{item.tagsName.slice(0,17)}}</span>
-          <span class="timeSpan">{{item.playNum}}次播放</span>
-          <span class="timeSpan">{{item.pushTime}}</span>
+        <!-- 点赞 收藏 缓存 分享 -->
+        <div class="flex aic jca">
+          <div class="flex-col aic"
+            @click="upPraise">
+            <div class="op-icon">
+              <van-icon name="good-job-o" :color="videoDetails.isLike !== '0'?'#FC386F':'#fff'" />
+            </div>
+            <div class="opa3">{{videoDetails.careNum}}</div>
+          </div>
+          <div class="flex-col aic"
+            @click="collection">
+            <div class="op-icon">
+              <van-icon name="star-o" :color="videoDetails.isCare !=='0' ?'#FC386F':'#fff'" />
+            </div>
+            <div class="opa3">收藏</div>
+          </div>
+          <div class="flex-col aic">
+            <div class="op-icon">
+              <img src="@/assets/images/cache.png" />
+            </div>
+            <div class="opa3">缓存</div>
+          </div>
+          <div class="flex-col aic"
+            @click="share">
+            <div class="op-icon">
+              <img src="@/assets/images/share.png" />
+            </div>
+            <div class="opa3">分享</div>
+          </div>
         </div>
-      </a>
-    </div>
-    <br>
-    <span @click="showMoreMovie" v-show="isShowMoreMovie&&videoDetails.likeVideoList.length>0" style="justify-content:center; display: flex;color:  #AA845D;font-family:'楷体';">收起&#8593;</span>
-    <br>
-
-    <hr>
-    <div class="comment">
-      <span>全部评论</span><span style="font-size: 0.8rem ;color: #cccccc;margin-left: 0.5rem">{{videoDetails.videoCommentNum}}条</span>
-    </div>
-    <hr>
-    <div class="commentContainer" :index="i" v-for="i in 2" v-show="videoDetails.videoCommentNum">
-      <div class="user">
-        <img class="headPortrait" src="../../img/Icon/1.jpg" alt="">
-        <span class="gender"></span>
-        <span>{{videoDetails.pushTime}}</span>
       </div>
-      <div class="comment1">
-        <span>没用</span>
+      <!-- 广告 -->
+      <div class="mt20">
+        <div class="swiper-wrapper">
+          <van-swipe
+            :autoplay="3000"
+            :show-indicators="false"
+            indicator-color="#FF7AC8">
+            <van-swipe-item v-for="(item) in bannerList"
+              :key="item.id"
+              @click="onSwiperClick(item)">
+              <div class="swiper-item flex jcc">
+                <van-image fit="cover" :src="item.picUrl"></van-image>
+              </div>
+            </van-swipe-item>
+          </van-swipe>
+        </div>
+      </div>
+      <!-- tabs -->
+      <div class="p15">
+        <van-tabs
+          :border="false"
+          title-active-color="#fff"
+          title-inactive-color="#A7ADB6">
+          <van-tab title="简介">
+            <div class="wh">
+              <p class="f13 opa7 lh21"
+                :class="{'van-multi-ellipsis--l4':!showMore}">
+                {{videoDetails.briefContent}}
+              </p>
+              <div class="flex aic opa5 mb15"
+                style="justify-content:flex-end;"
+                @click="showMore = !showMore">
+                <span>{{showMore?'收起':'更多'}}</span>
+                <van-icon :name="showMore?'arrow-up':'arrow-down'" />
+              </div>
+              <!-- 影片类型、标签、番号 -->
+              <div class="lh16 mb15">
+                <div class="flex aic mb5">
+                  <span class="opa5">影片类型：</span>
+                  <div class="flex" v-if="videoDetails.classifyName">
+                    <p
+                      style="border-width:1px;"
+                      v-for="type in videoDetails.classifyName.split(',')"
+                      :key="type"
+                      class="tag flex-none mr5 mc-purple">{{type}}</p>
+                  </div>
+                </div>
+                <div class="flex aic mb5">
+                  <span class="opa5">影片标签：</span>
+                  <div class="flex" v-if="videoDetails.tags">
+                    <p
+                      style="border-width:1px;"
+                      v-for="(item) in videoDetails.tags.split(',')"
+                      :key="item"
+                      class="tag flex-none mr5 mc-purple">{{item}}</p>
+                  </div>
+                </div>
+                <div class="flex aic mb5">
+                  <span class="opa5">影片番号：</span>
+                  <span class="opa5">{{videoDetails.id}}</span>
+                </div>
+              </div>
+              <!-- 猜你喜欢 -->
+              <div class="wh">
+                <p class="mb18 f16 fw500">猜你喜欢</p>
+                <!-- 列表 -->
+                <div>
+                  <div
+                    class="guess-item flex"
+                    v-for="item in videoDetails.likeVideoList"
+                    :key="item.id"
+                    @click="$router.push(`/video/${item.id}`);">
+                    <div class="flex jcc flex-none mr12 guess-item-cover ovh">
+                      <van-image :src="item.videoCover" />
+                    </div>
+                    <div class="flex-auto">
+                      <p class="opa9 f16 fw500 mb5">{{item.videoName}}</p>
+                      <div class="flex ova mb5" v-if="item.tagsName">
+                        <p
+                          style="border-width:1px;"
+                          v-for="tag in item.tagsName.split(',')"
+                          :key="tag"
+                          class="tag flex-none mr5">{{tag}}</p>
+                      </div>
+                      <div class="flex jcb opa5">
+                        <div class="flex aic">
+                          <van-icon name="play-circle" />
+                          <span class="ml5">播放{{item.playNum}}次</span>
+                        </div>
+                        <div class="flex aic">
+                          <van-icon name="clock-o" />
+                          <span class="ml5">{{item.pushTime}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </van-tab>
+          <van-tab title="评论(0)">
+          </van-tab>
+        </van-tabs>
       </div>
     </div>
-
-    <div class="blank">
-
-    </div>
-
-    <div class="footer" @click="commentPermit">
-      <img src="../../img/Icon/1.jpg" alt="">
-      <div class="footerButton">
-        <span>快来说说你的感想</span>
+    <!-- 评论 -->
+    <div class="flex-none comment-box flex aic wh">
+      <div class="flex jcc avatar ovh mr12">
+        <van-image src="" />
       </div>
+      <p class="f14 fw400">快来说说你的感想吧</p>
     </div>
-
-    <!-- 弹窗组件 -->
-    <div v-transfer-dom>
-      <popup v-model="show" height="50%">
-        <div class="popup1">
-          <span class="title" style="justify-content:center;font-size: 1.2rem">
-            {{videoDetails.briefContent}}
-          </span>
-          <hr>
-          <span>
-            简介
-            <br />
-            {{videoDetails.briefContent}}
-          </span>
-        </div>
-      </popup>
-    </div>
-
-    <div v-transfer-dom>
-      <x-dialog v-model="isPermitView" class="dialog-demo">
-        <div @click="isPermitView=false" style="float: right">
-          <span style="color: #dfa432;" class="vux-close"></span>
-        </div>
-        <p style="color:#fff;text-align:center;">
-          <br>
-          <div>非常抱歉，您的使用时间已到</div>
-          <div></div>
-          <div>邀请好友或者购买<span style="color: red;">vip会员</span> ，就可以无限制观看视频啦</div>
-          <div></div>
-          <XButton @click.native="skipToInvite" style="background-color: #dfa432;color: white" mini>邀请好友</XButton> &nbsp;
-          <XButton @click.native="skipToBuyVip" style="background-color: #dfa432;color: white" mini>购买vip会员</XButton>
-      </x-dialog>
-    </div>
-
-    <div v-transfer-dom>
-      <x-dialog v-model="isPermitComment" class="dialog-demo">
-        <div @click="isPermitComment=false" style="float: right">
-          <span style="color: #dfa432;" class="vux-close"></span>
-        </div>
-        <p style="color:#fff;text-align:center;">
-          <br>
-          <div>用户2等级才可以发表评论，邀请好友就可以升级啦！</div>
-          <br>
-          <XButton @click.native="skipToInvite" style="background-color: #dfa432;color: white" mini="true">邀请好友</XButton> &nbsp;
-      </x-dialog>
-    </div>
-    <toast v-model="showToast" type="text" :time="1000" is-show-mask :text="showToastMsg" position="buttom"></toast>
-    <!--</scroller>-->
-
   </div>
-
 </template>
 
 <script>
 import { videoPlayer, setCareTimes } from 'vue-video-player';
-import {
-  Toast,
-  XHeader,
-  Scroller,
-  Tabbar,
-  TabbarItem,
-  Flexbox,
-  FlexboxItem,
-  XProgress,
-  Popup,
-  XDialog,
-  XButton,
-  TransferDomDirective as TransferDom,
-} from 'vux';
-import { getVideoDetail, setCareHistory, setCareTimess } from '../../api';
-
+import { getVideoDetail, setCareHistory, setCareTimess } from '@/api';
 import './css/custom-theme.css';
 
 export default {
-  directives: {
-    TransferDom,
-  },
   components: {
     videoPlayer,
-    Scroller,
-    XHeader,
-    Tabbar,
-    TabbarItem,
-    Flexbox,
-    FlexboxItem,
-    XProgress,
-    Popup,
-    XDialog,
-    XButton,
-    Toast,
   },
   data() {
     return {
@@ -210,7 +201,6 @@ export default {
       show: false,
       // videojs options
       playerOptions: {
-        height: '260',
         autoplay: true, //如果true,浏览器准备好时开始回放。
         muted: true, //默认情况下将会消除任何音频。
         language: 'zh-CN',
@@ -233,49 +223,21 @@ export default {
         notSupportedMessage: '加载中，请耐心等待或者重新点击影片', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
       },
       videoDetails: {
-        useView: '1',
-        payDuration: 60, //允许播放时间
-        isVip: 1, //是否vip  1为vip
-        briefContent: '',
-        starId: 14,
-        isLike: '0',
-        cent: '67.0%', //点赞比例
-        bannerListHead: [],
-        briefContext: null,
-        starVideoNum: 634, //播放次数
-        videoUrl: 'http://v2.727831.com/20190914/MqipcZML/index.m3u8', //播放地址
-        bannerList: [],
-        videoName: 'ときめき 剛毛マンコは嫌いですか加藤椿',
-        starName: '无码',
-        playTime: null,
-        id: 8759,
-        heightNum: '170',
-        pushTime: '2019-09-17',
-        classifyName: '无码',
-        starVideoList: [],
-        extensionInfo: '',
-        videoType: 2,
-        playNum: '4724',
-        dislikeNum: 1,
-        headPic: 'group1/M00/00/13/wKhfFV0sU26AFVEmAAB_Vd18BZ4357.png',
-        tags: '【肛交口交】,【体射颜射】',
-        videoCommentNum: 0, //评论条数
-        careNum: 2,
-        bwh: null,
-        videoCoverType: 1,
-        likeVideoList: [],
-        videoCover: '',
-        isCare: '0',
-        loseNum: 0,
-        cup: '大陆',
+        classifyName: '',
+        tags: '',
       },
       isPermitView: false, //是否允许用户观看
       isPermitComment: false, //是否允许用户评论
+
+      //
+      bannerList: [],
+      showMore: false,
     };
   },
   mounted() {
     this.videoId = this.$route.params.videoId;
     this.getVideoDetail(this.videoId);
+    console.log(1);
   },
   computed: {
     player() {
@@ -284,11 +246,11 @@ export default {
   },
   methods: {
     // 处理广告跳转
-    handlerBanner() {
-      switch (this.banner.linkType) {
+    onSwiperClick(item) {
+      switch (item.linkType) {
         case 1: {
           // 外部链接
-          window.location.href = banner.linkUrl;
+          window.location.href = item.linkUrl;
           break;
         }
         case 3: {
@@ -309,28 +271,28 @@ export default {
     },
     //发送请求获取影片数据
     async getVideoDetail(videoId) {
-      this.$vux.loading.show({
-        text: '',
+      console.log(videoId);
+      Toast.loading({
+        message: '加载中...',
+        loadingType: 'spinner',
+        duration: 0,
+        overlay: true,
       });
-      const params = {
-        videoId: videoId,
-      };
-      const result = await getVideoDetail(params);
+      const result = await getVideoDetail({
+        videoId,
+      });
       if (result.retCode === '1') {
         this.playerOptions.sources[0].src = result.data.videoUrl;
         this.playerOptions.sources[0].type = 'application/x-mpegURL';
         this.videoDetails = result.data;
         this.isVip = result.isVip;
         this.payDuration = result.payDuration;
-
         this.videoDetails.videoCover = result.data.videoCover;
-
-        this.banner = result.data.bannerList[0] || null;
+        this.bannerList = result.data.bannerList;
+        Toast.clear();
       } else {
-        this.showToastMsg = '服务器繁忙';
-        this.showToast = true;
+        Toast(result.retMsg);
       }
-      this.$vux.loading.hide();
     },
     skipToInvite() {
       //路由到邀请好友页面
@@ -354,21 +316,22 @@ export default {
       window.scrollTo(0, 0);
       console.log('切换影片');
     },
-    collection(videoId) {
-      //点击收藏，如果没有登录，跳转到登录页面
-      console.log('收藏');
-      let params = {
-        videoId: videoId,
-      };
-      this.sendCollection(params);
+    collection() {
+      if (this.videoDetails.isCare === '0') {
+        this.sendCollection({
+          videoId: this.videoId,
+        });
+      } else {
+        Toast('已收藏');
+      }
     },
     async sendCollection(params) {
       const result = await setCareHistory(params);
       if (result.retCode === '1') {
-        this.isAlreadyCollection = true;
-        this.showToastMsg = '收藏成功';
-        this.showToast = true;
-        console.log('收藏成功');
+        this.videoDetails.isCare = '1';
+        Toast('收藏成功');
+      } else {
+        Toast(result.retMsg);
       }
     },
     share() {
@@ -376,60 +339,36 @@ export default {
       let message = '';
       message += this.videoDetails.extensionInfo.extensionContext;
       message += this.videoDetails.extensionInfo.extensionUrl;
-
       this.$copyText(message).then(
-        (e) => {
-          this.showToastMsg = '请分享粘贴，已复制到系统剪贴板';
-          this.showToast = true;
+        e => {
+          Toast('请分享粘贴，已复制到系统剪贴板');
         },
-        (e) => {
-          this.showToastMsg = '粘贴失败，请重试';
-          console.log(e);
+        e => {
+          Toast('粘贴失败，请重试');
         },
       );
     },
     upPraise() {
-      if (!this.isAlreadyPraise) {
-        let params = {
+      if (this.videoDetails.isLike === '0') {
+        this.sendPraise({
           videoId: this.videoId,
           careType: 1,
-        };
-        this.sendPraise(params);
+        });
+      } else {
+        Toast('已点赞');
       }
     },
     async sendPraise(params) {
       //异步发送点赞请求
       const result = await setCareTimess(params);
-
-      console.log(result);
       if (result.retCode === '1') {
-        if (!this.isDownPraise) {
-          this.isUpPraise = !this.isUpPraise;
-          this.isAlreadyPraise = true;
-        }
-        this.showToastMsg = '点赞成功';
-        this.showToast = true;
-        console.log('点赞成功');
+        this.videoDetails.isLike = '1';
+        Toast('点赞成功');
       } else {
-        this.showToastMsg = '点赞失败';
-        this.showToast = true;
-        console.log('点赞失败');
-      }
-    },
-    DownPraise() {
-      //差评点赞
-      console.log('差评点赞');
-      if (!this.isAlreadyPraise) {
-        if (!this.isUpPraise) {
-          this.isDownPraise = !this.isDownPraise;
-        }
-        this.isAlreadyPraise = true;
-        this.showToastMsg = '提交成功';
-        this.showToast = true;
+        Toast(result.retMsg);
       }
     },
     showMoreMovie(flag) {
-      console.log('----');
       this.isShowMoreMovie = !this.isShowMoreMovie;
     },
     back() {
@@ -453,265 +392,110 @@ export default {
 };
 </script>
 
-<style  scoped lang="scss">
-// @import '~vux/src/styles/close';
-.ignore {
-  /* 弹窗组件*/
-  .popup0 {
-    padding-bottom: 15px;
-    height: 200px;
-  }
-  .popup1 {
+<style lang="scss" scoped>
+.video-wrapper {
+  height: 276px;
+  background: rgba(255, 255, 255, 0.3);
+  margin-top: -50px;
+}
+.video-info {
+  padding: 12px 15px;
+}
+.op-icon {
+  width: 17px;
+  height: 17px;
+  margin-bottom: 8px;
+  img {
     width: 100%;
+  }
+}
+.van-icon-good-job-o {
+  font-size: 18px;
+}
+.van-icon-star-o {
+  font-size: 18px;
+}
+.bg {
+  background: #21203c;
+}
+.swiper-item {
+  margin: 0 10px;
+  height: 84px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+}
+.comment-box {
+  height: 60px;
+  padding: 0 17px;
+  background: rgba(45, 36, 100, 1);
+}
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+.guess-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 17px;
+  padding-bottom: 14px;
+  &:last-child {
+    border-bottom: 0;
+    margin-bottom: 0;
+  }
+}
+.guess-item-cover {
+  width: 126px;
+  height: 71px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.tag {
+  padding: 2px 6px;
+  font-size: 12px;
+  border-radius: 24px;
+  border: 1px solid #9348ff;
+}
+.mc-purple {
+  color: #9348ff;
+}
+.van-nav-bar{
+  z-index: 10 !important;
+}
+</style>
+<style lang="scss">
+.video {
+  .van-tabs__nav {
+    background: transparent;
+  }
+  .van-tab.van-tab--active {
+    background: transparent;
+    border-radius: 0;
+    font-size: 19px;
+    font-weight: 600px;
+  }
+  .van-tab {
+    flex: none;
+    margin-right: 15px;
+    padding: 0;
+  }
+  .van-tabs__line {
+    background: linear-gradient(90deg, #e95aa0, #a769ff);
+    min-width: 38px;
+  }
+  .van-tabs__wrap {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 20px;
+  }
+  .van-tag--plain {
+    background: transparent;
+  }
+  .van-tag--round,
+  .van-tag--round::after {
+    border-radius: 20px;
+  }
+  .vjs-custom-skin > .video-js {
     height: 100%;
-  }
-  .popup2 {
-    padding-bottom: 15px;
-    height: 400px;
-  }
-  .position-vertical-demo {
-    background-color: #ffe26d;
-    color: #000;
-    text-align: center;
-    padding: 15px;
-  }
-  .position-horizontal-demo {
-    position: relative;
-    height: 100%;
-    .vux-close {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translateX(-50%) translateY(-50%) scale(4);
-      color: #000;
-    }
-  }
-
-  .dialog-demo {
-    .weui-dialog {
-      border-radius: 8px;
-      padding-bottom: 8px;
-    }
-    .dialog-title {
-      line-height: 30px;
-      color: #666;
-    }
-    .img-box {
-      height: 350px;
-      overflow: hidden;
-    }
-    .vux-close {
-      margin-top: 8px;
-      margin-bottom: 8px;
-    }
-  }
-
-  .video .filmName {
-    /*文本自动换行*/
-    font-weight: bold;
-    word-break: normal;
-    width: auto;
-    display: block;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    overflow: hidden;
-    margin: 1rem 0 0 1rem;
-  }
-  .video .fabulousSymbolLeft {
-    margin-left: 0.9rem;
-  }
-  .video .fabulousSymbolRight {
-    /*margin-right: 0.9rem;*/
-  }
-
-  .video .fabulousNumber {
-    color: red;
-    width: 120%;
-    font-size: 0.2rem;
-    margin: 0 auto;
-  }
-  .video .fabulous {
-    margin: 0 auto;
-    text-align: center;
-  }
-  .video .time {
-    margin: 0.5rem 1rem;
-  }
-  .video .briefIntroduction {
-    width: 93%;
-    height: 1.5rem;
-    margin: 0.5rem 1rem 1.5rem 1rem;
-    /*word-break: break-all;*/
-    /*background-color: #F3F3F3;*/
-    word-wrap: break-word;
-    word-break: normal;
-    background-color: whitesmoke;
-  }
-  .video .briefIntroduction span {
-    color: #000000;
-    /* overflow: hidden;*/
-    word-wrap: break-word;
-    /*word-break: normal;*/
-    /*text-overflow: ellipsis;*/
-    /*-o-text-overflow: ellipsis;*/
-    /*white-space: nowrap;*/
-    width: 80%;
-    display: inline-block;
-    word-break: break-all;
-  }
-  .video .briefIntroduction button {
-    color: #c49c69;
-    font-size: 1rem;
-    float: right;
-    background-color: transparent;
-    border-style: none;
-  }
-  .video .commentStatistics {
-    margin: 0 0 1rem 1rem;
-  }
-
-  .video .commentStatistics span {
-    font-size: 1rem;
-  }
-  .video .commentStatistics .commentStatisticsRight {
-    float: right;
-    margin-right: 1rem;
-  }
-  .video .advertisement img {
-    width: 90%;
-    height: 8rem;
-    margin: 1rem 1rem;
-    border-radius: 1rem;
-  }
-  .video .like {
-    font-size: 1.3rem;
-    margin-left: 1rem;
-  }
-
-  .video .filmContainer {
-    width: 95%;
-    margin: 1rem 0.5rem;
-  }
-  .video .filmContainer a {
-    text-decoration: none;
-  }
-  .video .filmContainer .ranking {
-    width: 40%;
-    display: inline-block;
-  }
-  .video .filmContainer .ranking span {
-    word-break: normal;
-    width: auto;
-    display: block;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    overflow: hidden;
-    color: black;
-    text-align: left;
-    margin: 6% 5%;
-  }
-  .video .filmContainer .ranking .timeSpan {
-    font-size: 1rem;
-    color: #cccccc;
-  }
-  .video .filmContainer .film {
-    width: 50%;
-    display: inline-block;
-  }
-  .video .filmContainer .film img {
-    width: 100%;
-    height: 100%;
-  }
-
-  .comment {
-    color: black;
-    padding: 1rem 1rem;
-    border-top: 0rem solid #000000;
-    border-bottom: 0 solid #000000;
-    /*border-radius:0.5rem;*/
-  }
-  .commentContainer {
-    padding: 1rem;
-    border-bottom: 0.1rem solid #f5f5f5;
-  }
-  .commentContainer .headPortrait {
-    width: 4rem;
-    height: 4rem;
-    border-radius: 50%;
-  }
-  .commentContainer .gender {
-    width: 1.5rem;
-    height: 1.5rem;
-    margin-left: 1rem;
-  }
-
-  .commentContainer .user span {
-    color: black;
-    font-size: 0.9rem;
-  }
-  .commentContainer .comment1 {
-    color: #000000;
-    word-wrap: break-word;
-    width: 90%;
-    margin: 1rem 1rem;
-  }
-  .video .blank {
-    margin-bottom: 5rem;
-  }
-
-  .footer {
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    background-color: #ffffff;
-    z-index: 99999;
-    border-top: 0.1rem solid #f5f5f5;
-  }
-  .footer img {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    /*margin: 0.5rem;*/
-    position: relative;
-    top: 0.6rem;
-    margin: 0 0.5rem;
-  }
-
-  .footer .footerButton {
-    width: 75%;
-    text-align: center;
-    border: 0.07rem solid #000000;
-    border-radius: 5rem;
-    display: inline-block;
-    margin-bottom: 0.5rem;
-  }
-  .footer .footerButton span {
-    font-size: 1rem;
-    display: inline-block;
-    width: 100%;
-    margin: 0 auto;
-    padding: 3% 0;
-  }
-
-  .player {
-    position: relative;
-  }
-
-  .returnContainer:before,
-  .returnContainer:after {
-    content: '';
-    display: table;
-    clear: both;
-  }
-
-  .returnContainer {
-    width: 90%;
-    font-size: 1.3rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    position: absolute;
-    z-index: 9999;
   }
 }
 </style>

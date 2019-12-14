@@ -24,7 +24,8 @@
           </div>
           <div class="flex-col flex1 jcb aic user-info-item">
             <button class="user-info-btn wh"
-              style="border-width:1px;">积分详情</button>
+              style="border-width:1px;"
+              @click="$router.push('/integralDetail')">积分详情</button>
             <p>积分可兑换会员</p>
           </div>
           <div class="flex-col flex1 jcb aic user-info-item">
@@ -67,7 +68,7 @@
             <van-swipe-item v-for="(item) in bannerList"
               :key="item.id"
               @click="onSwiperClick(item)">
-              <div class="swiper-item flex jcc">
+              <div class="swiper-item flex jcc ovh">
                 <van-image :src="item.picUrl" />
               </div>
             </van-swipe-item>
@@ -93,7 +94,7 @@
       v-model="dialogVisible"
       show-cancel-button
       @confirm="onDialogConfirm"
-      @cancel="dialogVisible = false">
+      @cancel="onDialogCancel">
       <div class="flex-col aic">
         <div class="warn-icon">
           <img src="@/assets/images/warn.png" />
@@ -194,8 +195,8 @@ export default {
       defaultAvatar: require('@/assets/images/avatar.png'),
       memberInfo: {}, // 用户信息
       bannerList: [], // 轮播
-      dialogVisible: false,
       overlayVisible: false,
+      dialogVisible: false,
     };
   },
   mounted() {
@@ -204,6 +205,15 @@ export default {
     this.getGcGroup();
   },
   methods: {
+    onDialogConfirm() {
+      localStorage.removeItem('token');
+      this.$router.push('/login');
+    },
+    onDialogCancel() {
+      localStorage.removeItem('token');
+      this.dialogVisible = false;
+      window.location.reload();
+    },
     onSwiperClick(banner) {
       this.addIntegral(3);
       const linkType = banner.linkType; //广告类型
@@ -291,11 +301,11 @@ export default {
     },
     copyInviteCode(copyContent) {
       this.$copyText(copyContent).then(
-        (e) => {
+        e => {
           this.showToastMsg = '复制成功';
           this.showToast = true;
         },
-        (e) => {
+        e => {
           console.log(e);
         },
       );

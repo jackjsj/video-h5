@@ -21,6 +21,7 @@ import {
   DatetimePicker,
   Swipe,
   SwipeItem,
+  Tag,
   Panel,
   List,
   Search,
@@ -63,4 +64,5 @@ Vue.use(NavBar)
   .use(Image)
   .use(SwitchCell)
   .use(List)
+  .use(Tag)
   .use(Loading);

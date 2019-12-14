@@ -22,7 +22,7 @@
           <van-swipe-item v-for="(item,index) in bannerList"
             :key="item.id"
             @click="handleRotationChart(index)">
-            <div class="swiper-item flex jcc">
+            <div class="swiper-item flex jcc ovh">
               <van-image :src="item.picUrl" />
             </div>
           </van-swipe-item>
@@ -62,7 +62,7 @@
             class="item mb15"
             v-for="item in newVideoList"
             :key="item.id"
-            @click="$router.push(`/video/${item.id}`);">
+            @click="$router.push(`/video/${item.id}`)">
             <div class="img-wrapper rel flex jcc">
               <van-image :src="item.videoCover" />
             </div>

@@ -39,7 +39,7 @@
             v-for="item in searchDataList"
             :key="item.id"
             @click="$router.push(`/video/${item.id}`);">
-            <div class="flex-auto cover-img-wrapper flex jcc">
+            <div class="flex-auto cover-img-wrapper flex jcc ovh">
               <van-image :src="item.cover" />
             </div>
             <p class="result-name wh flex-none ell f16 fw600">{{item.name}}</p>

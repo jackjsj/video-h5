@@ -21,9 +21,8 @@
           class="mr18 flex-none">
         </van-checkbox>
         <div class="pct100 flex aic flex-none">
-          <div class="item-cover flex jcc mr13 flex-none">
+          <div class="item-cover flex jcc mr13 flex-none ovh">
             <van-image
-              fit="cover"
               :src="item.videoCover" />
           </div>
           <div class="flex-col jca">

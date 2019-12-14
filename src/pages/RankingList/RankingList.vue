@@ -27,7 +27,7 @@
             <div v-if="index === 0">
               <!-- 第一名 -->
               <div class="flex jcc rank1-image">
-                <van-image fit="contain" :src="item.video_cover" />
+                <van-image style="width:100%;" :src="item.video_cover" />
               </div>
               <div class="rank1-name flex aic">
                 <img class="rank-badge flex-none" src="@/assets/images/rankBadge1.png" />
@@ -48,7 +48,7 @@
             </div>
             <div class="flex aic video-item" v-else>
               <div class="flex flex-none jcc video-cover">
-                <van-image fit="contain" :src="item.video_cover" />
+                <van-image :src="item.video_cover" />
               </div>
               <div class="flex-auto">
                 <p class="rank-no wh opa5 b mb5"
@@ -228,6 +228,8 @@ export default {
   height: 194px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 12px 12px 0 0;
+  overflow:hidden;
+
 }
 .rank-badge {
   width: 26px;

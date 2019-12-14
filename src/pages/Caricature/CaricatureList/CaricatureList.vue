@@ -46,7 +46,9 @@
           :key="item.id"
           @click="$router.push(`/caricatureDetails/${item.id}`)">
           <div class="img-wrapper rel flex aic jcc">
-            <van-image :src="item.cover" />
+            <div style="height:100%;width:100%;" class="flex jcc">
+              <van-image :src="item.cover" />
+            </div>
             <div class="num abs fw400">共{{item.chapterNum}}话</div>
             <!-- <div class="status abs fw400">{{item.status}}</div> -->
           </div>
@@ -61,7 +63,6 @@
 </template>
 
 <script>
-
 import { getCartoonInfo } from '@/api';
 
 const list = new Array(10).fill().map((item, index) => ({
@@ -142,7 +143,7 @@ export default {
       this[target] = item;
       this.getCartoonInfo(
         String(this.currentType.id),
-        String(this.currentOrder.type)
+        String(this.currentOrder.type),
       );
     },
     // 路由跳转
@@ -169,10 +170,10 @@ export default {
         this.types = data.classifyList;
         this.orders = data.orderTypes;
         this.currentOrder = this.orders.filter(
-          (item) => item.type === Number(data.orderType)
+          item => item.type === Number(data.orderType),
         )[0];
         this.currentType = this.types.filter(
-          (item) => item.id === Number(data.classifyId)
+          item => item.id === Number(data.classifyId),
         )[0];
         this.list = data.caricatureList;
         Toast.clear();
@@ -213,11 +214,7 @@ export default {
   height: 152px;
   background: rgba(204, 204, 204, 0.1);
   border-radius: 4px 4px 0 0;
-  img {
-    width: 100%;
-
-    // height:100%;
-  }
+  overflow:hidden;
   .num {
     left: 4px;
     top: 4px;

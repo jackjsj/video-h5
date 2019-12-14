@@ -21,10 +21,10 @@
           checked-color="#B000BA"
           class="mr18 flex-none">
         </van-checkbox>
-        <div class="pct100 flex aic flex-none">
-          <div class="item-cover flex jcc mr13 flex-none">
+        <div class="pct100 flex aic flex-none"
+          @click="$router.push(`/video/${item.videoId}`)">
+          <div class="item-cover flex jcc mr13 flex-none ovh">
             <van-image
-              fit="cover"
               :src="item.videoCover" />
           </div>
           <div class="flex-col jca">
@@ -98,14 +98,14 @@ export default {
     },
     selectAll() {
       this.allSelect = !this.allSelect;
-      this.movies.forEach((item) => (item.checked = this.allSelect));
+      this.movies.forEach(item => (item.checked = this.allSelect));
     },
     async deleteSelected() {
-      const selected = this.movies.filter((item) => item.checked);
+      const selected = this.movies.filter(item => item.checked);
       if (selected.length === 0) {
         return;
       }
-      let ids = selected.map((item) => item.id).join(',');
+      let ids = selected.map(item => item.id).join(',');
       Toast.loading({
         message: '正在删除...',
         loadingType: 'spinner',
