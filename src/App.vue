@@ -13,14 +13,12 @@ import { genLoginParams } from '@/utils/loginUtils';
 
 export default {
   data() {
-    return {
-    };
+    return {};
   },
   mounted() {
     this.autoLogin();
   },
   methods: {
-
     /**
      * 自动登录
      */
@@ -31,11 +29,10 @@ export default {
         duration: 0,
         forbidClick: true,
       });
-      let tokenOne = this.$store.state.token;
-      if (!tokenOne && tokenOne.length <= 0) {
+      let token = localStorage.getItem('token');
+      if (!token) {
         // 从localStore中查询是否存在uuid
         let deviceCode = localStorage.getItem('deviceCode');
-        let token = localStorage.getItem('token');
         if (!deviceCode) {
           // 存入uuid
           deviceCode = uuid();
@@ -44,11 +41,6 @@ export default {
         const loginParams = genLoginParams(deviceCode, token);
         const result = await authLogin(loginParams);
         if (result.retCode === '1' && result.token) {
-          // 保存token到store中
-          this.$store.dispatch('saveUserToken', {
-            token: result.token,
-            loginType: result.loginType,
-          });
           // 保存token
           localStorage.setItem('token', result.token);
           // 保存通知列表

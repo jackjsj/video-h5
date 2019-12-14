@@ -77,8 +77,6 @@
 <script>
 import { findEverydayPays, findMonthlyPays, findWeeklyPays } from '@/api';
 
-const apis = [findEverydayPays, findWeeklyPays, findMonthlyPays];
-
 const types = [
   {
     name: '日榜',
@@ -124,6 +122,7 @@ export default {
       list: [],
       overlayVisible: false,
       first3,
+      apis: [findEverydayPays, findWeeklyPays, findMonthlyPays],
     };
   },
   mounted() {
@@ -137,7 +136,7 @@ export default {
         loadingType: 'spinner',
         duration: 0,
       });
-      const resp = await apis[index]();
+      const resp = await this.apis[index]();
       if (resp.retCode === '1') {
         this.list = resp.data;
         Toast.clear();
@@ -228,8 +227,7 @@ export default {
   height: 194px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 12px 12px 0 0;
-  overflow:hidden;
-
+  overflow: hidden;
 }
 .rank-badge {
   width: 26px;

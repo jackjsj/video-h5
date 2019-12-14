@@ -215,28 +215,9 @@ const router = new Router({
  */
 router.beforeEach(async (to, from, next) => {
   const path = to.path;
-  const loginType = store.state.loginType;
+  const loginType = localStorage.getItem('loginType');
   let resultSetting = store.state.Setting;
   let resultOpenPay = store.state.OpenPay;
-
-  next();
-  return;
-  /**
-   * 首页不做拦截
-   */
-  if (path === '/home') {
-    next();
-    return;
-  }
-
-  /**
-   * 用户已经手机号登陆
-   */
-  if (path === '/login' && loginType === '1') {
-    next();
-    return;
-  }
-
   /**
    * 用户没有手机号登陆，点击账户管理跳转到登陆页面
    */
@@ -244,6 +225,23 @@ router.beforeEach(async (to, from, next) => {
     next('/login');
     return;
   }
+  /**
+   * 用户已经手机号登陆
+   */
+  if (path === '/login' && loginType === '1') {
+    next('/personalCenter');
+    return;
+  }
+  if (path === '/vipCreditAdd' && loginType !== '1') {
+    next('/login');
+    return;
+  }
+  if (path === '/vipInfoDetails/1' && loginType !== '1') {
+    next('/login');
+    return;
+  }
+  next();
+  return;
 
   /**
    * 明星漫画页面做拦截处理
@@ -289,8 +287,6 @@ router.beforeEach(async (to, from, next) => {
       return;
     }
   }
-
-  next();
 });
 
 export default router;

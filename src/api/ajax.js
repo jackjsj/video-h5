@@ -80,7 +80,7 @@ const sendGetReq = (url, data) => {
  * @param data
  */
 const sendPostReqType4Json = (url, data) => {
-  axios.defaults.headers.common['token'] = store.state.token;
+  axios.defaults.headers.common['token'] = localStorage.getItem('token');
   return axios.post(url, data);
 };
 
@@ -95,11 +95,11 @@ const sendPostReqType4Form = (url, data) => {
 };
 
 const sendPostReqCarryTokenType4Form = (url, data) => {
-  axios.defaults.headers.common['token'] = store.state.token;
+  axios.defaults.headers.common['token'] = localStorage.getItem('token');
   return axios.post(url, qs.stringify(data));
 };
 
 const sendpostReqCarryTaken = (url, data) => {
-  axios.defaults.headers.common['token'] = store.state.token;
+  axios.defaults.headers.common['token'] = localStorage.getItem('token');
   return axios.post(url, data);
 };

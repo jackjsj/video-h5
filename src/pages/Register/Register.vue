@@ -143,10 +143,8 @@ export default {
           Toast('注册成功');
           this.computeTime = 0;
           clearInterval(this.intervalId);
-          this.$store.dispatch('saveUserToken', { token: result.token });
-          this.$store.dispatch('saveUserloginType', {
-            loginType: result.loginType,
-          });
+          localStorage.setItem('token', result.token);
+          localStorage.setItem('loginType', result.loginType);
           this.$router.push(`/home`);
         } else {
           Toast(result.retMsg);

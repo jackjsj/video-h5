@@ -207,10 +207,12 @@ export default {
   methods: {
     onDialogConfirm() {
       localStorage.removeItem('token');
+      localStorage.removeItem('loginType');
       this.$router.push('/login');
     },
     onDialogCancel() {
       localStorage.removeItem('token');
+      localStorage.removeItem('loginType');
       this.dialogVisible = false;
       window.location.reload();
     },
@@ -252,9 +254,6 @@ export default {
       } else {
         Toast(result.retMsg);
       }
-    },
-    onDialogConfirm() {
-      this.$router.push('/login');
     },
     onItemClick(item) {
       if (item.to) {

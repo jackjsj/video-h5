@@ -89,6 +89,8 @@ export default {
           token: result.token,
           loginType: result.loginType,
         });
+        localStorage.setItem('token', result.token);
+        localStorage.setItem('loginType', result.loginType);
         // 查看是否保存用户名密码
         if (this.isRememberPwd) {
           // 保存账号密码
