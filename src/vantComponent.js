@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue from "vue";
 import {
   NavBar,
   Button,
@@ -31,7 +31,8 @@ import {
   Loading,
   Overlay,
   Image,
-} from 'vant';
+  SwitchCell,
+} from "vant";
 
 window.Toast = Toast;
 
@@ -58,13 +59,8 @@ Vue.use(NavBar)
   .use(SwipeItem)
   .use(Overlay)
   .use(Search)
+  .use(Dialog)
   .use(Image)
+  .use(SwitchCell)
+  .use(List)
   .use(Loading);
-// Vue.use(Panel);
-// Vue.use(List);
-// Vue.use(Search);
-
-// Vue.use(Dialog);
-// Vue.use(ActionSheet);
-// Vue.use(Slider);
-// Vue.use(Uploader);

@@ -209,6 +209,9 @@ div.dib {
 .lh22 {
   line-height: 22px;
 }
+.lh23 {
+  line-height: 22px;
+}
 .lh24 {
   line-height: 24px;
 }
@@ -216,6 +219,9 @@ div.dib {
   line-height: 30px;
 }
 .lh32 {
+  line-height: 32px;
+}
+.lh33 {
   line-height: 32px;
 }
 .lh52 {
@@ -270,8 +276,17 @@ div.dib {
 .mr5 {
   margin-right: 5px;
 }
+.mr8 {
+  margin-right: 8px;
+}
 .mr10 {
   margin-right: 10px;
+}
+.mr12 {
+  margin-right: 12px;
+}
+.mr13 {
+  margin-right: 13px;
 }
 .mr15 {
   margin-right: 15px;
@@ -281,6 +296,9 @@ div.dib {
 }
 .mr20 {
   margin-right: 20px;
+}
+.mr26 {
+  margin-right: 26px;
 }
 .mr30 {
   margin-right: 30px;
@@ -340,6 +358,9 @@ div.dib {
   margin-bottom: 12px;
 }
 .mb15 {
+  margin-bottom: 15px;
+}
+.mb18 {
   margin-bottom: 15px;
 }
 .mb20 {
@@ -592,6 +613,9 @@ div.dib {
 .bgwh {
   background-color: #fff;
 }
+.bgwh1 {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
 .bgfb {
   background-color: #fbfbfb;
 }
@@ -616,6 +640,9 @@ div.dib {
 }
 .g6 {
   color: #666;
+}
+.g8 {
+  color: #888;
 }
 .g9 {
   color: #999;
@@ -652,7 +679,7 @@ div.dib {
 .f14 {
   font-size: 14px;
 }
-.f15{
+.f15 {
   font-size: 15px;
 }
 .f16 {
@@ -711,10 +738,19 @@ div.dib {
   font-family: Simsun;
 }
 .fl {
-  font-family: 'Lucida Console';
+  font-family: "Lucida Console";
 }
 .fw {
-  font-family: 'Microsoft Yahei';
+  font-family: "Microsoft Yahei";
+}
+.fw400 {
+  font-weight: 400;
+}
+.fw500 {
+  font-weight: 500;
+}
+.fw600 {
+  font-weight: 600;
 }
 /* font-style */
 .n {
@@ -846,7 +882,43 @@ a.tdl:hover {
 /* opacity */
 .opa0 {
   opacity: 0;
-  filer: alpha(opacity=0);
+  filter: alpha(opacity=0);
+}
+.opa1 {
+  opacity: 0.1;
+  filter: alpha(opacity=0.1);
+}
+.opa2 {
+  opacity: 0.2;
+  filter: alpha(opacity=0.2);
+}
+.opa3 {
+  opacity: 0.3;
+  filter: alpha(opacity=0.3);
+}
+.opa4 {
+  opacity: 0.4;
+  filter: alpha(opacity=0.4);
+}
+.opa5 {
+  opacity: 0.5;
+  filter: alpha(opacity=0.5);
+}
+.opa6 {
+  opacity: 0.6;
+  filter: alpha(opacity=0.6);
+}
+.opa7 {
+  opacity: 0.7;
+  filter: alpha(opacity=0.7);
+}
+.opa8 {
+  opacity: 0.8;
+  filter: alpha(opacity=0.8);
+}
+.opa9 {
+  opacity: 0.9;
+  filter: alpha(opacity=0.9);
 }
 /* zoom */
 .z {
@@ -864,6 +936,9 @@ a.tdl:hover {
 }
 .jcfe {
   justify-content: flex-end;
+}
+.aifs {
+  align-items: flex-start;
 }
 .flexend {
   align-items: flex-end;
@@ -884,7 +959,7 @@ a.tdl:hover {
 }
 .fix:after {
   display: table;
-  content: '';
+  content: "";
   clear: both;
 }
 /* 基于display:table-cell的自适应布局 */

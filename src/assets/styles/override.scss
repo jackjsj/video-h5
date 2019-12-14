@@ -19,7 +19,16 @@ p {
   background-color: #21203c;
   background-image: url(~@/assets/images/bg-1.png);
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: 100%;
+}
+.bg-2 {
+  background-color: #21203c;
+  background-image: url(~@/assets/images/bg-2.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+.bg-blur {
+  filter: blur(10px);
 }
 .van-nav-bar {
   background: transparent;
@@ -34,10 +43,15 @@ p {
   font-weight: 400;
 }
 .van-nav-bar__text {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
   color: #fff;
 }
+.van-nav-bar__text:active {
+  background: transparent;
+  opacity: 0.7;
+}
+
 .van-nav-bar__right {
   .van-icon {
     font-size: 18px;
@@ -57,7 +71,7 @@ p {
 }
 .slide-enter-active,
 .slide-leave-active {
-  transition: all 1s ease;
+  transition: opacity .5s ease;
 }
 .slide-leave-active,
 .slide-leave-active {
@@ -85,7 +99,6 @@ p {
 }
 .van-tabs--line .van-tabs__wrap {
   height: 47px;
-  width: 346px;
   margin: auto;
   border-radius: 20px 20px 0 0;
   overflow: hidden;
@@ -155,4 +168,14 @@ p {
     font-weight: 400;
     background: transparent;
   }
+}
+.van-overlay {
+  position: absolute;
+}
+.van-multi-ellipsis--l4 {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
 }
