@@ -3,12 +3,15 @@ html {
 }
 body {
   font-size: 12px;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 p {
   margin: 0;
 }
 .vh100 {
-  height: 100vh;
+  height: 100%;
 }
 .bg {
   background: url(~@/assets/images/bg.png) no-repeat;

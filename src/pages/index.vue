@@ -1,6 +1,6 @@
 <template>
   <div class="vh100 flex-col rel">
-    <div class="flex-auto rel bg">
+    <div class="flex-auto rel bg ova">
       <transition name="slide">
         <keep-alive>
           <router-view class="view" />
@@ -94,5 +94,10 @@ export default {
   position: absolute;
   height: 100%;
   width: 100%;
+}
+.nav-bar{
+  position:fixed;
+  bottom:0;
+  width:100%;
 }
 </style>

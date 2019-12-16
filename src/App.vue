@@ -15,6 +15,7 @@ export default {
     return {};
   },
   mounted() {
+    document.getElementById('app').style.height = window.innerHeight +'px';
     this.autoLogin();
   },
   methods: {
