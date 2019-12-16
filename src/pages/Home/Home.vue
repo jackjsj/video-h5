@@ -5,12 +5,16 @@
       <van-search placeholder="输入关键词搜索片源"
         left-icon=""
         background="transparent"
-        class="search-bar"
+        class="search-bar flex-auto mr10"
         shape="round"
         right-icon="search"
         @focus="$router.push('/movieSearch')" />
-      <img class="header-icon" src="@/assets/images/download.png"
-        @click="$router.push('offlineCache')" />
+      <div class="mr10 flex-none"
+        @click="toAppDownPage">
+        <button class="download-app-btn">下载APP</button>
+      </div>
+      <!-- <img class="header-icon" src="@/assets/images/download.png"
+        @click="$router.push('/offlineCache')" /> -->
       <img class="header-icon" src="@/assets/images/history.png"
         @click="$router.push('/viewHistory')" />
     </div>
@@ -35,7 +39,9 @@
           v-for="item in types"
           :key="item.name"
           @click="$router.push(`/movieClassifyList?type=${item.name}`)">
-          <van-image class="type-icon" :src="item.icon" />
+          <div class="type-icon flex jcc">
+            <van-image :src="item.classifyIcon" />
+          </div>
           <p class="f14 lh20 mt8 wh">{{item.name}}</p>
         </div>
       </div>
@@ -143,8 +149,8 @@
     <van-overlay :show="overlayVisible" />
     <van-popup
       :close-on-click-overlay="false"
-      class="popup rel " v-model="popupVisible">
-      <div class="animated bounceIn fast">
+      class="popup " v-model="popupVisible">
+      <div class="animated bounceIn fast rel">
         <img src="@/assets/images/home-popup.png" />
         <!-- 关闭按钮 -->
         <div class="popup-close-btn"
@@ -152,7 +158,7 @@
         <!-- 说明 -->
         <div class="wh popup-content tc flex-col aic">
           <p class="lh33 f24 f600 mb10">{{notice.noticleTitle}}</p>
-          <p class="lh24 f14 fw400" v-html="notice.noticContent && notice.noticContent.replace(/\n/g,'<br>')"></p>
+          <p class="lh24 f14 fw400 notice-content" v-html="notice.noticContent && notice.noticContent.replace(/\n/g,'<br>')"></p>
           <div class="popup-confirm-btn f14 tc fw400"
             @click="popupVisible=false">
             <span>我知道了</span>
@@ -166,7 +172,8 @@
 </template>
 
 <script>
-import { getIndexInfo, checkInAddIntegral, getExtensionUrl } from '@/api/';
+import { getIndexInfo, checkInAddIntegral, getExtensionUrl } from '@/api';
+
 const types = [
   {
     name: '动漫',
@@ -218,7 +225,7 @@ const list = new Array(9).fill().map((item, index) => ({
 export default {
   data() {
     return {
-      types,
+      types: [],
       newVideoList: [],
       mostVideoList: [],
       classifyListCollect: [],
@@ -231,7 +238,7 @@ export default {
       newVideoList: [], //最新电影
       mostVideoList: [], // 重磅热播
       classifyListCollect: [],
-      extensionUrl: 'http://baidu.com', //推广url
+      extensionUrl: '', //推广url
 
       //
       popupVisible: false,
@@ -241,14 +248,16 @@ export default {
   mounted() {
     // 显示通知列表
     this.getIndexInfo();
-    // this.getExtensionUrl();
+    this.getExtensionUrl();
   },
   methods: {
     /**
      * 跳转app推广页面
      */
     toAppDownPage() {
-      window.location.href = this.extensionUrl;
+      if (this.extensionUrl) {
+        window.location.href = this.extensionUrl;
+      }
     },
     toSearchPage() {
       this.$router.push('/movieSearch');
@@ -305,6 +314,7 @@ export default {
         const { data } = result;
         this.newVideoList = data.newVideoList;
         this.mostVideoList = data.mostVideoList;
+        this.types = data.classifyList;
         this.classifyListCollect = data.classifyListCollect;
         this.bannerList = data.bannerList;
         Toast.clear();
@@ -336,7 +346,7 @@ export default {
 
 <style lang="scss" scoped>
 .search-bar {
-  width: 267px;
+  width: 240px;
 }
 .header-icon {
   width: 21px;
@@ -360,6 +370,9 @@ export default {
 .type-icon {
   width: 45px;
   height: 45px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
 }
 .type-item {
   width: 25%;
@@ -430,6 +443,32 @@ export default {
   background-size: contain;
   &:active {
     opacity: 0.7;
+  }
+}
+.notice-content {
+  height: 96px;
+  overflow: auto;
+  a {
+    color: #ffd200;
+  }
+}
+.download-app-btn {
+  padding: 0 10px;
+  height: 30px;
+  border-radius: 30px;
+  border: none;
+  background: linear-gradient(#e95aa0, #a769ff);
+  font-size: 14px;
+  color: #fff;
+  &:active {
+    opacity: 0.7;
+  }
+}
+</style>
+<style lang="scss">
+.notice-content {
+  a {
+    color: #ffd200;
   }
 }
 </style>

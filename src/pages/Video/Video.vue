@@ -169,7 +169,7 @@
     <!-- 评论 -->
     <div class="flex-none comment-box flex aic wh">
       <div class="flex jcc avatar ovh mr12">
-        <van-image src="" />
+        <van-image fit="cover" :src="memberInfo.headpic ? memberInfo.headpic : defaultAvatar" />
       </div>
       <p class="f14 fw400">快来说说你的感想吧</p>
     </div>
@@ -232,11 +232,14 @@ export default {
       //
       bannerList: [],
       showMore: false,
+      defaultAvatar: require('@/assets/images/avatar.png'),
+      memberInfo: {},
     };
   },
   mounted() {
     this.videoId = this.$route.params.videoId;
     this.getVideoDetail(this.videoId);
+    this.memberInfo = JSON.parse(localStorage.getItem('memberInfo')) || {};
     console.log(1);
   },
   computed: {
@@ -363,7 +366,7 @@ export default {
       const result = await setCareTimess(params);
       if (result.retCode === '1') {
         this.videoDetails.isLike = '1';
-        this.videoDetails.careNum = this.videoDetails.careNum+1;
+        this.videoDetails.careNum = this.videoDetails.careNum + 1;
         Toast('点赞成功');
       } else {
         Toast(result.retMsg);

@@ -1,8 +1,8 @@
 <template>
-  <div class="bg-2 flex-col vh100">
+  <div class="bg-2 flex-col vh100 movie-classify">
     <van-nav-bar
       class="flex-none"
-      title="电影"
+      :title="filters[0].current"
       left-arrow
       @click-left="$router.back()"
       :border="false">
@@ -13,17 +13,29 @@
     <div class="f14 pt15 pl15 pr15 flex-none" style="color:#fffaff">
       <!-- 条件项 -->
       <div
-        class="flex aic mb10 ova"
+        class="mb10"
         v-for="(filter,index) in filters"
         :key="index">
-        <div
+        <!-- <div
           class="filter-item flex-none"
           v-for="item in filter.items"
           :class="{active:item.name === filter.current}"
           :key="item.name"
           @click="onFilterItemClick(filter, item)">
           {{item.name}}
-        </div>
+        </div> -->
+        <van-tabs
+          :border="false"
+          title-inactive-color="#FFFAFF"
+          v-model="filter.current"
+          @click="(name,title)=>onFilterItemClick(filter,title)">
+          <van-tab
+            class="filter-item"
+            v-for="item in filter.items"
+            :key="item.name"
+            :name="item.name"
+            :title="item.name"></van-tab>
+        </van-tabs>
       </div>
     </div>
     <!-- 列表 -->
@@ -38,7 +50,8 @@
           <div
             class="item mb15"
             v-for="item in movieList"
-            :key="item.id">
+            :key="item.id"
+            @click="$router.push(`/video/${item.id}`)">
             <div class="img-wrapper rel flex jcc">
               <van-image :src="item.videoCover" />
             </div>
@@ -49,8 +62,8 @@
       </van-list>
     </div>
     <van-overlay
-    @click="onOverlayClick"
-    :show="overlayVisible" />
+      @click="onOverlayClick"
+      :show="overlayVisible" />
   </div>
 </template>
 
@@ -84,10 +97,6 @@ const areas = [
 // 类型
 const types = [
   {
-    name: '全部类型',
-    id: -1,
-  },
-  {
     name: '动漫',
     id: 8,
   },
@@ -114,6 +123,10 @@ const types = [
   {
     name: '战争',
     id: 2,
+  },
+  {
+    name: '全部',
+    id: -1,
   },
 ];
 
@@ -190,15 +203,14 @@ export default {
   computed: {
     // 获取当前类型
     currentTypeId() {
-      const currentType = this.filters.filter((item) => item.name === '类型')[0]
+      const currentType = this.filters.filter(item => item.name === '类型')[0]
         .current;
-      return types.filter((item) => item.name === currentType)[0].id;
+      return types.filter(item => item.name === currentType)[0].id;
     },
     currentOrderParams() {
-      const currentOrder = this.filters.filter(
-        (item) => item.name === '排序',
-      )[0].current;
-      const key = orders.filter((item) => item.name === currentOrder)[0].key;
+      const currentOrder = this.filters.filter(item => item.name === '排序')[0]
+        .current;
+      const key = orders.filter(item => item.name === currentOrder)[0].key;
       if (key) {
         return {
           [key]: '1',
@@ -266,24 +278,23 @@ export default {
           items: orders,
         },
       ],
-      overlayVisible:false,
+      overlayVisible: false,
     };
   },
   mounted() {
     // 获取路由中的参数，设置默认属性
     let { type = '全部', order = '综合排序' } = this.$route.query;
-    type += type === '全部' ? '类型' : '';
-    this.filters.filter((item) => item.name === '类型')[0].current = type;
-    this.filters.filter((item) => item.name === '排序')[0].current = order;
+    this.filters.filter(item => item.name === '类型')[0].current = type;
+    this.filters.filter(item => item.name === '排序')[0].current = order;
     // 查询数据
     // this.getMovieList();
   },
   methods: {
-    onOverlayClick(){
-      Toast('操作太频繁了')
+    onOverlayClick() {
+      Toast('操作太频繁了');
     },
-    onFilterItemClick(filter, item) {
-      filter.current = item.name;
+    onFilterItemClick(filter, name) {
+      filter.current = name;
       // 重置页码
       this.pageNum = 1;
       this.movieList = [];
@@ -310,7 +321,8 @@ export default {
       };
       const result = await getMovieList(params);
       if (result.retCode === '1') {
-        const { current, pages, data } = result;
+        const { current, pages, data, classifyList } = result;
+        this.filters[0].items = classifyList;
         this.loading = false;
         if (current === pages || pages === 0) {
           // 最后一页了
@@ -362,7 +374,46 @@ export default {
   width: 168px;
   box-sizing: border-box;
 }
-.van-overlay{
-  background:transparent;
+.van-overlay {
+  background: transparent;
+}
+</style>
+<style lang="scss">
+.movie-classify {
+  .van-tab.van-tab--active {
+    border-radius: 30px;
+  }
+  .van-tabs__nav--card {
+    border: none;
+  }
+  .van-tabs__wrap van-tabs__wrap--scrollable {
+    height: auto;
+  }
+  .van-tab {
+    border-right: 0;
+    border-radius: 30px;
+    height: 30px;
+    line-height: 30px;
+    &.active {
+      border: none;
+      background: linear-gradient(#e95aa0, #a769ff);
+    }
+  }
+  .van-tabs__nav {
+    background: transparent;
+    margin: 0;
+  }
+  .van-tabs__line {
+    background-color: transparent;
+  }
+  .van-tabs__content {
+    height: 0;
+  }
+  .van-tabs__nav--line {
+    padding: 0;
+  }
+  .van-tabs--line .van-tabs__wrap {
+    height: auto;
+  }
 }
 </style>

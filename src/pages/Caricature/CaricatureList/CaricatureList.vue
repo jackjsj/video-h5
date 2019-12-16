@@ -238,6 +238,7 @@ export default {
   line-height: 34px;
   padding: 0 6px;
   width: 108px;
+  border-radius: 0 0 4px 4px;
   box-sizing: border-box;
 }
 </style>

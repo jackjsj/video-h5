@@ -27,6 +27,12 @@ p {
   background-repeat: no-repeat;
   background-size: 100%;
 }
+.bg-3 {
+  background-color: #21203c;
+  background-image: url(~@/assets/images/bg-3.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
 .bg-blur {
   filter: blur(10px);
 }

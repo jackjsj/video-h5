@@ -236,10 +236,6 @@ router.beforeEach(async (to, from, next) => {
     next('/login');
     return;
   }
-  if (path === '/vipInfoDetails/1' && loginType !== '1') {
-    next('/login');
-    return;
-  }
   next();
   return;
 
@@ -251,7 +247,7 @@ router.beforeEach(async (to, from, next) => {
       //不存在数据
       alert('功能未开放');
       next('/home');
-      return;
+      
     } else {
       if (
         resultSetting.data.caricatureModuleSetting.isEnable === '1' &&

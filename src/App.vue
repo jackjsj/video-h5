@@ -3,7 +3,6 @@
     <transition name="slide">
       <router-view v-if="$store.state.isAuthLogin" />
     </transition>
-
   </div>
 </template>
 <script>

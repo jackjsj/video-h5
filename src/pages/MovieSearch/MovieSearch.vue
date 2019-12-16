@@ -53,11 +53,7 @@
 </template>
 
 <script>
-import {
-  getCaricatureHotLabel,
-  getMovieHotLabel,
-  searchVideo,
-} from '../../api';
+import { getCaricatureHotLabel, getMovieHotLabel, searchVideo } from '@/api';
 
 export default {
   data() {
@@ -76,7 +72,7 @@ export default {
     this.$nextTick().then(() => {
       const { type } = this.$route.params;
       this.type = type;
-      document.getElementsByTagName('input')[0].focus();
+      // document.getElementsByTagName('input')[0].focus();
       this.getHotLabel();
     });
   },
@@ -124,12 +120,12 @@ export default {
             this.pageNum++;
           }
           if (current === 1) {
-            this.searchDataList = data.map((i) => {
+            this.searchDataList = data.map(i => {
               return { name: i.videoName, cover: i.videoCover, id: i.id };
             });
           } else {
             this.movieList.push(
-              ...data.map((i) => {
+              ...data.map(i => {
                 return { name: i.videoName, cover: i.videoCover, id: i.id };
               }),
             );
@@ -154,7 +150,7 @@ export default {
       // });
       const result = await getMovieHotLabel();
       if (result.retCode === '1') {
-        this.hotLabels = result.data.map((item) => item.searchName);
+        this.hotLabels = result.data.map(item => item.searchName);
         // Toast.clear();
       } else {
         Toast(result.retMsg);

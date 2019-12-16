@@ -20,8 +20,8 @@
             v-for="item in movieList"
             :key="item.id"
             @click="toVideoPage(item.id)">
-            <div class="img-wrapper rel flex jcc">
-              <van-image fit="contain" :src="item.videoCover" />
+            <div class="img-wrapper rel flex jcc ovh">
+              <van-image :src="item.videoCover" />
             </div>
             <p class="cb9 f16 item-name ell">{{item.videoName}}</p>
           </div>

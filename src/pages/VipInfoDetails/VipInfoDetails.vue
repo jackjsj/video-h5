@@ -11,22 +11,23 @@
       <!-- 卡 -->
       <div class="card">
         <p class="mc-gold f18 fw500 mb18">尊享VIP无限观影</p>
-        <div class="flex aic wh">
+        <div class="flex wh">
           <!-- 头像 -->
           <div class="avatar flex-none flex jcc mr5">
             <van-image fit="cover" :src="memberInfo.headpic ? memberInfo.headpic : defaultAvatar" />
           </div>
           <div class="flex-auto lh1">
-            <p class="f17 fw400 mb5">{{memberInfo.nickName}}</p>
-            <div class="flex aic">
+            <p class="f17 fw400 mb8">{{memberInfo.nickName}} </p>
+            <div class="flex mb5">
               <p class="flex1 g9">{{isVip === 0?'尚未':'已'}}开通VIP</p>
               <p class="flex flex1 aic"
-              @click="$router.push('/integralDetail')">
+                @click="$router.push('/integralDetail')">
                 <span class="f14 mr5">{{integralNumber}}</span>
                 <span class="g9">积分详情</span>
                 <van-icon class="g9" name="arrow" />
               </p>
             </div>
+            <span class="f12 g9">VIP有效期至{{memberInfo.vipDate}}</span>
           </div>
         </div>
       </div>
@@ -68,7 +69,8 @@
                   <p class="opa5">{{item.integralNumber}}积分即可兑换{{item.dayNumber}}天VIP特权</p>
                 </div>
                 <div>
-                  <button class="btn">去兑换</button>
+                  <button class="btn"
+                    @click="exchangeVip(item.id)">去兑换</button>
                 </div>
               </div>
             </div>
@@ -89,6 +91,8 @@ import {
   getIntegralClassifies,
   getExchangeVipTypes,
   checkInAddIntegral,
+  exchangeVip,
+  getMemberInfo,
 } from '@/api';
 
 const integralAcquireItems = [
@@ -172,6 +176,27 @@ export default {
           break;
       }
     },
+    async getMemberInfo() {
+      this.overlayVisible = true;
+      Toast.loading({
+        message: '加载中...',
+        loadingType: 'spinner',
+        duration: 0,
+        overlay: true,
+      });
+      const result = await getMemberInfo({});
+      if (result.retCode === '1' && result.httpCode === 200) {
+        this.memberInfo = result.data.memberInfo;
+        // 保存用户id
+        localStorage.setItem('memberInfo', JSON.stringify(this.memberInfo));
+        this.$store.dispatch('saveUserId', this.memberInfo.id);
+      } else if (result.httpCode === 801) {
+        this.$router.push('/personalCenter');
+      } else {
+        Toast(result.msg);
+      }
+      return result.retCode === '1';
+    },
     // 获取积分获取项
     async getIntegralClassifies() {
       Toast.loading({
@@ -205,6 +230,17 @@ export default {
       } else {
         Toast(result.retMsg);
         this.$router.push('/personalCenter');
+      }
+    },
+    async exchangeVip(id) {
+      const result = await exchangeVip(id);
+      if (result.retCode === '1') {
+        await this.getMemberInfo({});
+        await this.getIntegralClassifies();
+        await this.getExchangeVipTypes();
+        Toast('兑换成功');
+      } else {
+        Toast(result.retMsg);
       }
     },
     // 完成任务

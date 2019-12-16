@@ -4,7 +4,6 @@
       class="flex-none"
       title="明星"
       :border="false">
-      <van-icon name="search" slot="right" color="#fff" />
     </van-nav-bar>
     <div class="content flex-col flex-auto ova">
       <van-tabs
@@ -39,24 +38,31 @@
             </div>
           </div>
           <div class="pt20 pb20 pl5 pr5">
-            <div
-              class="flex aic mc-gray f13 mb10"
-              v-for="(item,index) in last()"
-              :key="item.id">
-              <p class="rank-num">{{index+4}}</p>
-              <img class="avatar" :src="item.headpic" />
-              <div class="flex aic p12 star-info"
-                @click="showStarDetail(item)">
-                <span class="star-name">{{item.name}}</span>
-                <div class="flex aic">
-                  <img class="fire-img" src="@/assets/images/fire.png" />
-                  <p class="fire-num">{{item.heat}}</p>
+            <van-list
+              v-model="loading"
+              :finished="finished"
+              :error.sync="error"
+              finished-text="没有更多了"
+              @load="getStarList">
+              <div
+                class="flex aic mc-gray f13 mb10"
+                v-for="(item,index) in last()"
+                :key="item.id">
+                <p class="rank-num">{{index+4}}</p>
+                <img class="avatar" :src="item.headpic" />
+                <div class="flex aic p12 star-info"
+                  @click="showStarDetail(item)">
+                  <span class="star-name">{{item.name}}</span>
+                  <div class="flex aic">
+                    <img class="fire-img" src="@/assets/images/fire.png" />
+                    <p class="fire-num">{{item.heat}}</p>
+                  </div>
+                  <button class="fav-btn"
+                    :class="{isFav:item.isCollect === '1'}"
+                    @click.stop="saveMemberCollect(item.id,item.isCollect)">收藏</button>
                 </div>
-                <button class="fav-btn"
-                  :class="{isFav:item.isCollect === '1'}"
-                  @click.stop="saveMemberCollect(item.id,item.isCollect)">收藏</button>
               </div>
-            </div>
+            </van-list>
           </div>
         </div>
       </van-tabs>
@@ -68,7 +74,7 @@
 <script>
 import Vue from 'vue';
 
-import { getStarList, saveMemberCollect, delMemberCollect } from '../../api';
+import { getStarList, saveMemberCollect, delMemberCollect } from '@/api';
 
 const first3 = [
   {
@@ -128,6 +134,10 @@ export default {
       list: [],
       first3,
       overlayVisible: false,
+      loading: false,
+      finished: false,
+      error: false,
+      pageNum: 1,
     };
   },
   mounted() {
@@ -135,7 +145,7 @@ export default {
   },
   computed: {
     rank(index) {
-      return (index) => {
+      return index => {
         return this.list[index]
           ? this.list[index]
           : {
@@ -147,6 +157,10 @@ export default {
   },
   methods: {
     onTabChange(name) {
+      this.loading = false;
+      this.finished = false;
+      this.error = false;
+      this.pageNum = 1;
       this.getStarList(name);
     },
     showStarDetail(item) {
@@ -163,21 +177,26 @@ export default {
         duration: 0,
       });
 
-      // 重置分页参数
-      this.dataOnNull = false;
-      this.onFetching = false;
-      this.pageParams.pageNum = 1;
-
       // 请求参数
-      // let params = this.getStarListReqParams(selectClassIndex, cupIndex);
       const result = await getStarList({
         newData: selectClassIndex,
-        pageNum: 1,
+        pageNum: this.pageNum,
       });
-
       if (result.retCode === '1') {
+        const { current, pages, data } = result;
+        this.loading = false;
+        if (current === pages || pages === 0) {
+          // 最后一页了
+          this.finished = true;
+        } else {
+          this.pageNum++;
+        }
+        if (current === 1) {
+          this.list = data;
+        } else {
+          this.list.push(...data);
+        }
         this.cupList = result.cupList;
-        this.list = result.data;
         Toast.clear();
         this.overlayVisible = false;
       }
@@ -187,46 +206,6 @@ export default {
       const listCopy = this.list.concat();
       listCopy.splice(0, 3);
       return listCopy;
-    },
-    //
-    //
-    // 分页查询
-    async pageQuery() {
-      if (this.onFetching) {
-      } else {
-        this.onFetching = true;
-        if (this.dataOnNull) {
-          this.$vux.toast.text('没有更多数据', 'bottom');
-          return;
-        }
-        // 查询数据
-        let params = this.getStarListReqParams(null, null);
-
-        //添加分页数
-        params.pageNum = this.pageParams.pageNum + 1;
-
-        const result = await getStarList(params);
-
-        if (result.retCode === '1') {
-          let starList = result.data;
-
-          if (starList.length <= 0) {
-            //标识无数据
-            this.dataOnNull = true;
-          }
-
-          this.starList = this.starList.concat(starList);
-          this.onFetching = false;
-
-          this.pageParams.pageNum = this.pageParams.pageNum + 1;
-
-          this.$nextTick(() => {
-            this.$refs.contentScroller.reset();
-          });
-        } else {
-          this.$vux.toast.text(result.retMsg, 'bottom');
-        }
-      }
     },
     // 收藏明星
     async saveMemberCollect(id, isCollect) {
@@ -252,63 +231,11 @@ export default {
       // 根据id找到对应的元素
       let starList = this.list;
 
-      let index = starList.findIndex((star) => star.id === id);
+      let index = starList.findIndex(star => star.id === id);
       let star = starList[index];
       star.isCollect = isCollect === '1' ? '0' : '1';
 
       Vue.set(this.list, index, star);
-    },
-
-    /**
-     * 获取请求参数
-     */
-    getStarListReqParams(selectClassIndex, cupIndex) {
-      let params = {};
-      // 防止为空
-      if (!selectClassIndex) {
-        selectClassIndex = this.selectClassIfyIndex;
-      }
-
-      if (!cupIndex) {
-        cupIndex = this.cupIndex;
-      }
-
-      const selectClassType = this.selectClassifyList[selectClassIndex].type;
-      const cup = this.cupList[cupIndex];
-
-      if (cup) {
-        params.cup = cup.value === '-1' ? '' : cup.value;
-      }
-
-      if (selectClassType) {
-        switch (selectClassType) {
-          case 1: {
-            params.newData = '1';
-            this.pageParams.orderStr = 'newData';
-            break;
-          }
-          case 2: {
-            params.newVideo = '1';
-            this.pageParams.orderStr = 'newVideo';
-            break;
-          }
-          case 3: {
-            params.videoNum = '1';
-            this.pageParams.orderStr = 'videoNum';
-            break;
-          }
-        }
-      }
-
-      // 添加分页数据
-      params.pageNum = this.pageParams.pageNum;
-      this.pageParams.cup = params.cup;
-
-      // 保存搜索标识
-      this.selectClassIfyIndex = selectClassIndex;
-      this.cupIndex = cupIndex;
-
-      return params;
     },
   },
 };

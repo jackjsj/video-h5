@@ -13,6 +13,7 @@
           <van-image :src="memberInfo.headpic ? memberInfo.headpic : defaultAvatar" />
         </div>
         <p class="username f20 fw400 wh">{{memberInfo.nickName}}</p>
+        <p class="username f12 fw400 wh" v-if="memberInfo.isVip">VIP有效期至{{memberInfo.vipDate}}</p>
         <div class="flex pct100 jcb g9 mt20">
           <div class="flex-col flex1 jcb aic user-info-item">
             <div class="flex aic wh">
@@ -55,7 +56,7 @@
           style="border-width:1px;"
           v-for="item in countItems"
           :key="item.name">
-          <p class="wh f24">{{item.count || 0}}</p>
+          <p class="wh f24">{{item.count>0?item.count:0}}</p>
           <p class="g9 f12 ">{{item.name}}</p>
         </div>
       </div>
@@ -250,6 +251,7 @@ export default {
       });
       const result = await checkInAddIntegral(id);
       if (result.retCode === '1') {
+        await this.getMemberInfo();
         Toast('签到成功');
       } else {
         Toast(result.retMsg);
@@ -286,7 +288,8 @@ export default {
         this.qqUrl = result.data.qqurl;
         this.isVip = result.data.memberInfo.isVip;
         this.vipDate = result.data.memberInfo.vipDate;
-        this.countItems[0].count = this.memberInfo.usedViewNum;
+        this.countItems[0].count =
+          this.memberInfo.viewNum - this.memberInfo.usedViewNum;
         this.countItems[1].count = this.memberInfo.tmpViewNum;
         this.countItems[2].count = this.memberInfo.usedCacheNum;
         // 保存用户id

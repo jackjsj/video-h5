@@ -24,7 +24,7 @@
           v-for="item in list"
           :key="item.id"
           @click="goto(item.id, item.name)">
-          <div class="img-wrapper rel flex aic jcc">
+          <div class="img-wrapper rel flex aic jcc ovh">
             <van-image :src="item.picUrl" />
           </div>
           <p class="cb9 f16 item-name ell">{{item.name}}</p>
@@ -169,6 +169,7 @@ export default {
   padding: 0 6px;
   width: 108px;
   box-sizing: border-box;
+  border-radius:0 0 4px 4px;
 }
 .content {
   padding: 0 15px;

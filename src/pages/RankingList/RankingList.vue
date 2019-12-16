@@ -24,26 +24,33 @@
             v-for="(item,index) in list"
             :key="item.id"
             @click="$router.push(`/video/${item.id}`);">
-            <div v-if="index === 0">
+            <div v-if="index === 0" class="rank1-wrapper rel">
               <!-- 第一名 -->
-              <div class="flex jcc rank1-image">
-                <van-image style="width:100%;" :src="item.video_cover" />
+              <div class="flex jcc rank1-image mb15">
+                <van-image :src="item.video_cover" />
               </div>
               <div class="rank1-name flex aic">
-                <img class="rank-badge flex-none" src="@/assets/images/rankBadge1.png" />
                 <div class="flex-auto rel">
-                  <p class="ell f16 fw600 rank1-video-name">{{item.video_name}}</p>
+                  <div class="flex aic mb8">
+                    <p class="rank-no wh opa5 b mr10"
+                      style="border-width:1px;">NO.{{index+1}}</p>
+                    <p class="wh ell f16 fw600 rank1-video-name lh1">{{item.video_name}}</p>
+                  </div>
                   <div class="flex aic">
                     <div class="flex aic mr10">
                       <van-icon name="play-circle" />
-                      <p class="ml3">播放 1000 次</p>
+                      <p class="ml3">播放{{item.payNum}}次</p>
                     </div>
                     <div class="flex aic">
                       <van-icon name="good-job" />
-                      <p class="ml3">点赞 100%</p>
+                      <p class="ml3">点赞{{item.cent}}</p>
                     </div>
                   </div>
                 </div>
+              </div>
+              <!-- 第一名徽章 -->
+              <div class="rank1-badge-wrapper flex aic jcc">
+                <img class="rank-badge flex-none" src="@/assets/images/rankBadge1.png" />
               </div>
             </div>
             <div class="flex aic video-item" v-else>
@@ -53,7 +60,7 @@
               <div class="flex-auto">
                 <p class="rank-no wh opa5 b mb5"
                   style="border-width:1px;">NO.{{index+1}}</p>
-                <p class="mc-gold f16 fw600 lh18 mb2">{{item.video_name}}</p>
+                <p class="wh f16 fw600 lh18 mb2">{{item.video_name}}</p>
                 <div class="flex aic mc-gold f12">
                   <div class="flex aic mr10">
                     <van-icon name="play-circle" />
@@ -224,20 +231,18 @@ export default {
   border-radius: 12px;
 }
 .rank1-image {
-  height: 194px;
+  height: 182px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px 12px 0 0;
+  border-radius: 12px;
   overflow: hidden;
 }
 .rank-badge {
-  width: 26px;
-  height: 34px;
-  margin-right: 13px;
+  width: 19px;
+  height: 25px;
 }
 .rank1-name {
   height: 53px;
-  background: #1b182e;
-  padding: 0 18px;
+  padding: 0 10px;
   color: #cfae98;
 }
 .rank1-video-name {
@@ -271,5 +276,26 @@ export default {
 }
 .mb2 {
   margin-bottom: 2px;
+}
+.rank1-wrapper {
+  height: 269px;
+  border: 1px solid #bb4fd1;
+  background: rgba(187, 79, 209, 0.1);
+  border-radius: 10px;
+  padding: 11px;
+  box-sizing: border-box;
+}
+.rank1-badge-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 54px;
+  height: 39px;
+  background: linear-gradient(
+    90deg,
+    rgba(232, 86, 157, 1) 0%,
+    rgba(147, 72, 255, 1) 100%
+  );
+  border-radius: 8px 0px 13px 0px;
 }
 </style>

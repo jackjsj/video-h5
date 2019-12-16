@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { getCaricatureHotLabel, getCartoonInfo } from '../../../api';
+import { getCaricatureHotLabel, getCartoonInfo } from '@/api';
 
 export default {
   data() {
@@ -62,7 +62,7 @@ export default {
     this.$nextTick().then(() => {
       const { type } = this.$route.params;
       this.type = type;
-      document.getElementsByTagName('input')[0].focus();
+      // document.getElementsByTagName('input')[0].focus();
       this.getHotLabel();
     });
   },

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-2 flex-col vh100 vip-info-detail">
+  <div class="bg-2 flex-col vh100 ">
     <van-nav-bar
       class="flex-none bgwh1"
       title="我的推广"

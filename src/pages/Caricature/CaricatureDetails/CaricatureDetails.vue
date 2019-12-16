@@ -9,7 +9,7 @@
     </van-nav-bar>
     <div class="flex-auto ova wh p15 mt5">
       <div class="flex jcc cover mb15 ovh">
-        <van-image fit="cover" :src="caricatureInfo.cover"></van-image>
+        <van-image :src="caricatureInfo.cover"></van-image>
       </div>
       <p class="ell f17 fw600 mb10">{{caricatureInfo.caricatureDesc}}</p>
       <div class="flex opa7 f12">
@@ -90,20 +90,19 @@ export default {
     // 跳转
     onSwiperClick(index) {
       // 获取当前广告类型
+      debugger;
       const banner = this.bannerList[index];
       /**
        *  判断是否已经完成当前任务
        */
-      this.addIntegral(3);
       const linkType = banner.linkType; //广告类型
-      console.log(linkType);
       switch (linkType) {
         case 1:
           // 外部链接
           window.location.href = banner.linkUrl;
           break;
         case 3:
-          //购买vip
+          // 购买vip
           this.$router.push('/vipInfoDetails/1');
           break;
         case 4:
