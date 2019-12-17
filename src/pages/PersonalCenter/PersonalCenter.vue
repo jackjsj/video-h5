@@ -312,11 +312,9 @@ export default {
         this.$nextTick(() => {
           // 渲染轮播
           new Swiper('.swiper-container', {
-            slidesPerView: 1,
+            // loop: true,
+            slidesPerView: 'auto',
             centeredSlides: true,
-            slidesOffsetBefore: 20,
-            slidesOffsetAfter: 20,
-            spaceBetween: 20,
             // 如果需要分页器
             pagination: {
               el: '.swiper-pagination',
@@ -410,6 +408,7 @@ export default {
   height: 84px;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.1);
+  margin: 5px;
   // margin: auto;
 }
 .item {
@@ -455,6 +454,9 @@ export default {
 </style>
 <style lang="scss">
 .mine {
+  .swiper-slide {
+    width: auto;
+  }
   .van-swipe__indicators {
     right: 57px;
     display: flex;
