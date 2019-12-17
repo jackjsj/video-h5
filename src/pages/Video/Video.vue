@@ -63,7 +63,7 @@
       </div>
       <!-- 广告 -->
       <div class="mt20">
-        <div class="swiper-wrapper">
+        <!-- <div>
           <van-swipe
             :autoplay="3000"
             :show-indicators="false"
@@ -76,6 +76,18 @@
               </div>
             </van-swipe-item>
           </van-swipe>
+        </div> -->
+        <div class="swiper-container">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide"
+              v-for="(item) in bannerList"
+              :key="item.id"
+              @click="onSwiperClick(item)">
+              <div class="swiper-item flex jcc ovh">
+                <van-image :src="item.picUrl" />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <!-- tabs -->
@@ -177,6 +189,8 @@
 </template>
 
 <script>
+import 'swiper/css/swiper.min.css';
+import Swiper from 'swiper';
 import { videoPlayer, setCareTimes } from 'vue-video-player';
 import { getVideoDetail, setCareHistory, setCareTimess } from '@/api';
 import './css/custom-theme.css';
@@ -292,6 +306,21 @@ export default {
         this.payDuration = result.payDuration;
         this.videoDetails.videoCover = result.data.videoCover;
         this.bannerList = result.data.bannerList;
+        this.$nextTick(() => {
+          // 渲染轮播
+          new Swiper('.swiper-container', {
+            loop: true,
+            autoplay: true,
+            slidesPerView: 'auto',
+            centeredSlides: true,
+            loopAdditionalSlides: 100,
+            slidesPerView: 'auto',
+            // 如果需要分页器
+            pagination: {
+              el: '.swiper-pagination',
+            },
+          });
+        });
         Toast.clear();
       } else {
         Toast(result.retMsg);
@@ -424,6 +453,7 @@ export default {
 }
 .swiper-item {
   margin: 0 10px;
+  width: 289px;
   height: 84px;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.1);
@@ -452,7 +482,9 @@ export default {
   width: 126px;
   height: 71px;
   border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.1);
+  // background-color: rgba(255, 255, 255, 0.1);
+  overflow:hidden;
+  z-index: 1;
 }
 .tag {
   padding: 2px 6px;

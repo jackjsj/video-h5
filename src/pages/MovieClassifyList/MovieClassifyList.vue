@@ -203,36 +203,39 @@ export default {
   computed: {
     // 获取当前类型
     currentTypeId() {
-      const currentType = this.filters.filter(item => item.name === '类型')[0]
+      let currentType = this.filters.filter(item => item.name === '类型')[0]
         .current;
-      return types.filter(item => item.name === currentType)[0].id;
+      currentType = currentType || this.filters[0].items[0];
+      const target = this.filters[0].items.filter(
+        item => item.name === currentType,
+      );
+      return target[0] && target[0].id;
     },
     currentOrderParams() {
       const currentOrder = this.filters.filter(item => item.name === '排序')[0]
         .current;
-      const key = orders.filter(item => item.name === currentOrder)[0].key;
+      const { key } = orders.filter(item => item.name === currentOrder)[0];
       if (key) {
         return {
           [key]: '1',
         };
-      } else {
-        return {};
       }
+      return {};
     },
   },
   data() {
     return {
-      onFetching: false, //分页查询上锁
+      onFetching: false, // 分页查询上锁
       dataOnNull: false,
       pageParams: {
         pageNum: 1, // 当前页
-        classifyId: null, //分类id
-        orderStr: '', //排序字段
+        classifyId: null, // 分类id
+        orderStr: '', // 排序字段
       },
       orderList: [],
       orderIndex: 0,
-      movieList: [], //电影数据
-      classifyList: [], //分类数据
+      movieList: [], // 电影数据
+      classifyList: [], // 分类数据
       classifyIndex: null,
       isInit: true, // 是否为初始化
       //
@@ -249,8 +252,8 @@ export default {
         // },
         {
           name: '类型',
-          current: '全部类型',
-          items: types,
+          current: '',
+          items: [],
         },
         // {
         //   name: '标签',
@@ -281,9 +284,12 @@ export default {
       overlayVisible: false,
     };
   },
-  mounted() {
+  async mounted() {
+    // 先获取所有的类型
+    const result = await getMovieList();
+    this.filters[0].items = result.classifyList;
     // 获取路由中的参数，设置默认属性
-    let { type = '全部', order = '综合排序' } = this.$route.query;
+    const { type = result.classifyList[0].name, order = '综合排序' } = this.$route.query;
     this.filters.filter(item => item.name === '类型')[0].current = type;
     this.filters.filter(item => item.name === '排序')[0].current = order;
     // 查询数据
@@ -316,7 +322,7 @@ export default {
       // this.overlayVisible = true;
       const params = {
         pageNum: this.pageNum,
-        classifyId: this.currentTypeId, //类型
+        classifyId: this.currentTypeId, // 类型
         ...this.currentOrderParams, // 排序方式
       };
       const result = await getMovieList(params);

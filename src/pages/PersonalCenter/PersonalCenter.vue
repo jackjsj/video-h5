@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import 'swiper/dist/css/swiper.min.css';
+import 'swiper/css/swiper.min.css';
 import Swiper from 'swiper';
 import { getMemberInfo, getGcGroup, checkInAddIntegral } from '@/api';
 
@@ -312,7 +312,12 @@ export default {
         this.$nextTick(() => {
           // 渲染轮播
           new Swiper('.swiper-container', {
-            // loop: true,
+            loop: true,
+            autoplay: {
+              delay: 3000,
+              disableOnInteraction: false,
+            },
+            loopAdditionalSlides: 100,
             slidesPerView: 'auto',
             centeredSlides: true,
             // 如果需要分页器
@@ -454,8 +459,29 @@ export default {
 </style>
 <style lang="scss">
 .mine {
-  .swiper-slide {
+  .swiper-container-horizontal > .swiper-pagination-bullets,
+  .swiper-pagination-custom,
+  .swiper-pagination-fraction {
+    bottom: 10px;
+    right: 57px;
+    left: unset;
     width: auto;
+    display: flex;
+    align-items: center;
+  }
+  .swiper-pagination-bullet {
+    width: 6px;
+    height: 6px;
+  }
+  .swiper-container-horizontal
+    > .swiper-pagination-bullets
+    .swiper-pagination-bullet {
+    margin: 0 2px;
+  }
+  .swiper-pagination-bullet-active {
+    background: #ff7ac8;
+    width: 8px;
+    height: 8px;
   }
   .van-swipe__indicators {
     right: 57px;

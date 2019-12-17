@@ -198,3 +198,13 @@ p {
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
 }
+.swiper-slide {
+  width: auto;
+  .van-image__error,
+  .van-image__loading {
+    background: transparent;
+    .van-icon {
+      display: none;
+    }
+  }
+}

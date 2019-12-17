@@ -7,7 +7,7 @@
     </van-nav-bar>
     <div class="content flex-col flex-auto ova rel">
       <van-tabs
-        class="pl15 pr15"
+        class="pl15 pr15 flex-col vh100"
         :border="false"
         :line-height="0"
         @change="onTabChange"
@@ -48,11 +48,11 @@
               <div
                 class="flex aic mc-gray f13 mb10"
                 v-for="(item,index) in last()"
-                :key="item.id">
+                :key="item.id"
+                @click="showStarDetail(item)">
                 <p class="rank-num">{{index+4}}</p>
                 <img class="avatar" :src="item.headpic" />
-                <div class="flex aic p12 star-info"
-                  @click="showStarDetail(item)">
+                <div class="flex aic p12 star-info">
                   <span class="star-name">{{item.name}}</span>
                   <div class="flex aic">
                     <img class="fire-img" src="@/assets/images/fire.png" />
@@ -158,11 +158,11 @@ export default {
   computed: {
     rank(index) {
       return index => (this.list[index]
-          ? this.list[index]
-          : {
-              name: '虚位以待',
-              heat: 0,
-            });
+        ? this.list[index]
+        : {
+          name: '虚位以待',
+          heat: 0,
+        });
     },
   },
   methods: {
@@ -365,6 +365,18 @@ export default {
   &.active {
     background: #0021e0;
     border-radius: 100%;
+  }
+}
+</style>
+<style lang="scss">
+.star {
+  .van-tabs__content {
+    flex: auto;
+    overflow: auto;
+  }
+  .van-tabs--line .van-tabs__wrap {
+    width: 100%;
+    flex: none;
   }
 }
 </style>

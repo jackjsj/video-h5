@@ -62,7 +62,7 @@
             :key="item.id"
             @click="$router.push(`/video/${item.id}`)">
             <div class="flex aic">
-              <div class="item-cover flex jcc mr13 flex-none">
+              <div class="item-cover flex jcc mr13 flex-none ovh">
                 <van-image
                   :src="item.videoCover" />
               </div>
@@ -103,7 +103,7 @@ export default {
       finished: false,
       error: false,
       pageNum: 1,
-      moment
+      moment,
     };
   },
   computed: {
@@ -132,11 +132,11 @@ export default {
       if (isCollect === '1') {
         result = await delMemberCollect(id);
       } else {
-        //收藏
+        // 收藏
         result = await saveMemberCollect(id);
       }
       if (result.retCode === '1') {
-        //修改状态
+        // 修改状态
         this.updateCollectState(id, isCollect);
       }
       Toast(result.retMsg);
@@ -171,7 +171,7 @@ export default {
         } else {
           this.movieList.push(...data);
         }
-      }else{
+      } else {
         this.error = true;
       }
     },

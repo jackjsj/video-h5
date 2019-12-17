@@ -25,7 +25,7 @@
       </div>
       <!-- 广告 -->
       <div class="mt15">
-        <div class="swiper-wrapper">
+        <div>
           <van-swipe
             :autoplay="3000"
             :show-indicators="false"
@@ -33,7 +33,7 @@
             <van-swipe-item v-for="(item,index) in bannerList"
               :key="item.id"
               @click="onSwiperClick(index)">
-              <div class="swiper-item flex jcc">
+              <div class="swiper-item flex jcc ovh">
                 <van-image :src="item.picUrl"></van-image>
               </div>
             </van-swipe-item>
@@ -59,7 +59,7 @@ import {
   getCaricatureInfo,
   addCaricatureCollect,
   delCaricatureCollect,
-} from '../../../api';
+} from '@/api';
 
 export default {
   data() {
@@ -95,7 +95,7 @@ export default {
       /**
        *  判断是否已经完成当前任务
        */
-      const linkType = banner.linkType; //广告类型
+      const { linkType } = banner; // 广告类型
       switch (linkType) {
         case 1:
           // 外部链接
@@ -121,13 +121,13 @@ export default {
         loadingType: 'spinner',
         duration: 0,
       });
-      const isCollect = this.isCollect;
+      const { isCollect } = this;
       let result = null;
       if (isCollect === '1') {
-        //取消收藏
+        // 取消收藏
         result = await delCaricatureCollect(this.caricatureId);
       } else {
-        //收藏
+        // 收藏
         result = await addCaricatureCollect(this.caricatureId);
       }
       if (result.retCode === '1') {

@@ -20,7 +20,7 @@
     </div>
     <div class="flex-auto ova">
       <!-- 轮播 -->
-      <div class="swiper-wrapper">
+      <div class="home-swiper-wrapper">
         <van-swipe :autoplay="3000" indicator-color="white"
           :stop-propagation="false">
           <van-swipe-item v-for="(item,index) in bannerList"
@@ -364,7 +364,7 @@ export default {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 5px;
 }
-.swiper-wrapper {
+.home-swiper-wrapper {
   padding: 0 15px 10px;
 }
 .type-icon {
@@ -398,6 +398,12 @@ export default {
   overflow: hidden;
   img {
     width: 100%;
+  }
+}
+.list{
+  .item{
+    border-radius: 4px;
+    overflow: hidden;
   }
 }
 .item-pad {
@@ -464,6 +470,9 @@ export default {
   &:active {
     opacity: 0.7;
   }
+}
+.van-swipe{
+  border-radius: 5px;
 }
 </style>
 <style lang="scss">

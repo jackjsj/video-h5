@@ -27,7 +27,7 @@
                 <van-icon class="g9" name="arrow" />
               </p>
             </div>
-            <span class="f12 g9">VIP有效期至{{memberInfo.vipDate}}</span>
+            <span class="f12 g9" v-if="isVip === 1">VIP有效期至{{memberInfo.vipDate}}</span>
           </div>
         </div>
       </div>
@@ -138,7 +138,7 @@ export default {
       width: screen.availWidth,
       height: screen.availHeight,
       isVip: 0, // 是否是会员
-      integralNumber: 0, //积分数
+      integralNumber: 0, // 积分数
       headHeight: null,
       integralClassifies: [], // 积分兑换类型
       exchangeVipTypes: [],
@@ -253,23 +253,23 @@ export default {
         case 1:
           this.addIntegral(id);
           break;
-        /*跳转路由邀请好友*/
+        /* 跳转路由邀请好友 */
         case 2:
           this.$router.push('/invitation');
           break;
-        /*跳转到首页*/
+        /* 跳转到首页 */
         case 3:
           this.$router.push('/home');
           break;
-        /*跳转到下载链接*/
+        /* 跳转到下载链接 */
         case 4:
           window.location.href = 'https://qqsp.app/';
           break;
-        /*跳转路由邀请好友*/
+        /* 跳转路由邀请好友 */
         case 5:
           this.$router.push('/invitation');
           break;
-        /*登录*/
+        /* 登录 */
         case 6:
           this.$router.push('/login');
           break;
@@ -292,7 +292,7 @@ export default {
         Toast('任务完成');
         this.getIntegralClassifies();
       } else {
-        Toast('任务失败:' + result.retMsg);
+        Toast(`任务失败:${result.retMsg}`);
       }
     },
   },
