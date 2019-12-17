@@ -5,17 +5,18 @@
       title="明星"
       :border="false">
     </van-nav-bar>
-    <div class="content flex-col flex-auto ova">
+    <div class="content flex-col flex-auto ova rel">
       <van-tabs
         class="pl15 pr15"
         :border="false"
         :line-height="0"
-        @change="onTabChange">
+        @change="onTabChange"
+        v-model="currentType">
         <van-tab
           v-for="type in types"
           :key="type.name"
           :title="type.name"
-          :name="type.type">
+          :name="type.key">
         </van-tab>
         <!-- 明星列表 -->
         <div>
@@ -66,6 +67,16 @@
           </div>
         </div>
       </van-tabs>
+      <div class="index-bar">
+        <p
+          class="tc index-item"
+          :class="{active:item.value === currentCup}"
+          v-for="item in cupList"
+          :key="item.name"
+          @click="onCupClick(item)">
+          {{item.name}}
+        </p>
+      </div>
     </div>
     <van-overlay :show="overlayVisible" />
   </div>
@@ -92,16 +103,16 @@ const first3 = [
 ];
 const types = [
   {
+    name: '最新数据',
+    key: 'newData',
+  },
+  {
     name: '人气最高',
-    type: '2',
+    key: 'newVideo',
   },
   {
-    name: '片量最多',
-    type: '3',
-  },
-  {
-    name: '最近更新',
-    type: '1',
+    name: '电影最多',
+    key: 'videoNum',
   },
 ];
 
@@ -117,16 +128,15 @@ export default {
   data() {
     return {
       starList: [],
-      cupList: [], //分类数据
+      cupList: [], // 分类数据
       selectClassIfyIndex: 0,
-      cupIndex: 0, //默认为查询全部
-      heat: 0, //热度
-      onFetching: false, //分页查询上锁
-      pageNum: 1, //分页记录数
+      cupIndex: 0, // 默认为查询全部
+      heat: 0, // 热度
+      onFetching: false, // 分页查询上锁
       dataOnNull: false,
       pageParams: {
         pageNum: 1,
-        orderStr: null, //排序标识
+        orderStr: null, // 排序标识
         cup: null,
       },
 
@@ -138,30 +148,38 @@ export default {
       finished: false,
       error: false,
       pageNum: 1,
+      currentCup: '-1',
+      currentType: 'newData',
     };
   },
   mounted() {
-    this.getStarList();
+    // this.getStarList();
   },
   computed: {
     rank(index) {
-      return index => {
-        return this.list[index]
+      return index => (this.list[index]
           ? this.list[index]
           : {
               name: '虚位以待',
               heat: 0,
-            };
-      };
+            });
     },
   },
   methods: {
-    onTabChange(name) {
+    onCupClick(item) {
+      this.currentCup = item.value;
       this.loading = false;
       this.finished = false;
       this.error = false;
       this.pageNum = 1;
-      this.getStarList(name);
+      // this.getStarList();
+    },
+    onTabChange() {
+      this.loading = false;
+      this.finished = false;
+      this.error = false;
+      this.pageNum = 1;
+      // this.getStarList();
     },
     showStarDetail(item) {
       if (item.id) {
@@ -169,7 +187,8 @@ export default {
         this.$router.push('/starDetail');
       }
     },
-    async getStarList(selectClassIndex, cupIndex) {
+    async getStarList() {
+      console.log(1);
       this.overlayVisible = true;
       Toast.loading({
         message: '加载中...',
@@ -179,11 +198,13 @@ export default {
 
       // 请求参数
       const result = await getStarList({
-        newData: selectClassIndex,
+        [this.currentType]: '1',
         pageNum: this.pageNum,
+        cup: this.currentCup,
       });
       if (result.retCode === '1') {
         const { current, pages, data } = result;
+        this.cupList = data.cupList;
         this.loading = false;
         if (current === pages || pages === 0) {
           // 最后一页了
@@ -217,24 +238,22 @@ export default {
       if (isCollect == '1') {
         result = await delMemberCollect(id);
       } else {
-        //收藏
+        // 收藏
         result = await saveMemberCollect(id);
       }
 
       if (result.retCode === '1') {
-        //修改状态
+        // 修改状态
         this.updateCollectState(id, isCollect);
       }
       Toast(result.retMsg);
     },
     updateCollectState(id, isCollect) {
       // 根据id找到对应的元素
-      let starList = this.list;
-
-      let index = starList.findIndex(star => star.id === id);
-      let star = starList[index];
+      const starList = this.list;
+      const index = starList.findIndex(star => star.id === id);
+      const star = starList[index];
       star.isCollect = isCollect === '1' ? '0' : '1';
-
       Vue.set(this.list, index, star);
     },
   },
@@ -243,7 +262,7 @@ export default {
 
 <style lang="scss" scoped>
 .first-3 {
-  margin: 13px 25px 0;
+  margin: 13px 32px 0 25px;
 }
 .seat {
   width: 58px;
@@ -326,6 +345,26 @@ export default {
   width: 74px;
 }
 .star-info {
-  border-bottom: 1px dashed #999;
+  border-bottom: 1px solid rgba(153, 153, 153, 0.2);
+}
+.index-bar {
+  width: 22px;
+  border-radius: 22px;
+  background: black;
+  color: #fff;
+  position: absolute;
+  top: 65px;
+  bottom: 10px;
+  right: 10px;
+  font-size: 16px;
+  padding: 5px 2px;
+}
+.index-item {
+  margin-bottom: 10px;
+  transition: all 0.3s;
+  &.active {
+    background: #0021e0;
+    border-radius: 100%;
+  }
 }
 </style>

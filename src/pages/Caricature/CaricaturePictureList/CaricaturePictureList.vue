@@ -7,11 +7,11 @@
       :border="false"
       @click-left="$router.back()">
     </van-nav-bar>
-    <div class="flex-auto ova p15">
+    <div class="flex-auto ova">
       <div v-for="item in chapterPictureList"
         :key="item.sortNo">
-        <div class="mb5">
-          <img class="pct100" :src="item.imgUrl" />
+        <div class="flex jcc">
+          <van-image class="pct100" :src="item.imgUrl" />
         </div>
       </div>
     </div>
@@ -26,17 +26,17 @@
 </template>
 
 <script>
-import { getChapterPictureList } from '../../../api';
+import { getChapterPictureList } from '@/api';
 
 export default {
   name: 'CaricaturePictureList',
   data() {
     return {
-      chapterId: null, //章节id
+      chapterId: null, // 章节id
       chapterPictureList: [], // 图片列表
       chapterName: '', // 章节名字
-      upId: -1, //上一章
-      nextId: -1, //下一章
+      upId: -1, // 上一章
+      nextId: -1, // 下一章
     };
   },
   mounted() {

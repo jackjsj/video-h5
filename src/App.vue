@@ -15,7 +15,10 @@ export default {
     return {};
   },
   mounted() {
-    document.getElementById('app').style.height = window.innerHeight + 'px';
+    document.getElementById('app').style.height = `${window.innerHeight  }px`;
+    window.addEventListener('resize', () => {
+      document.getElementById('app').style.height = `${window.innerHeight  }px`;
+    });
     this.autoLogin();
   },
   methods: {
@@ -29,7 +32,7 @@ export default {
         duration: 0,
         forbidClick: true,
       });
-      let token = localStorage.getItem('token');
+      const token = localStorage.getItem('token');
       if (!token) {
         // 从localStore中查询是否存在uuid
         let deviceCode = localStorage.getItem('deviceCode');
@@ -47,8 +50,8 @@ export default {
           const notice = result.noticeList[0] || {};
           localStorage.setItem('notice', JSON.stringify(notice));
         } else {
-          //提示错误信息
-          Toast(result.retMsg + 'token');
+          // 提示错误信息
+          Toast(`${result.retMsg  }token`);
           return;
         }
         const resultSetting = await getModuleSetting();
@@ -56,14 +59,14 @@ export default {
         if (resultSetting.retCode === '1') {
           this.$store.dispatch('saveUserSeting', { setting: resultSetting });
         } else {
-          Toast(result.retMsg + 'setting');
+          Toast(`${result.retMsg  }setting`);
           return;
         }
 
         if (resultOpenPay.retCode === '1') {
           this.$store.dispatch('saveUserOpenPay', { openpay: resultOpenPay });
         } else {
-          Toast(result.retMsg + 'openPay');
+          Toast(`${result.retMsg  }openPay`);
           return;
         }
       }

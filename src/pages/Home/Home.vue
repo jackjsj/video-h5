@@ -233,12 +233,12 @@ export default {
       overlayVisible: false,
       value: '',
       indexInfoData: null, // 首页数据
-      bannerList: [], //轮播图
-      classifyList: [], //分类数据
-      newVideoList: [], //最新电影
+      bannerList: [], // 轮播图
+      classifyList: [], // 分类数据
+      newVideoList: [], // 最新电影
       mostVideoList: [], // 重磅热播
       classifyListCollect: [],
-      extensionUrl: '', //推广url
+      extensionUrl: '', // 推广url
 
       //
       popupVisible: false,
@@ -270,7 +270,7 @@ export default {
        *  判断是否已经完成当前任务
        */
       this.addIntegral(3);
-      const linkType = banner.linkType; //广告类型
+      const { linkType } = banner; // 广告类型
       console.log(linkType);
       switch (linkType) {
         case 1:
@@ -278,7 +278,7 @@ export default {
           window.location.href = banner.linkUrl;
           break;
         case 3:
-          //购买vip
+          // 购买vip
           this.$router.push('/vipInfoDetails/1');
           break;
         case 4:
@@ -337,7 +337,7 @@ export default {
       if (result.retCode === '1') {
         Toast('任务完成');
       } else {
-        Toast('任务失败:' + result.retMsg);
+        Toast(`任务失败:${result.retMsg}`);
       }
     },
   },
@@ -353,7 +353,7 @@ export default {
   height: 22px;
 }
 .header {
-  padding: 16px;
+  padding: 16px 16px 0;
 }
 .van-search {
   padding: 0;
@@ -365,7 +365,7 @@ export default {
   border-radius: 5px;
 }
 .swiper-wrapper {
-  padding: 15px;
+  padding: 10px 15px;
 }
 .type-icon {
   width: 45px;

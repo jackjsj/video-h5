@@ -39,6 +39,14 @@ p {
 .bg-blur {
   filter: blur(10px);
 }
+.van-image {
+  height: 100%;
+  width: 100%;
+}
+.van-image__error,
+.van-image__loading {
+  background: rgba(0, 0, 0, 0.2);
+}
 .van-nav-bar {
   background: transparent;
 }
@@ -60,8 +68,8 @@ p {
   background: transparent;
   opacity: 0.7;
 }
-.van-cell--clickable:active{
-  background:transparent;
+.van-cell--clickable:active {
+  background: transparent;
 }
 .van-nav-bar__right {
   .van-icon {
@@ -82,7 +90,7 @@ p {
 }
 .slide-enter-active,
 .slide-leave-active {
-  transition: opacity .5s ease;
+  transition: opacity 0.5s ease;
 }
 .slide-leave-active,
 .slide-leave-active {

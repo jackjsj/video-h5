@@ -99,8 +99,8 @@
               <!-- 影片类型、标签、番号 -->
               <div class="lh16 mb15">
                 <div class="flex aic mb5">
-                  <span class="opa5">影片类型：</span>
-                  <div class="flex" v-if="videoDetails.classifyName">
+                  <span class="opa5 flex-none">影片类型：</span>
+                  <div class="flex ova" v-if="videoDetails.classifyName">
                     <p
                       style="border-width:1px;"
                       v-for="type in videoDetails.classifyName.split(',')"
@@ -109,8 +109,8 @@
                   </div>
                 </div>
                 <div class="flex aic mb5">
-                  <span class="opa5">影片标签：</span>
-                  <div class="flex" v-if="videoDetails.tags">
+                  <span class="opa5 flex-none">影片标签：</span>
+                  <div class="flex ova" v-if="videoDetails.tags">
                     <p
                       style="border-width:1px;"
                       v-for="(item) in videoDetails.tags.split(',')"
@@ -119,7 +119,7 @@
                   </div>
                 </div>
                 <div class="flex aic mb5">
-                  <span class="opa5">影片番号：</span>
+                  <span class="opa5 flex-none">影片番号：</span>
                   <span class="opa5">{{videoDetails.id}}</span>
                 </div>
               </div>
@@ -190,44 +190,44 @@ export default {
       banner: {},
       payDuration: 60,
       isVip: 1,
-      isShowMoreMovie: false, //是否显示更多电影
-      isAlreadyCollection: false, //是否已经点过喜欢
-      isAlreadyPraise: false, //是否已经点过赞
+      isShowMoreMovie: false, // 是否显示更多电影
+      isAlreadyCollection: false, // 是否已经点过喜欢
+      isAlreadyPraise: false, // 是否已经点过赞
       showToastMsg: '',
       showToast: false,
       videoId: '',
-      isUpPraise: false, //是否点赞
-      isDownPraise: false, //是否点差评点赞
+      isUpPraise: false, // 是否点赞
+      isDownPraise: false, // 是否点差评点赞
       show: false,
       // videojs options
       playerOptions: {
-        autoplay: true, //如果true,浏览器准备好时开始回放。
-        muted: true, //默认情况下将会消除任何音频。
+        autoplay: true, // 如果true,浏览器准备好时开始回放。
+        muted: true, // 默认情况下将会消除任何音频。
         language: 'zh-CN',
-        controls: true, //控制条
-        preload: 'auto', //视频预加载
-        loop: false, //导致视频一结束就重新开始。 //播放速度
-        /*playbackRates: [0.7, 1.0, 1.5, 2.0],*/ aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+        controls: true, // 控制条
+        preload: 'auto', // 视频预加载
+        loop: false, // 导致视频一结束就重新开始。 //播放速度
+        /* playbackRates: [0.7, 1.0, 1.5, 2.0], */ aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
         fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
         sources: [
           {
-            /* type: "video/mp4",*/
+            /* type: "video/mp4", */
             type: 'application/x-mpegURL',
-            /* src: "http://vjs.zencdn.net/v/oceans.mp4",*/
-            /*http://v1.727831.com/20190914/YR0JZ3Lp/index.m3u8*/
+            /* src: "http://vjs.zencdn.net/v/oceans.mp4", */
+            /* http://v1.727831.com/20190914/YR0JZ3Lp/index.m3u8 */
             src: '',
           },
         ],
-        poster: '', //未播放时封面图片
+        poster: '', // 未播放时封面图片
         width: document.documentElement.clientWidth,
-        notSupportedMessage: '加载中，请耐心等待或者重新点击影片', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+        notSupportedMessage: '加载中，请耐心等待或者重新点击影片', // 允许覆盖Video.js无法播放媒体源时显示的默认信息。
       },
       videoDetails: {
         classifyName: '',
         tags: '',
       },
-      isPermitView: false, //是否允许用户观看
-      isPermitComment: false, //是否允许用户评论
+      isPermitView: false, // 是否允许用户观看
+      isPermitComment: false, // 是否允许用户评论
 
       //
       bannerList: [],
@@ -257,7 +257,7 @@ export default {
           break;
         }
         case 3: {
-          //购买vip
+          // 购买vip
           this.$router.push('/vipInfoDetails/1');
           break;
         }
@@ -272,7 +272,7 @@ export default {
         }
       }
     },
-    //发送请求获取影片数据
+    // 发送请求获取影片数据
     async getVideoDetail(videoId) {
       console.log(videoId);
       Toast.loading({
@@ -298,23 +298,23 @@ export default {
       }
     },
     skipToInvite() {
-      //路由到邀请好友页面
+      // 路由到邀请好友页面
       this.$router.push('/invitation');
       console.log('跳转到邀请好友页面');
     },
     skipToBuyVip() {
-      //路由到购买vip
+      // 路由到购买vip
       this.$router.push('/vipInfoDetails/1');
       console.log('跳转到购买vip页面');
     },
     commentPermit() {
       console.log('评论限制');
 
-      //等级判断，如果大于等于2级可以评论
+      // 等级判断，如果大于等于2级可以评论
       this.isPermitComment = true;
     },
     changeMovie(movie) {
-      //切换影片
+      // 切换影片
       this.$router.replace(`/video/${movie.id}`);
       window.scrollTo(0, 0);
       console.log('切换影片');
@@ -338,7 +338,7 @@ export default {
       }
     },
     share() {
-      //复制一段内容到剪贴板
+      // 复制一段内容到剪贴板
       let message = '';
       message += this.videoDetails.extensionInfo.extensionContext;
       message += this.videoDetails.extensionInfo.extensionUrl;
@@ -362,7 +362,7 @@ export default {
       }
     },
     async sendPraise(params) {
-      //异步发送点赞请求
+      // 异步发送点赞请求
       const result = await setCareTimess(params);
       if (result.retCode === '1') {
         this.videoDetails.isLike = '1';
@@ -379,8 +379,8 @@ export default {
       this.$router.back();
     },
     onPlayerTimeupdate(player) {
-      /*console.log('player Timeupdate!', player.currentTime())*/
-      //真实使用
+      /* console.log('player Timeupdate!', player.currentTime()) */
+      // 真实使用
       if (!(this.isVip === 1) && player.currentTime() >= this.payDuration) {
         player.pause();
         this.isPermitView = true;

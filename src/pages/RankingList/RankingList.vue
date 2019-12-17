@@ -122,7 +122,7 @@ export default {
   data() {
     return {
       rankingListClassifys: ['日榜', '周榜', '月榜'],
-      rankingIndex: 0, //默认选中
+      rankingIndex: 0, // 默认选中
       rankingList: [],
 
       types,
@@ -145,7 +145,7 @@ export default {
       });
       const resp = await this.apis[index]();
       if (resp.retCode === '1') {
-        this.list = resp.data;
+        this.list = resp.data.slice(0, 50);
         Toast.clear();
         this.overlayVisible = false;
       }
@@ -154,11 +154,11 @@ export default {
       return this.list[index]
         ? this.list[index]
         : {
-            video_name: '虚位以待',
-            payNum: 0,
-            cent: '0%',
-            video_cover: '',
-          };
+          video_name: '虚位以待',
+          payNum: 0,
+          cent: '0%',
+          video_cover: '',
+        };
     },
     last() {
       const listCopy = this.list.concat();
