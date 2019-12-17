@@ -61,10 +61,23 @@
         </div>
       </div>
       <!-- swiper -->
-      <div>
+      <div class="swiper-container">
         <div class="swiper-wrapper">
+          <div class="swiper-slide"
+            v-for="(item) in bannerList"
+            :key="item.id"
+            @click="onSwiperClick(item)">
+            <div class="swiper-item flex jcc ovh">
+              <van-image :src="item.picUrl" />
+            </div>
+          </div>
+        </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination"></div>
+      </div>
+      <!-- <div class="swiper-wrapper">
           <van-swipe
-            :autoplay="3000"
+            :autoplay="300000"
             indicator-color="#FF7AC8">
             <van-swipe-item v-for="(item) in bannerList"
               :key="item.id"
@@ -74,8 +87,7 @@
               </div>
             </van-swipe-item>
           </van-swipe>
-        </div>
-      </div>
+        </div> -->
       <!-- 功能列表 -->
       <div class="flex flex-wrap mt30 mb30">
         <div
@@ -110,6 +122,8 @@
 </template>
 
 <script>
+import 'swiper/dist/css/swiper.min.css';
+import Swiper from 'swiper';
 import { getMemberInfo, getGcGroup, checkInAddIntegral } from '@/api';
 
 const countItems = [
@@ -137,7 +151,7 @@ export default {
       height: screen.availHeight,
       showToastMsg: '',
       showToast: false,
-
+      location: window.location,
       //
       countItems,
       items: [
@@ -219,14 +233,14 @@ export default {
     },
     onSwiperClick(banner) {
       this.addIntegral(3);
-      const linkType = banner.linkType; //广告类型
+      const { linkType } = banner; // 广告类型
       switch (linkType) {
         case 1:
           // 外部链接
           window.location.href = banner.linkUrl;
           break;
         case 3:
-          //购买vip
+          // 购买vip
           this.$router.push('/vipInfoDetails/1');
           break;
         case 4:
@@ -295,8 +309,26 @@ export default {
         // 保存用户id
         localStorage.setItem('memberInfo', JSON.stringify(this.memberInfo));
         this.$store.dispatch('saveUserId', this.personal.memberInfo.id);
+        this.$nextTick(() => {
+          // 渲染轮播
+          new Swiper('.swiper-container', {
+            slidesPerView: 1,
+            centeredSlides: true,
+            slidesOffsetBefore: 20,
+            slidesOffsetAfter: 20,
+            spaceBetween: 20,
+            // 如果需要分页器
+            pagination: {
+              el: '.swiper-pagination',
+            },
+          });
+        });
       } else if (result.httpCode === 801) {
-        this.checkIsLayout();
+        if (localStorage.getItem('loginType') === '1') {
+          this.checkIsLayout();
+        } else {
+          this.onDialogCancel();
+        }
       } else {
         Toast(result.msg);
       }
@@ -378,7 +410,7 @@ export default {
   height: 84px;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.1);
-  margin: auto;
+  // margin: auto;
 }
 .item {
   width: 33%;

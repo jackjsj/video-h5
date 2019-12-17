@@ -2,7 +2,7 @@ module.exports = {
   plugins: {
     'postcss-pxtorem': {
       rootValue: 37.5,
-      propList: ['*', '!border-radius'],
+      propList: ['*'],
       selectorBlackList: [/ignore$/, /bb1$/],
     },
   },

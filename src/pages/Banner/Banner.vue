@@ -93,7 +93,7 @@ export default {
       const resp = await getTagType();
       if (resp.retCode === '1') {
         this.types = resp.data;
-        //默认查第一个类型
+        // 默认查第一个类型
         const first = this.types[0];
         if (first) {
           this.getTagsByType(first.id);
@@ -169,7 +169,7 @@ export default {
   padding: 0 6px;
   width: 108px;
   box-sizing: border-box;
-  border-radius:0 0 4px 4px;
+  border-radius: 0 0 4px 4px;
 }
 .content {
   padding: 0 15px;

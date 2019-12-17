@@ -353,7 +353,7 @@ export default {
   height: 22px;
 }
 .header {
-  padding: 16px 16px 0;
+  padding: 10px 16px;
 }
 .van-search {
   padding: 0;
@@ -365,7 +365,7 @@ export default {
   border-radius: 5px;
 }
 .swiper-wrapper {
-  padding: 10px 15px;
+  padding: 0 15px 10px;
 }
 .type-icon {
   width: 45px;
@@ -409,6 +409,7 @@ export default {
   line-height: 34px;
   padding: 0 6px;
   width: 168px;
+  border-radius: 0 0 4px 4px;
   box-sizing: border-box;
 }
 .popup {
