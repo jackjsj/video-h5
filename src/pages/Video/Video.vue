@@ -110,24 +110,24 @@
               </div>
               <!-- 影片类型、标签、番号 -->
               <div class="lh16 mb15">
-                <div class="flex aic mb5">
+                <div class="flex mb5">
                   <span class="opa5 flex-none">影片类型：</span>
-                  <div class="flex ova" v-if="videoDetails.classifyName">
+                  <div class="flex flex-wrap" v-if="videoDetails.classifyName">
                     <p
                       style="border-width:1px;"
                       v-for="type in videoDetails.classifyName.split(',')"
                       :key="type"
-                      class="tag flex-none mr5 mc-purple">{{type}}</p>
+                      class="tag flex-none mr5 mb5 mc-purple">{{type}}</p>
                   </div>
                 </div>
-                <div class="flex aic mb5">
+                <div class="flex mb5">
                   <span class="opa5 flex-none">影片标签：</span>
-                  <div class="flex ova" v-if="videoDetails.tags">
+                  <div class="flex flex-wrap" v-if="videoDetails.tags">
                     <p
                       style="border-width:1px;"
                       v-for="(item) in videoDetails.tags.split(',')"
                       :key="item"
-                      class="tag flex-none mr5 mc-purple">{{item}}</p>
+                      class="tag flex-none mr5 mb5 mc-purple">{{item}}</p>
                   </div>
                 </div>
                 <div class="flex aic mb5">
@@ -150,12 +150,12 @@
                     </div>
                     <div class="flex-auto">
                       <p class="opa9 f16 fw500 mb5">{{item.videoName}}</p>
-                      <div class="flex ova mb5" v-if="item.tagsName">
+                      <div class="flex flex-wrap mb5 pct100" v-if="item.tagsName">
                         <p
                           style="border-width:1px;"
                           v-for="tag in item.tagsName.split(',')"
                           :key="tag"
-                          class="tag flex-none mr5">{{tag}}</p>
+                          class="tag flex-none mr5 mb5">{{tag}}</p>
                       </div>
                       <div class="flex jcb opa5">
                         <div class="flex aic">

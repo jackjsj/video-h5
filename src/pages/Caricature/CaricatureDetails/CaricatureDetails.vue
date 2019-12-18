@@ -9,7 +9,7 @@
     </van-nav-bar>
     <div class="flex-auto ova wh p15 mt5">
       <div class="flex jcc cover mb15 ovh">
-        <van-image :src="caricatureInfo.cover"></van-image>
+        <van-image :src="caricatureInfo.descCover"></van-image>
       </div>
       <p class="ell f17 fw600 mb10">{{caricatureInfo.caricatureDesc}}</p>
       <div class="flex opa7 f12">
