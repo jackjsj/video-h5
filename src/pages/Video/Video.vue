@@ -148,9 +148,9 @@
                     <div class="flex jcc flex-none mr12 guess-item-cover ovh">
                       <van-image :src="item.videoCover" />
                     </div>
-                    <div class="flex-auto">
-                      <p class="opa9 f16 fw500 mb5">{{item.videoName}}</p>
-                      <div class="flex flex-wrap mb5 pct100" v-if="item.tagsName">
+                    <div class="flex-auto ovh">
+                      <p class="opa9 f16 fw500 mb5 ell">{{item.videoName}}</p>
+                      <div class="flex flex-wrap mb5 pct100 tag-box" v-if="item.tagsName">
                         <p
                           style="border-width:1px;"
                           v-for="tag in item.tagsName.split(',')"
@@ -483,7 +483,7 @@ export default {
   height: 71px;
   border-radius: 12px;
   // background-color: rgba(255, 255, 255, 0.1);
-  overflow:hidden;
+  overflow: hidden;
   z-index: 1;
 }
 .tag {
@@ -497,6 +497,11 @@ export default {
 }
 .van-nav-bar {
   z-index: 10 !important;
+}
+.tag-box {
+  max-height: 50px;
+  overflow: hidden;
+  align-items: flex-start;
 }
 </style>
 <style lang="scss">
