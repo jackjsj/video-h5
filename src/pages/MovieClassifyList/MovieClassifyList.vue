@@ -2,7 +2,7 @@
   <div class="bg-2 flex-col vh100 movie-classify">
     <van-nav-bar
       class="flex-none"
-      :title="filters[0].current"
+      :title="title"
       left-arrow
       @click-left="$router.back()"
       :border="false">
@@ -16,14 +16,6 @@
         class="mb10"
         v-for="(filter,index) in filters"
         :key="index">
-        <!-- <div
-          class="filter-item flex-none"
-          v-for="item in filter.items"
-          :class="{active:item.name === filter.current}"
-          :key="item.name"
-          @click="onFilterItemClick(filter, item)">
-          {{item.name}}
-        </div> -->
         <van-tabs
           :border="false"
           title-inactive-color="#FFFAFF"
@@ -32,9 +24,28 @@
           <van-tab
             class="filter-item"
             v-for="item in filter.items"
-            :key="item.name"
-            :name="item.name"
-            :title="item.name"></van-tab>
+            :key="item.id"
+            :name="item.id"
+            :title="item.name">
+            <div v-if="filter.name === '标签类型' && item.name!=='全部类型'"
+              class="pt10">
+              <div class="tag-box">
+                <div class="btn-box-wrapper flex jcc aic rel">
+                  <img class="btn-box" src="@/assets/images/btn-box.png" />
+                  <p class="abs wh flex aic jcc btn-box-text">
+                    <span>{{isExpandTag ? '收起':'展开'}}</span>
+                    <van-icon :name="isExpandTag?'arrow-down':'arrow-up'" />
+                  </p>
+                </div>
+                <p class="filter-item tag-filter-item mb10 van-tab"
+                  :class="{active:tag.checked}"
+                  @click="tag.checked = !tag.checked"
+                  v-for="tag in currentTags"
+                  :key="tag.id">{{tag.name}}</p>
+                <div style="clear:both;"></div>
+              </div>
+            </div>
+          </van-tab>
         </van-tabs>
       </div>
     </div>
@@ -68,41 +79,66 @@
 </template>
 
 <script>
-import { getMovieList, search } from '@/api';
+import { getMovieList, search, getTagByTagTypeId } from '@/api';
 
 // 排序
 const orders = [
   {
     name: '综合排序',
-    type: -1,
+    id: -1,
   },
-  { name: '最多播放', type: 1, key: 'playNum' },
-  { name: '最近更新', type: 2, key: 'newVideo' },
-  { name: '最多好评', type: 3, key: 'careNum' },
+  { name: '最多播放', id: 1, key: 'playNum' },
+  { name: '最近更新', id: 2, key: 'newVideo' },
+  { name: '最多好评', id: 3, key: 'careNum' },
 ];
 
 export default {
   computed: {
     // 获取当前类型
-    currentTypeId() {
-      let currentType = this.filters.filter(item => item.name === '类型')[0]
-        .current;
-      currentType = currentType || this.filters[0].items[0];
-      const target = this.filters[0].items.filter(
-        item => item.name === currentType,
-      );
-      return target[0] && target[0].id;
+    classifyId() {
+      return this.filters.filter(item => item.name === '类型')[0].current;
     },
     currentOrderParams() {
       const currentOrder = this.filters.filter(item => item.name === '排序')[0]
         .current;
-      const { key } = orders.filter(item => item.name === currentOrder)[0];
+      const { key } = orders.filter(item => item.id === currentOrder)[0];
       if (key) {
         return {
           [key]: '1',
         };
       }
       return {};
+    },
+    // 地区
+    districtId() {
+      return this.filters.filter(item => item.name === '地区')[0].current;
+    },
+    // 年代
+    yearsId() {
+      return this.filters.filter(item => item.name === '年代')[0].current;
+    },
+    // 时长
+    durationTypeId() {
+      return this.filters.filter(item => item.name === '时长')[0].current;
+    },
+    // 规格
+    videoClassifyId() {
+      return this.filters.filter(item => item.name === '规格')[0].current;
+    },
+    // 语言
+    languageId() {
+      return this.filters.filter(item => item.name === '语言')[0].current;
+    },
+    // 标签类型
+    tagTypeId() {
+      return this.filters.filter(item => item.name === '标签类型')[0].current;
+    },
+    title() {
+      const typeFilter = this.filters.filter(item => item.name === '类型')[0];
+      const target = typeFilter.items.filter(
+        item => item.id === typeFilter.current,
+      );
+      return target[0] && target[0].name;
     },
   },
   data() {
@@ -124,12 +160,12 @@ export default {
       list: [],
       pageNum: 1,
       loading: false,
-      finished: false,
+      finished: true,
       error: false,
       filters: [
         {
           name: '地区',
-          current: '全部地区',
+          current: -1,
           items: [],
           key: 'districTagList',
           all: '全部地区',
@@ -142,50 +178,57 @@ export default {
         },
         {
           name: '标签类型',
-          current: '全部类型',
+          current: -1,
           items: [],
           key: 'tagTypeList',
           all: '全部类型',
         },
         {
-          name: '年份',
-          current: '全部年份',
+          name: '年代',
+          current: -1,
           items: [],
           key: 'yearsTagList',
-          all: '全部年份',
+          all: '全部年代',
         },
         {
           name: '时长',
-          current: '全部时长',
+          current: -1,
           items: [],
           key: 'durationTypeTagList',
           all: '全部时长',
         },
         {
           name: '规格',
-          current: '全部规格',
+          current: -1,
           items: [],
           key: 'videoClassifyTagList',
           all: '全部规格',
         },
         {
           name: '语言',
-          current: '全部语言',
+          current: -1,
           items: [],
           key: 'languageTagList',
           all: '全部语言',
         },
         {
           name: '排序',
-          current: '综合排序',
+          current: -1,
           items: orders,
         },
       ],
       overlayVisible: false,
+      currentTags: [],
+      isExpandTag: false,
     };
   },
   async mounted() {
     // 先获取所有的类型
+    Toast.loading({
+      message: '加载中...',
+      loadingType: 'spinner',
+      duration: 0,
+    });
     const result = await search();
     if (result.retCode === '1' && result.httpCode === 200) {
       const { data } = result;
@@ -198,71 +241,93 @@ export default {
             });
           }
           filter.items.push(...data[filter.key]);
-          console.log(filter.items);
         }
       });
+      this.finished = false;
+      Toast.clear();
     } else {
       Toast(result.retMsg || result.msg);
     }
     // 获取路由中的参数，设置默认属性
-    // const {
-    //   type = result.classifyList[0].name,
-    //   order = '综合排序',
-    // } = this.$route.query;
-    // this.filters.filter(item => item.name === '类型')[0].current = type;
-    // this.filters.filter(item => item.name === '排序')[0].current = order;
-    // 查询数据
-    // this.getMovieList();
+    const {
+      type = result.data.classifyList[0].id,
+      order = -1,
+    } = this.$route.query;
+    this.filters.filter(item => item.name === '类型')[0].current = parseInt(
+      type,
+    );
+    this.filters.filter(item => item.name === '排序')[0].current = parseInt(
+      order,
+    );
   },
   methods: {
     onOverlayClick() {
       Toast('操作太频繁了');
     },
-    onFilterItemClick(filter, name) {
-      filter.current = name;
+    async onFilterItemClick(filter) {
+      // 如果是标签类型
+      if (filter.name === '标签类型') {
+        // 根据当前的标签类型查询标签列表
+        this.currentTags = [];
+        if (filter.current === -1) {
+          const resp = await getTagByTagTypeId(filter.current);
+          if (resp.retCode === '1') {
+            this.currentTags = resp.data.map(item => ({
+              ...item,
+              checked: false,
+            }));
+          } else {
+            Toast(resp.retMsg || resp.msg);
+          }
+        } else {
+          this.isExpandTag = false;
+        }
+      }
       // 重置页码
       this.pageNum = 1;
       this.movieList = [];
       this.finished = false;
-      this.loading = true;
+      this.loading = false;
       this.error = false;
       // 查询数据
-      this.getMovieList();
+      // this.getMovieList();
     },
     // 查询数据,不分页
     async getMovieList() {
-      // Toast.loading({
-      //   message: '加载中...',
-      //   loadingType: 'spinner',
-      //   duration: 0,
-      //   forbidClick: true,
-      //   overlay: true,
-      // });
-      // this.overlayVisible = true;
       const params = {
         pageNum: this.pageNum,
-        classifyId: this.currentTypeId, // 类型
+        classifyId: String(this.classifyId), // 分类
+        districtId: String(this.districtId), // 地区
+        yearsId: String(this.yearsId), // 年代
+        videoClassifyId: String(this.videoClassifyId), // 规格
+        durationTypeId: String(this.durationTypeId), // 时长
+        languageId: String(this.languageId), // 语言
+        tagTypeId: String(this.tagTypeId), // 标签类型
+        tagIds: this.currentTags
+          .filter(item => item.checked)
+          .map(item => item.id),
         ...this.currentOrderParams, // 排序方式
       };
-      const result = await getMovieList(params);
+      console.log(params);
+      const result = await search(params);
       if (result.retCode === '1') {
-        const { current, pages, data } = result;
+        const { page } = result.data;
+        const { pages, current, records } = page;
         this.loading = false;
-        if (current === pages || pages === 0 || data.length === 0) {
+        if (current === pages || pages === 0 || records.length === 0) {
           // 最后一页了
           this.finished = true;
         } else {
           this.pageNum++;
         }
         if (current === 1) {
-          this.movieList = data;
+          this.movieList = records;
         } else {
-          this.movieList.push(...data);
+          this.movieList.push(...records);
         }
       } else {
         this.error = true;
       }
-      // this.overlayVisible = false;
     },
   },
 };
@@ -270,7 +335,7 @@ export default {
 
 <style lang="scss" scoped>
 .filter-item {
-  padding: 5px 15px;
+  // padding: 5px 15px;
   border-radius: 30px;
   line-height: 20px;
   &.active {
@@ -300,6 +365,28 @@ export default {
 }
 .van-overlay {
   background: transparent;
+}
+.btn-box {
+  width: 60px;
+  height: 24px;
+}
+.btn-box-text{
+  top:0;
+  bottom:0;
+  left:0;
+  right: 0;
+}
+.tag-box {
+  padding-left: 90px;
+  min-height: 40px;
+}
+.btn-box-wrapper {
+  height: 30px;
+  float: right;
+  margin-bottom: 10px;
+}
+.tag-filter-item.van-tab {
+  float: left;
 }
 </style>
 <style lang="scss">
@@ -333,9 +420,9 @@ export default {
   .van-tabs__line {
     background-color: transparent;
   }
-  .van-tabs__content {
-    height: 0;
-  }
+  // .van-tabs__content {
+  //   height: 0;
+  // }
   .van-tabs__nav--line {
     padding: 0;
   }

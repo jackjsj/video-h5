@@ -38,7 +38,7 @@
           class="type-item flex-col jcc aic"
           v-for="item in types"
           :key="item.name"
-          @click="$router.push(`/movieClassifyList?type=${item.name}`)">
+          @click="$router.push(`/movieClassifyList?type=${item.id}`)">
           <div class="type-icon flex jcc">
             <van-image :src="item.classifyIcon" />
           </div>
@@ -56,7 +56,7 @@
               <van-icon name="replay" />
             </div> -->
             <div class="flex aic"
-              @click="$router.push('/movieClassifyList?order=最近更新')">
+              @click="$router.push('/movieClassifyList?order=2')">
               <p class="mr5">更多</p>
               <van-icon name="arrow" />
             </div>
@@ -88,7 +88,7 @@
               <van-icon name="replay" />
             </div> -->
             <div class="flex aic"
-              @click="$router.push('/movieClassifyList?order=最多播放')">
+              @click="$router.push('/movieClassifyList?order=1')">
               <p class="mr5">更多</p>
               <van-icon name="arrow" />
             </div>
@@ -123,7 +123,7 @@
               <van-icon name="replay" />
             </div> -->
               <div class="flex aic"
-                @click="$router.push(`/movieClassifyList?type=${item.name}`)">
+                @click="$router.push(`/movieClassifyList?type=${item.id}`)">
                 <p class="mr5">更多</p>
                 <van-icon name="arrow" />
               </div>
