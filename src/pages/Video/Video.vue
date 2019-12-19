@@ -99,7 +99,7 @@
           <van-tab title="简介">
             <div class="wh">
               <p class="f13 opa7 lh21"
-                :class="{'van-multi-ellipsis--l4':!showMore}">
+                :class="{'van-multi-ellipsis--l2':!showMore}">
                 {{videoDetails.briefContent}}
               </p>
               <div class="flex aic opa5 mb15"
