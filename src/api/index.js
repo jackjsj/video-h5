@@ -159,4 +159,4 @@ export const getExtensionUrl = () => ajax(`${BASE_URL}/openapi/extensionInfo/get
 export const getBannerByCid = cId => ajax(`${BASE_URL}/openapi/findBanner`, { cId }, POST_FORM);
 
 // 根据广告类型获取广告
-export const search = options => ajax(`${BASE_URL}/openapi/search`, options, POST_FORM);
+export const search = options => ajax(`${BASE_URL}/openapi/search`, options, POST_JSON);

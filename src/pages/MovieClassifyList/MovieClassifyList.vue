@@ -68,125 +68,7 @@
 </template>
 
 <script>
-import { getMovieList } from '@/api';
-
-const list = new Array(9).fill().map((item, index) => ({
-  videoName: '宝可梦',
-  videoCover: '',
-  id: index,
-}));
-// 地区
-const areas = [
-  {
-    name: '全部地区',
-  },
-  {
-    name: '欧美',
-  },
-  {
-    name: '港台',
-  },
-  {
-    name: '非洲',
-  },
-  {
-    name: '澳洲',
-  },
-];
-
-// 类型
-const types = [
-  {
-    name: '动漫',
-    id: 8,
-  },
-  {
-    name: '科幻',
-    id: 7,
-  },
-  {
-    name: '恐怖',
-    id: 6,
-  },
-  {
-    name: '喜剧',
-    id: 5,
-  },
-  {
-    name: '剧情',
-    id: 4,
-  },
-  {
-    name: '动作',
-    id: 3,
-  },
-  {
-    name: '战争',
-    id: 2,
-  },
-  {
-    name: '全部',
-    id: -1,
-  },
-];
-
-// 标签
-const tags = [
-  {
-    name: '全部标签',
-  },
-  {
-    name: '迷人',
-  },
-  {
-    name: '性感',
-  },
-  {
-    name: '童真',
-  },
-];
-
-// 年份
-const years = [
-  {
-    name: '全部年份',
-  },
-  {
-    name: '2019',
-  },
-  {
-    name: '2018',
-  },
-  {
-    name: '2017',
-  },
-];
-
-// 规格
-const lengths = [
-  {
-    name: '全部规格',
-  },
-  {
-    name: '长片',
-  },
-  {
-    name: '短片',
-  },
-];
-
-// 语言
-const langs = [
-  {
-    name: '全部语言',
-  },
-  {
-    name: '中文字幕',
-  },
-  {
-    name: '国语对白',
-  },
-];
+import { getMovieList, search } from '@/api';
 
 // 排序
 const orders = [
@@ -194,9 +76,9 @@ const orders = [
     name: '综合排序',
     type: -1,
   },
-  { name: '最多播放', type: 1, key: 'mostPlay' },
+  { name: '最多播放', type: 1, key: 'playNum' },
   { name: '最近更新', type: 2, key: 'newVideo' },
-  { name: '最多好评', type: 3, key: 'mostCare' },
+  { name: '最多好评', type: 3, key: 'careNum' },
 ];
 
 export default {
@@ -245,36 +127,54 @@ export default {
       finished: false,
       error: false,
       filters: [
-        // {
-        //   name: '地区',
-        //   current: '全部地区',
-        //   items: areas,
-        // },
+        {
+          name: '地区',
+          current: '全部地区',
+          items: [],
+          key: 'districTagList',
+          all: '全部地区',
+        },
         {
           name: '类型',
           current: '',
           items: [],
+          key: 'classifyList',
         },
-        // {
-        //   name: '标签',
-        //   current: '全部标签',
-        //   items: tags,
-        // },
-        // {
-        //   name: '年份',
-        //   current: '全部年份',
-        //   items: years,
-        // },
-        // {
-        //   name: '规格',
-        //   current: '全部规格',
-        //   items: lengths,
-        // },
-        // {
-        //   name: '语言',
-        //   current: '全部语言',
-        //   items: langs,
-        // },
+        {
+          name: '标签类型',
+          current: '全部类型',
+          items: [],
+          key: 'tagTypeList',
+          all: '全部类型',
+        },
+        {
+          name: '年份',
+          current: '全部年份',
+          items: [],
+          key: 'yearsTagList',
+          all: '全部年份',
+        },
+        {
+          name: '时长',
+          current: '全部时长',
+          items: [],
+          key: 'durationTypeTagList',
+          all: '全部时长',
+        },
+        {
+          name: '规格',
+          current: '全部规格',
+          items: [],
+          key: 'videoClassifyTagList',
+          all: '全部规格',
+        },
+        {
+          name: '语言',
+          current: '全部语言',
+          items: [],
+          key: 'languageTagList',
+          all: '全部语言',
+        },
         {
           name: '排序',
           current: '综合排序',
@@ -286,12 +186,31 @@ export default {
   },
   async mounted() {
     // 先获取所有的类型
-    const result = await getMovieList();
-    this.filters[0].items = result.classifyList;
+    const result = await search();
+    if (result.retCode === '1' && result.httpCode === 200) {
+      const { data } = result;
+      this.filters.forEach(filter => {
+        if (filter.key) {
+          if (filter.all) {
+            filter.items.push({
+              id: -1,
+              name: filter.all,
+            });
+          }
+          filter.items.push(...data[filter.key]);
+          console.log(filter.items);
+        }
+      });
+    } else {
+      Toast(result.retMsg || result.msg);
+    }
     // 获取路由中的参数，设置默认属性
-    const { type = result.classifyList[0].name, order = '综合排序' } = this.$route.query;
-    this.filters.filter(item => item.name === '类型')[0].current = type;
-    this.filters.filter(item => item.name === '排序')[0].current = order;
+    // const {
+    //   type = result.classifyList[0].name,
+    //   order = '综合排序',
+    // } = this.$route.query;
+    // this.filters.filter(item => item.name === '类型')[0].current = type;
+    // this.filters.filter(item => item.name === '排序')[0].current = order;
     // 查询数据
     // this.getMovieList();
   },
@@ -327,10 +246,9 @@ export default {
       };
       const result = await getMovieList(params);
       if (result.retCode === '1') {
-        const { current, pages, data, classifyList } = result;
-        this.filters[0].items = classifyList;
+        const { current, pages, data } = result;
         this.loading = false;
-        if (current === pages || pages === 0) {
+        if (current === pages || pages === 0 || data.length === 0) {
           // 最后一页了
           this.finished = true;
         } else {
@@ -392,7 +310,7 @@ export default {
   .van-tabs__nav--card {
     border: none;
   }
-  .van-tabs__wrap van-tabs__wrap--scrollable {
+  .van-tabs__wrap {
     height: auto;
   }
   .van-tab {
@@ -400,6 +318,9 @@ export default {
     border-radius: 30px;
     height: 30px;
     line-height: 30px;
+    flex: none !important;
+    margin-right: 8px;
+    padding: 0 10px;
     &.active {
       border: none;
       background: linear-gradient(#e95aa0, #a769ff);
@@ -420,6 +341,7 @@ export default {
   }
   .van-tabs--line .van-tabs__wrap {
     height: auto;
+    border-radius: 0;
   }
 }
 </style>
