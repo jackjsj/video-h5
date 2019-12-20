@@ -7,7 +7,7 @@
       :border="false"
       @click-left="$router.back()">
     </van-nav-bar>
-    <div class="flex-auto ova">
+    <div class="flex-auto ova" ref="scrollBox">
       <div v-for="item in chapterPictureList"
         :key="item.sortNo">
         <div class="flex jcc">
@@ -63,7 +63,7 @@ export default {
           result.data.caricatureChapterMap.chapterImgList;
         this.upId = result.data.caricatureChapterMap.upId;
         this.nextId = result.data.caricatureChapterMap.nextId;
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
+        this.$refs.scrollBox.scrollTop = 0;
         Toast.clear();
       } else {
         Toast({
