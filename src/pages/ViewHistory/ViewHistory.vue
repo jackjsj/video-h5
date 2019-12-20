@@ -21,9 +21,13 @@
           class="mr18 flex-none">
         </van-checkbox>
         <div class="pct100 flex aic flex-none">
-          <div class="item-cover flex jcc mr13 flex-none ovh">
+          <div class="item-cover flex jcc mr13 flex-none ovh rel">
             <van-image
               :src="item.videoCover" />
+            <div class="abs cover-logo flex jcc" v-if="item.logoCover">
+              <van-image :src="item.logoCover" />
+            </div>
+            <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
           </div>
           <div class="flex-col jca">
             <p class="wh f16 opa9 fw500 lh23">{{item.videoName}}</p>
@@ -35,7 +39,7 @@
     <!-- 无记录 -->
     <div class="flex-auto ova flex-col aic" v-else>
       <div class="no-cache-img flex jcc">
-        <img src="@/assets/images/无缓存记录.png"/>
+        <img src="@/assets/images/无缓存记录.png" />
       </div>
       <p class="g9 f15 fw400 mt15">无历史记录</p>
     </div>
@@ -56,14 +60,14 @@
 </template>
 
 <script>
+import { getMemberViewHistoryMore, deleteViewHistory } from '../../api';
+
 const records = new Array(10).fill().map((item, index) => ({
   videoCover: '',
   videoName: '动物管理局静林宝可梦：大家的故事的时尚',
   viewTime: '2019-11-30',
   id: index,
 }));
-
-import { getMemberViewHistoryMore, deleteViewHistory } from '../../api';
 
 export default {
   data() {
@@ -95,14 +99,14 @@ export default {
     },
     selectAll() {
       this.allSelect = !this.allSelect;
-      this.movies.forEach((item) => (item.checked = this.allSelect));
+      this.movies.forEach(item => (item.checked = this.allSelect));
     },
     async deleteSelected() {
-      const selected = this.movies.filter((item) => item.checked);
+      const selected = this.movies.filter(item => item.checked);
       if (selected.length === 0) {
         return;
       }
-      let ids = selected.map((item) => item.id).join(',');
+      const ids = selected.map(item => item.id).join(',');
       Toast.loading({
         message: '正在删除...',
         loadingType: 'spinner',
@@ -131,7 +135,7 @@ export default {
       });
       const result = await getMemberViewHistoryMore();
       if (result.retCode === '1') {
-        this.movies = result.data.map((item) => ({
+        this.movies = result.data.map(item => ({
           ...item,
           checked: false,
         }));
@@ -157,6 +161,9 @@ export default {
   height: 71px;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.1);
+}
+.cover-logo {
+  border-radius: 12px 0 12px 0;
 }
 .lh23 {
   line-height: 23px;

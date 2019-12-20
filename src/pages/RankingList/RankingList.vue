@@ -54,8 +54,12 @@
               </div>
             </div>
             <div class="flex aic video-item" v-else>
-              <div class="flex flex-none jcc video-cover">
+              <div class="flex flex-none jcc video-cover rel">
                 <van-image :src="item.video_cover" />
+                <div class="abs cover-logo flex jcc" v-if="item.logoCover">
+                  <van-image :src="item.logoCover" />
+                </div>
+                <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
               </div>
               <div class="flex-auto">
                 <p class="rank-no wh opa5 b mb5"
@@ -255,6 +259,9 @@ export default {
   overflow: hidden;
   background: rgba(255, 255, 255, 0.1);
   margin-right: 12px;
+}
+.cover-logo {
+  border-radius: 15px 0 15px 0;
 }
 .video-item {
   background: #1b182e;

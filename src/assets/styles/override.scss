@@ -208,3 +208,23 @@ p {
     }
   }
 }
+.cover-logo {
+  top: 0;
+  left: 0;
+  border-radius: 4px 0 4px 0;
+  width: 40px;
+  height: 20px;
+  background: #f2275c;
+  overflow: hidden;
+}
+.movie-duration {
+  bottom: 5px;
+  right: 5px;
+  background: #616161;
+  padding: 0 5px;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  min-width: 40px;
+  border-radius: 4px 0 4px 0;
+}

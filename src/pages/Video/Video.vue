@@ -145,8 +145,12 @@
                     v-for="item in videoDetails.likeVideoList"
                     :key="item.id"
                     @click="$router.push(`/video/${item.id}`);">
-                    <div class="flex jcc flex-none mr12 guess-item-cover ovh">
+                    <div class="flex jcc flex-none mr12 guess-item-cover ovh rel">
                       <van-image :src="item.videoCover" />
+                      <div class="abs cover-logo flex jcc" v-if="item.logoCover">
+                        <van-image :src="item.logoCover" />
+                      </div>
+                      <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
                     </div>
                     <div class="flex-auto ovh">
                       <p class="opa9 f16 fw500 mb5 ell">{{item.videoName}}</p>
@@ -485,6 +489,9 @@ export default {
   // background-color: rgba(255, 255, 255, 0.1);
   overflow: hidden;
   z-index: 1;
+}
+.cover-logo {
+  border-radius: 12px 0 12px 0;
 }
 .tag {
   padding: 2px 6px;

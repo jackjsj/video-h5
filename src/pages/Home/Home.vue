@@ -39,7 +39,7 @@
           v-for="item in types"
           :key="item.name"
           @click="$router.push(`/movieClassifyList?type=${item.id}`)">
-          <div class="type-icon flex jcc">
+          <div class="type-icon flex jcc rel">
             <van-image :src="item.classifyIcon" />
           </div>
           <p class="f14 lh20 mt8 wh">{{item.name}}</p>
@@ -71,6 +71,10 @@
             @click="$router.push(`/video/${item.id}`)">
             <div class="img-wrapper rel flex jcc">
               <van-image :src="item.videoCover" />
+              <div class="abs cover-logo flex jcc" v-if="item.logoCover">
+                <van-image :src="item.logoCover" />
+              </div>
+              <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
             </div>
             <p class="cb9 f16 item-name ell">{{item.videoName}}</p>
           </div>
@@ -103,6 +107,10 @@
             @click="$router.push(`/video/${item.id}`);">
             <div class="img-wrapper rel flex jcc">
               <van-image :src="item.videoCover" />
+              <div class="abs cover-logo flex jcc" v-if="item.logoCover">
+                <van-image :src="item.logoCover" />
+              </div>
+              <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
             </div>
             <p class="cb9 f16 item-name ell">{{item.videoName}}</p>
           </div>
@@ -138,6 +146,10 @@
               @click="$router.push(`/video/${video.id}`);">
               <div class="img-wrapper rel flex jcc">
                 <van-image :src="video.videoCover" />
+                <div class="abs cover-logo flex jcc" v-if="video.logoCover">
+                  <van-image :src="video.logoCover" />
+                </div>
+                <p class="abs movie-duration" v-if="video.duration">{{video.duration}}</p>
               </div>
               <p class="cb9 f16 item-name ell">{{video.videoName}}</p>
             </div>
@@ -400,8 +412,8 @@ export default {
     width: 100%;
   }
 }
-.list{
-  .item{
+.list {
+  .item {
     border-radius: 4px;
     overflow: hidden;
   }
@@ -471,7 +483,7 @@ export default {
     opacity: 0.7;
   }
 }
-.van-swipe{
+.van-swipe {
   border-radius: 5px;
 }
 </style>

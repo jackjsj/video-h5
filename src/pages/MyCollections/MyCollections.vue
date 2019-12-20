@@ -26,6 +26,10 @@
           <div class="item-cover flex jcc mr13 flex-none ovh">
             <van-image
               :src="item.videoCover" />
+            <div class="abs cover-logo flex jcc" v-if="item.logoCover">
+              <van-image :src="item.logoCover" />
+            </div>
+            <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
           </div>
           <div class="flex-col jca">
             <p class="wh f16 opa9 fw500 lh23">{{item.videoName}}</p>
@@ -59,6 +63,7 @@
 
 <script>
 import { deleteCareHistory, getMemberCareHistoryPage } from '@/api';
+
 const records = new Array(10).fill().map((item, index) => ({
   videoCover: '',
   videoName: '动物管理局静林宝可梦：大家的故事的时尚',
@@ -105,7 +110,7 @@ export default {
       if (selected.length === 0) {
         return;
       }
-      let ids = selected.map(item => item.id).join(',');
+      const ids = selected.map(item => item.id).join(',');
       Toast.loading({
         message: '正在删除...',
         loadingType: 'spinner',

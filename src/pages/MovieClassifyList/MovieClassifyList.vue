@@ -29,20 +29,27 @@
             :title="item.name">
             <div v-if="filter.name === '标签类型' && item.name!=='全部类型'"
               class="pt10">
-              <div class="tag-box">
-                <div class="btn-box-wrapper flex jcc aic rel">
-                  <img class="btn-box" src="@/assets/images/btn-box.png" />
-                  <p class="abs wh flex aic jcc btn-box-text">
-                    <span>{{isExpandTag ? '收起':'展开'}}</span>
-                    <van-icon :name="isExpandTag?'arrow-down':'arrow-up'" />
-                  </p>
+              <div class="flex" :class="{short:!isExpandTag}">
+                <div class="flex-none">
+                  <p class="filter-item van-tab"
+                    :class="{active:currentTags.filter(item=>item.checked).length === 0}"
+                    @click="onAllTagClick">全部标签</p>
                 </div>
-                <p class="filter-item tag-filter-item mb10 van-tab"
-                  :class="{active:tag.checked}"
-                  @click="tag.checked = !tag.checked"
-                  v-for="tag in currentTags"
-                  :key="tag.id">{{tag.name}}</p>
-                <div style="clear:both;"></div>
+                <div class="flex-auto">
+                  <div class="btn-box-wrapper flex jcc aic rel">
+                    <img class="btn-box" src="@/assets/images/btn-box.png" />
+                    <p class="abs wh flex aic jcc btn-box-text">
+                      <span @click="isExpandTag = !isExpandTag">{{isExpandTag ? '收起':'展开'}}</span>
+                      <van-icon :name="!isExpandTag?'arrow-down':'arrow-up'" />
+                    </p>
+                  </div>
+                  <p class="filter-item tag-filter-item mb10 van-tab"
+                    :class="{active:tag.checked}"
+                    @click="onTagClick(tag)"
+                    v-for="tag in currentTags"
+                    :key="tag.id">{{tag.name}}</p>
+                  <div style="clear:both;"></div>
+                </div>
               </div>
             </div>
           </van-tab>
@@ -65,6 +72,10 @@
             @click="$router.push(`/video/${item.id}`)">
             <div class="img-wrapper rel flex jcc">
               <van-image :src="item.videoCover" />
+              <div class="abs cover-logo flex jcc" v-if="item.logoCover">
+                <van-image :src="item.logoCover" />
+              </div>
+              <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
             </div>
             <p class="cb9 f16 item-name ell">{{item.videoName}}</p>
           </div>
@@ -132,6 +143,12 @@ export default {
     // 标签类型
     tagTypeId() {
       return this.filters.filter(item => item.name === '标签类型')[0].current;
+    },
+    tagIds() {
+      const tagIds = this.currentTags
+        .filter(item => item.checked)
+        .map(item => item.id);
+      return tagIds.length > 0 ? tagIds : undefined;
     },
     title() {
       const typeFilter = this.filters.filter(item => item.name === '类型')[0];
@@ -261,6 +278,23 @@ export default {
     );
   },
   methods: {
+    onTagClick(tag) {
+      tag.checked = !tag.checked;
+      this.pageNum = 1;
+      this.movieList = [];
+      this.finished = false;
+      this.loading = false;
+      this.error = false;
+    },
+    onAllTagClick() {
+      // 清空所有标签选中
+      this.currentTags.forEach(item => (item.checked = false));
+      this.pageNum = 1;
+      this.movieList = [];
+      this.finished = false;
+      this.loading = false;
+      this.error = false;
+    },
     onOverlayClick() {
       Toast('操作太频繁了');
     },
@@ -269,7 +303,7 @@ export default {
       if (filter.name === '标签类型') {
         // 根据当前的标签类型查询标签列表
         this.currentTags = [];
-        if (filter.current === -1) {
+        if (filter.current !== -1) {
           const resp = await getTagByTagTypeId(filter.current);
           if (resp.retCode === '1') {
             this.currentTags = resp.data.map(item => ({
@@ -303,9 +337,7 @@ export default {
         durationTypeId: String(this.durationTypeId), // 时长
         languageId: String(this.languageId), // 语言
         tagTypeId: String(this.tagTypeId), // 标签类型
-        tagIds: this.currentTags
-          .filter(item => item.checked)
-          .map(item => item.id),
+        tagIds: this.tagIds,
         ...this.currentOrderParams, // 排序方式
       };
       console.log(params);
@@ -370,10 +402,10 @@ export default {
   width: 60px;
   height: 24px;
 }
-.btn-box-text{
-  top:0;
-  bottom:0;
-  left:0;
+.btn-box-text {
+  top: 0;
+  bottom: 0;
+  left: 0;
   right: 0;
 }
 .tag-box {
@@ -387,6 +419,10 @@ export default {
 }
 .tag-filter-item.van-tab {
   float: left;
+}
+.short {
+  height: 30px;
+  overflow: hidden;
 }
 </style>
 <style lang="scss">

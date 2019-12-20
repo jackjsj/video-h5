@@ -39,8 +39,12 @@
             v-for="item in searchDataList"
             :key="item.id"
             @click="$router.push(`/video/${item.id}`);">
-            <div class="flex-auto cover-img-wrapper flex jcc ovh">
+            <div class="flex-auto cover-img-wrapper flex jcc ovh rel">
               <van-image :src="item.cover" />
+              <div class="abs cover-logo flex jcc" v-if="item.logoCover">
+                <van-image :src="item.logoCover" />
+              </div>
+              <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
             </div>
             <p class="result-name wh flex-none ell f16 fw600">{{item.name}}</p>
           </div>
@@ -61,7 +65,7 @@ export default {
       hotLabels: [],
       searching: false,
       searchName: '', // 搜索名称
-      searchDataList: [], //搜索数据
+      searchDataList: [], // 搜索数据
       overlayVisible: false,
       loading: true,
       finished: false,
@@ -120,14 +124,18 @@ export default {
             this.pageNum++;
           }
           if (current === 1) {
-            this.searchDataList = data.map(i => {
-              return { name: i.videoName, cover: i.videoCover, id: i.id };
-            });
+            this.searchDataList = data.map(i => ({
+              name: i.videoName,
+              cover: i.videoCover,
+              id: i.id,
+            }));
           } else {
             this.movieList.push(
-              ...data.map(i => {
-                return { name: i.videoName, cover: i.videoCover, id: i.id };
-              }),
+              ...data.map(i => ({
+                name: i.videoName,
+                cover: i.videoCover,
+                id: i.id,
+              })),
             );
           }
         } else {

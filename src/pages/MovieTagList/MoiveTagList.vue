@@ -22,6 +22,10 @@
             @click="toVideoPage(item.id)">
             <div class="img-wrapper rel flex jcc ovh">
               <van-image :src="item.videoCover" />
+              <div class="abs cover-logo flex jcc" v-if="item.logoCover">
+                <van-image :src="item.logoCover" />
+              </div>
+              <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
             </div>
             <p class="cb9 f16 item-name ell">{{item.videoName}}</p>
           </div>
@@ -41,10 +45,10 @@ export default {
   name: 'Bannel',
   data() {
     return {
-      onFetching: false, //分页查询上锁
+      onFetching: false, // 分页查询上锁
       dataOnNull: false,
       pageNum: 1,
-      movieList: [], //电影数据
+      movieList: [], // 电影数据
       tagId: null,
       tagName: '',
       loading: false,
