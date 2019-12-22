@@ -117,7 +117,7 @@
                       style="border-width:1px;"
                       v-for="type in videoDetails.classifyName.split(',')"
                       :key="type"
-                      class="tag flex-none mr5 mb5 mc-purple">{{type}}</p>
+                      class="tag flex-none mr5 mb5">{{type}}</p>
                   </div>
                 </div>
                 <div class="flex mb5">
@@ -127,7 +127,7 @@
                       style="border-width:1px;"
                       v-for="(item) in videoDetails.tags.split(',')"
                       :key="item"
-                      class="tag flex-none mr5 mb5 mc-purple">{{item}}</p>
+                      class="tag flex-none mr5 mb5">{{item}}</p>
                   </div>
                 </div>
                 <div class="flex aic mb5">
@@ -220,7 +220,7 @@ export default {
       // videojs options
       playerOptions: {
         autoplay: true, // 如果true,浏览器准备好时开始回放。
-        muted: true, // 默认情况下将会消除任何音频。
+        muted: false, // 默认情况下将会消除任何音频。
         language: 'zh-CN',
         controls: true, // 控制条
         preload: 'auto', // 视频预加载
@@ -494,10 +494,14 @@ export default {
   border-radius: 12px 0 12px 0;
 }
 .tag {
-  padding: 2px 6px;
+  padding: 2px 7px;
   font-size: 12px;
   border-radius: 24px;
-  border: 1px solid #9348ff;
+  color:#fff;
+  background: linear-gradient(90deg,
+    rgba(233, 90, 160, 0.6),
+    rgba(167, 105, 255, 0.6)
+  );
 }
 .mc-purple {
   color: #9348ff;

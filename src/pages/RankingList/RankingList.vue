@@ -134,6 +134,7 @@ export default {
       overlayVisible: false,
       first3,
       apis: [findEverydayPays, findWeeklyPays, findMonthlyPays],
+      basePath,
     };
   },
   mounted() {

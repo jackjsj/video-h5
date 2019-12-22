@@ -103,7 +103,7 @@ const first3 = [
 ];
 const types = [
   {
-    name: '最新数据',
+    name: '最近更新',
     key: 'newData',
   },
   {

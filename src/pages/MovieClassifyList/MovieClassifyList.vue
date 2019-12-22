@@ -9,80 +9,83 @@
       <van-icon name="search" slot="right" color="#fff"
         @click="$router.push('/movieSearch')" />
     </van-nav-bar>
-    <!-- 过滤条件 -->
-    <div class="f14 pt15 pl15 pr15 flex-none" style="color:#fffaff">
-      <!-- 条件项 -->
-      <div
-        class="mb10"
-        v-for="(filter,index) in filters"
-        :key="index">
-        <van-tabs
-          :border="false"
-          title-inactive-color="#FFFAFF"
-          v-model="filter.current"
-          @click="(name,title)=>onFilterItemClick(filter,title)">
-          <van-tab
-            class="filter-item"
-            v-for="item in filter.items"
-            :key="item.id"
-            :name="item.id"
-            :title="item.name">
-            <div v-if="filter.name === '标签类型' && item.name!=='全部类型'"
-              class="pt10">
-              <div class="flex" :class="{short:!isExpandTag}">
-                <div class="flex-none">
-                  <p class="filter-item van-tab"
-                    :class="{active:currentTags.filter(item=>item.checked).length === 0}"
-                    @click="onAllTagClick">全部标签</p>
-                </div>
-                <div class="flex-auto">
-                  <div class="btn-box-wrapper flex jcc aic rel">
-                    <img class="btn-box" src="@/assets/images/btn-box.png" />
-                    <p class="abs wh flex aic jcc btn-box-text">
-                      <span @click="isExpandTag = !isExpandTag">{{isExpandTag ? '收起':'展开'}}</span>
-                      <van-icon :name="!isExpandTag?'arrow-down':'arrow-up'" />
-                    </p>
+    <div class="flex-auto ova">
+      <!-- 过滤条件 -->
+      <div class="f14 pt15 pl15 pr15" style="color:#fffaff">
+        <!-- 条件项 -->
+        <div
+          class="mb10"
+          v-for="(filter,index) in filters"
+          :key="index">
+          <van-tabs
+            :border="false"
+            title-inactive-color="#FFFAFF"
+            v-model="filter.current"
+            @click="(name,title)=>onFilterItemClick(filter,title)">
+            <van-tab
+              class="filter-item"
+              v-for="item in filter.items"
+              :key="item.name"
+              :name="item.id"
+              :title="item.name">
+              <div v-if="filter.name === '标签类型' && item.name!=='全部类型'"
+                class="pt10">
+                <div class="flex" :class="{short:!isExpandTag}">
+                  <div class="flex-none">
+                    <p class="filter-item van-tab"
+                      :class="{active:currentTags.filter(item=>item.checked).length === 0}"
+                      @click="onAllTagClick">全部标签</p>
                   </div>
-                  <p class="filter-item tag-filter-item mb10 van-tab"
-                    :class="{active:tag.checked}"
-                    @click="onTagClick(tag)"
-                    v-for="tag in currentTags"
-                    :key="tag.id">{{tag.name}}</p>
-                  <div style="clear:both;"></div>
+                  <div class="flex-auto">
+                    <div class="btn-box-wrapper flex jcc aic rel">
+                      <img class="btn-box" src="@/assets/images/btn-box.png" />
+                      <p class="abs wh flex aic jcc btn-box-text">
+                        <span @click="isExpandTag = !isExpandTag">{{isExpandTag ? '收起':'展开'}}</span>
+                        <van-icon :name="!isExpandTag?'arrow-down':'arrow-up'" />
+                      </p>
+                    </div>
+                    <p class="filter-item tag-filter-item mb10 van-tab"
+                      :class="{active:tag.checked}"
+                      @click="onTagClick(tag)"
+                      v-for="tag in currentTags"
+                      :key="tag.id">{{tag.name}}</p>
+                    <div style="clear:both;"></div>
+                  </div>
                 </div>
               </div>
+            </van-tab>
+          </van-tabs>
+        </div>
+      </div>
+      <!-- 列表 -->
+      <div class="pl15 pr15 pt5 pb15">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          :error.sync="error"
+          finished-text="没有更多了"
+          @load="getMovieList">
+          <div class="list flex flex-wrap jcb">
+            <div
+              class="item mb15"
+              v-for="item in movieList"
+              :key="item.id"
+              @click="$router.push(`/video/${item.id}`)">
+              <div class="img-wrapper rel flex jcc">
+                <van-image :src="item.videoCover" />
+                <div class="abs cover-logo flex jcc" v-if="item.logoCover">
+                  <van-image :src="item.logoCover" />
+                </div>
+                <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
+              </div>
+              <p class="cb9 f16 item-name ell">{{item.videoName}}</p>
             </div>
-          </van-tab>
-        </van-tabs>
+            <div class="item-pad"></div>
+          </div>
+        </van-list>
       </div>
     </div>
-    <!-- 列表 -->
-    <div class="flex-auto ova pl15 pr15 pt5 pb15">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        :error.sync="error"
-        finished-text="没有更多了"
-        @load="getMovieList">
-        <div class="list flex flex-wrap jcb">
-          <div
-            class="item mb15"
-            v-for="item in movieList"
-            :key="item.id"
-            @click="$router.push(`/video/${item.id}`)">
-            <div class="img-wrapper rel flex jcc">
-              <van-image :src="item.videoCover" />
-              <div class="abs cover-logo flex jcc" v-if="item.logoCover">
-                <van-image :src="item.logoCover" />
-              </div>
-              <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
-            </div>
-            <p class="cb9 f16 item-name ell">{{item.videoName}}</p>
-          </div>
-          <div class="item-pad"></div>
-        </div>
-      </van-list>
-    </div>
+
     <van-overlay
       @click="onOverlayClick"
       :show="overlayVisible" />
@@ -120,14 +123,14 @@ export default {
       }
       return {};
     },
-    // 地区
-    districtId() {
-      return this.filters.filter(item => item.name === '地区')[0].current;
-    },
-    // 年代
-    yearsId() {
-      return this.filters.filter(item => item.name === '年代')[0].current;
-    },
+    // // 地区
+    // districtId() {
+    //   return this.filters.filter(item => item.name === '地区')[0].current;
+    // },
+    // // 年代
+    // yearsId() {
+    //   return this.filters.filter(item => item.name === '年代')[0].current;
+    // },
     // 时长
     durationTypeId() {
       return this.filters.filter(item => item.name === '时长')[0].current;
@@ -180,17 +183,18 @@ export default {
       finished: true,
       error: false,
       filters: [
-        {
-          name: '地区',
-          current: -1,
-          items: [],
-          key: 'districTagList',
-          all: '全部地区',
-        },
+        // {
+        //   name: '地区',
+        //   current: -1,
+        //   items: [],
+        //   key: 'districTagList',
+        //   all: '全部地区',
+        // },
         {
           name: '类型',
-          current: '',
+          current: -1,
           items: [],
+          all: '全部馆别',
           key: 'classifyList',
         },
         {
@@ -200,13 +204,13 @@ export default {
           key: 'tagTypeList',
           all: '全部类型',
         },
-        {
-          name: '年代',
-          current: -1,
-          items: [],
-          key: 'yearsTagList',
-          all: '全部年代',
-        },
+        // {
+        //   name: '年代',
+        //   current: -1,
+        //   items: [],
+        //   key: 'yearsTagList',
+        //   all: '全部年代',
+        // },
         {
           name: '时长',
           current: -1,
@@ -267,7 +271,7 @@ export default {
     }
     // 获取路由中的参数，设置默认属性
     const {
-      type = result.data.classifyList[0].id,
+      type = -1,
       order = -1,
     } = this.$route.query;
     this.filters.filter(item => item.name === '类型')[0].current = parseInt(
@@ -283,8 +287,9 @@ export default {
       this.pageNum = 1;
       this.movieList = [];
       this.finished = false;
-      this.loading = false;
+      this.loading = true;
       this.error = false;
+      this.getMovieList();
     },
     onAllTagClick() {
       // 清空所有标签选中
@@ -292,8 +297,10 @@ export default {
       this.pageNum = 1;
       this.movieList = [];
       this.finished = false;
-      this.loading = false;
+      this.loading = true;
       this.error = false;
+      // 查询数据
+      this.getMovieList();
     },
     onOverlayClick() {
       Toast('操作太频繁了');
@@ -321,18 +328,18 @@ export default {
       this.pageNum = 1;
       this.movieList = [];
       this.finished = false;
-      this.loading = false;
+      this.loading = true;
       this.error = false;
       // 查询数据
-      // this.getMovieList();
+      this.getMovieList();
     },
     // 查询数据,不分页
     async getMovieList() {
       const params = {
         pageNum: this.pageNum,
         classifyId: String(this.classifyId), // 分类
-        districtId: String(this.districtId), // 地区
-        yearsId: String(this.yearsId), // 年代
+        // districtId: String(this.districtId), // 地区
+        // yearsId: String(this.yearsId), // 年代
         videoClassifyId: String(this.videoClassifyId), // 规格
         durationTypeId: String(this.durationTypeId), // 时长
         languageId: String(this.languageId), // 语言
@@ -378,7 +385,7 @@ export default {
   width: 168px;
   height: 95px;
   background: rgba(204, 204, 204, 0.1);
-  border-radius: 4px 4px 0 0;
+  border-radius: 12px 12px 0 0;
   overflow: hidden;
   img {
     width: 100%;
@@ -394,6 +401,7 @@ export default {
   padding: 0 6px;
   width: 168px;
   box-sizing: border-box;
+  border-radius: 0 0 12px 12px;
 }
 .van-overlay {
   background: transparent;

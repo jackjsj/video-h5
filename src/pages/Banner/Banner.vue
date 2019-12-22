@@ -27,7 +27,7 @@
           <div class="img-wrapper rel flex aic jcc ovh">
             <van-image :src="item.picUrl" />
           </div>
-          <p class="cb9 f16 item-name ell">{{item.name}}</p>
+          <p class="cb9 f16 item-name ova">{{item.name}}</p>
         </div>
         <div class="item-pad"></div>
         <div class="item-pad"></div>

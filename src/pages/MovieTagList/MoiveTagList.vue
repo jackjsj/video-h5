@@ -109,7 +109,7 @@ export default {
   width: 168px;
   height: 95px;
   background: rgba(204, 204, 204, 0.1);
-  border-radius: 4px 4px 0 0;
+  border-radius: 12px 12px 0 0;
   overflow: hidden;
   img {
     width: 100%;
@@ -125,5 +125,6 @@ export default {
   padding: 0 6px;
   width: 168px;
   box-sizing: border-box;
+  border-radius: 0 0 12px 12px;
 }
 </style>

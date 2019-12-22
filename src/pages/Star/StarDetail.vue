@@ -20,7 +20,7 @@
           @click="saveMemberCollect(rank(item.index).id,rank(item.index).isCollect)">收藏</button>
         <div class="flex jcc f13 mt18">
           <p class="mr26">身高：{{detail.heightNum}}cm</p>
-          <p class="mr26">三围：{{detail.bwh}}</p>
+          <!-- <p class="mr26">三围：{{detail.bwh}}</p> -->
           <p>罩杯：{{detail.cup}}</p>
         </div>
       </div>

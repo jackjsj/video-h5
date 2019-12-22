@@ -51,10 +51,11 @@
         <div class="flex jcb video-list-header">
           <p class="f16">最新片源</p>
           <div class="flex aic f14">
-            <!-- <div class="flex aic mr20">
+            <div class="flex aic mr20"
+              @click="roll('newVideo')">
               <p class="mr5">换一换</p>
               <van-icon name="replay" />
-            </div> -->
+            </div>
             <div class="flex aic"
               @click="$router.push('/movieClassifyList?order=2')">
               <p class="mr5">更多</p>
@@ -87,10 +88,11 @@
         <div class="flex jcb video-list-header">
           <p class="f16">重磅热播</p>
           <div class="flex aic f14">
-            <!-- <div class="flex aic mr20">
+            <div class="flex aic mr20"
+              @click="roll('mostPlay')">
               <p class="mr5">换一换</p>
               <van-icon name="replay" />
-            </div> -->
+            </div>
             <div class="flex aic"
               @click="$router.push('/movieClassifyList?order=1')">
               <p class="mr5">更多</p>
@@ -126,10 +128,11 @@
           <div class="flex jcb video-list-header">
             <p class="f16">{{item.name}}</p>
             <div class="flex aic f14">
-              <!-- <div class="flex aic mr20">
-              <p class="mr5">换一换</p>
-              <van-icon name="replay" />
-            </div> -->
+              <div class="flex aic mr20"
+                @click="roll(item.id, item)">
+                <p class="mr5">换一换</p>
+                <van-icon name="replay" />
+              </div>
               <div class="flex aic"
                 @click="$router.push(`/movieClassifyList?type=${item.id}`)">
                 <p class="mr5">更多</p>
@@ -184,7 +187,12 @@
 </template>
 
 <script>
-import { getIndexInfo, checkInAddIntegral, getExtensionUrl } from '@/api';
+import {
+  getIndexInfo,
+  checkInAddIntegral,
+  getExtensionUrl,
+  getMovieList,
+} from '@/api';
 
 const types = [
   {
@@ -255,6 +263,7 @@ export default {
       //
       popupVisible: false,
       notice: {},
+      classifyPageNum: {},
     };
   },
   mounted() {
@@ -263,6 +272,51 @@ export default {
     this.getExtensionUrl();
   },
   methods: {
+    async roll(type, target) {
+      let result;
+      switch (type) {
+        case 'newVideo':
+          result = await getMovieList({
+            newVideo: '1',
+            pageSize: 6, // 一次换6个
+            pageNum: this.newVideoPageNum || 2,
+          });
+          this.newVideoList = result.data;
+          if (result.current < result.pages) {
+            this.newVideoPageNum = result.current + 1;
+          } else {
+            this.newVideoPageNum = 1;
+          }
+          break;
+        case 'mostPlay':
+          result = await getMovieList({
+            newVideo: '1',
+            pageSize: 6, // 一次换6个
+            pageNum: this.mostPlayPageNum || 2,
+          });
+          this.mostVideoList = result.data;
+          if (result.current < result.pages) {
+            this.mostPlayPageNum = result.current + 1;
+          } else {
+            this.mostPlayPageNum = 1;
+          }
+          break;
+        default:
+          result = await getMovieList({
+            classifyId: String(type),
+            pageSize: 6, // 一次换6个
+            pageNum: this.classifyPageNum[type] || 2,
+          });
+          if (result.data.length > 0) {
+            target.videoList = result.data;
+          }
+          if (result.current < result.pages) {
+            this.classifyPageNum[type] = result.current + 1;
+          } else {
+            this.classifyPageNum[type] = 1;
+          }
+      }
+    },
     /**
      * 跳转app推广页面
      */
@@ -283,7 +337,6 @@ export default {
        */
       this.addIntegral(3);
       const { linkType } = banner; // 广告类型
-      console.log(linkType);
       switch (linkType) {
         case 1:
           // 外部链接
@@ -406,7 +459,7 @@ export default {
   width: 168px;
   height: 95px;
   background: rgba(204, 204, 204, 0.1);
-  border-radius: 4px 4px 0 0;
+  border-radius: 12px 12px 0 0;
   overflow: hidden;
   img {
     width: 100%;
@@ -427,7 +480,7 @@ export default {
   line-height: 34px;
   padding: 0 6px;
   width: 168px;
-  border-radius: 0 0 4px 4px;
+  border-radius: 0 0 12px 12px;
   box-sizing: border-box;
 }
 .popup {
