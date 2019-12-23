@@ -40,7 +40,7 @@
             :key="item.id"
             @click="$router.push(`/video/${item.id}`);">
             <div class="flex-auto cover-img-wrapper flex jcc ovh rel">
-              <van-image :src="item.cover" />
+              <van-image style="width:100%;height:100%;" :src="item.cover" />
               <div class="abs cover-logo flex jcc" v-if="item.logoCover">
                 <van-image :src="item.logoCover" />
               </div>
