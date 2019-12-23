@@ -39,7 +39,8 @@
             @click="onFilterBtnClick(item,'currentType')">{{item.name}}</div>
         </div>
       </div>
-      <div class="list flex flex-wrap jcb flex-auto ova aifs">
+      <div class="list flex flex-wrap jcb flex-auto ova"
+        style="align-content:flex-start;">
         <div
           class="item mb15"
           v-for="item in list"
@@ -122,7 +123,7 @@ export default {
       orderTypes: [],
       classifyList: [],
       caricatureList: [],
-      classifyIndex: 0, //选中的是哪一个
+      classifyIndex: 0, // 选中的是哪一个
       orderTypeIndex: 0,
 
       list: [],
@@ -214,7 +215,7 @@ export default {
   height: 152px;
   background: rgba(204, 204, 204, 0.1);
   border-radius: 4px 4px 0 0;
-  overflow:hidden;
+  overflow: hidden;
   .num {
     left: 4px;
     top: 4px;

@@ -30,8 +30,11 @@
               <div class="seat mb12 rel" :class="item.class">
                 <van-image fit="cover" class="avatar" :src="rank(item.index).headpic" />
               </div>
-              <p class="f16">{{rank(item.index).name}}</p>
-              <p class="f14 mb10">{{rank(item.index).heat}}</p>
+              <p class="f16 mb5">{{rank(item.index).name}}</p>
+              <div class="flex aic mb10">
+                <img class="fire-img" src="@/assets/images/fire.png" />
+                <p class="f14">{{rank(item.index).heat}}</p>
+              </div>
               <button class="fav-btn"
                 :style="`opacity:${rank(item.index).isCollect !== undefined ? '1':'0'}`"
                 :class="{isFav:rank(item.index).isCollect==='1'}"
@@ -158,11 +161,11 @@ export default {
   computed: {
     rank(index) {
       return index => (this.list[index]
-        ? this.list[index]
-        : {
-          name: '虚位以待',
-          heat: 0,
-        });
+          ? this.list[index]
+          : {
+              name: '虚位以待',
+              heat: 0,
+            });
     },
   },
   methods: {

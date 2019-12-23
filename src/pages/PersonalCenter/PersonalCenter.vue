@@ -68,7 +68,7 @@
             :key="item.id"
             @click="onSwiperClick(item)">
             <div class="swiper-item flex jcc ovh">
-              <van-image :src="item.picUrl" />
+              <van-image :src="basePath+item.picUrl" />
             </div>
           </div>
         </div>
@@ -154,6 +154,7 @@ export default {
       location: window.location,
       //
       countItems,
+      basePath,
       items: [
         {
           name: '会员充值',

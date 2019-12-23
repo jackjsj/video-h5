@@ -27,7 +27,7 @@
             <div v-if="index === 0" class="rank1-wrapper rel">
               <!-- 第一名 -->
               <div class="flex jcc rank1-image mb15">
-                <van-image :src="item.video_cover" />
+                <van-image :src="basePath+item.video_cover" />
               </div>
               <div class="rank1-name flex aic">
                 <div class="flex-auto rel">
@@ -55,7 +55,7 @@
             </div>
             <div class="flex aic video-item" v-else>
               <div class="flex flex-none jcc video-cover rel">
-                <van-image :src="item.video_cover" />
+                <van-image :src="basePath+item.video_cover" />
                 <div class="abs cover-logo flex jcc" v-if="item.logoCover">
                   <van-image :src="item.logoCover" />
                 </div>

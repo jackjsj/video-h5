@@ -40,6 +40,13 @@
             <div class="opa3">{{videoDetails.careNum}}</div>
           </div>
           <div class="flex-col aic"
+            @click="downPraise">
+            <div class="op-icon" style="transform:rotate(180deg);">
+              <van-icon name="good-job-o" :color="'#fff'" />
+            </div>
+            <div class="opa3">{{videoDetails.dislikeNum}}</div>
+          </div>
+          <div class="flex-col aic"
             @click="collection">
             <div class="op-icon">
               <van-icon name="star-o" :color="videoDetails.isCare !=='0' ?'#FC386F':'#fff'" />
@@ -394,13 +401,24 @@ export default {
         Toast('已点赞');
       }
     },
+    downPraise() {
+      this.sendPraise({
+        videoId: this.videoId,
+        careType: 0,
+      });
+    },
     async sendPraise(params) {
       // 异步发送点赞请求
+      const { careType } = params;
       const result = await setCareTimess(params);
       if (result.retCode === '1') {
-        this.videoDetails.isLike = '1';
-        this.videoDetails.careNum = this.videoDetails.careNum + 1;
-        Toast('点赞成功');
+        if (careType === 1) {
+          this.videoDetails.isLike = '1';
+          this.videoDetails.careNum = this.videoDetails.careNum + 1;
+        } else {
+          this.videoDetails.dislikeNum = this.videoDetails.dislikeNum + 1;
+        }
+        Toast('操作成功');
       } else {
         Toast(result.retMsg);
       }
@@ -497,8 +515,9 @@ export default {
   padding: 2px 7px;
   font-size: 12px;
   border-radius: 24px;
-  color:#fff;
-  background: linear-gradient(90deg,
+  color: #fff;
+  background: linear-gradient(
+    90deg,
     rgba(233, 90, 160, 0.6),
     rgba(167, 105, 255, 0.6)
   );
