@@ -35,14 +35,14 @@
           <div class="flex-col aic"
             @click="upPraise">
             <div class="op-icon">
-              <van-icon name="good-job-o" :color="videoDetails.isLike !== '0'?'#FC386F':'#fff'" />
+              <van-icon name="good-job-o" :color="videoDetails.isLike === '1'?'#FC386F':'#fff'" />
             </div>
             <div class="opa3">{{videoDetails.careNum}}</div>
           </div>
           <div class="flex-col aic"
             @click="downPraise">
             <div class="op-icon" style="transform:rotate(180deg);">
-              <van-icon name="good-job-o" :color="'#fff'" />
+              <van-icon name="good-job-o" :color="videoDetails.isLike === '2'?'#FC386F':'#fff'" />
             </div>
             <div class="opa3">{{videoDetails.dislikeNum}}</div>
           </div>
@@ -398,14 +398,18 @@ export default {
           careType: 1,
         });
       } else {
-        Toast('已点赞');
+        Toast('已操作');
       }
     },
     downPraise() {
-      this.sendPraise({
-        videoId: this.videoId,
-        careType: 0,
-      });
+      if (this.videoDetails.isLike === '0') {
+        this.sendPraise({
+          videoId: this.videoId,
+          careType: 2,
+        });
+      } else {
+        Toast('已操作');
+      }
     },
     async sendPraise(params) {
       // 异步发送点赞请求
@@ -416,6 +420,7 @@ export default {
           this.videoDetails.isLike = '1';
           this.videoDetails.careNum = this.videoDetails.careNum + 1;
         } else {
+          this.videoDetails.isLike = '2';
           this.videoDetails.dislikeNum = this.videoDetails.dislikeNum + 1;
         }
         Toast('操作成功');
