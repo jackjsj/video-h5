@@ -61,21 +61,21 @@ export default {
           Toast(`${result.retMsg}token`);
           return;
         }
-        const resultSetting = await getModuleSetting();
-        const resultOpenPay = await findIsOpenPay();
-        if (resultSetting.retCode === '1') {
-          this.$store.dispatch('saveUserSeting', { setting: resultSetting });
-        } else {
-          Toast(`${result.retMsg}setting`);
-          return;
-        }
+      }
+      const resultSetting = await getModuleSetting();
+      const resultOpenPay = await findIsOpenPay();
+      if (resultSetting.retCode === '1') {
+        this.$store.dispatch('saveUserSeting', { setting: resultSetting });
+      } else {
+        Toast(`${result.retMsg}setting`);
+        return;
+      }
 
-        if (resultOpenPay.retCode === '1') {
-          this.$store.dispatch('saveUserOpenPay', { openpay: resultOpenPay });
-        } else {
-          Toast(`${result.retMsg}openPay`);
-          return;
-        }
+      if (resultOpenPay.retCode === '1') {
+        this.$store.dispatch('saveUserOpenPay', { openpay: resultOpenPay });
+      } else {
+        Toast(`${result.retMsg}openPay`);
+        return;
       }
       Toast.clear();
       this.$store.state.isAuthLogin = true;

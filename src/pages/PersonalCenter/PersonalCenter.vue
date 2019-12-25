@@ -68,7 +68,7 @@
             :key="item.id"
             @click="onSwiperClick(item)">
             <div class="swiper-item flex jcc ovh">
-              <van-image :src="basePath+item.picUrl" />
+              <van-image :src="getPicUrl(item.picUrl)" />
             </div>
           </div>
         </div>
@@ -221,6 +221,9 @@ export default {
     this.getGcGroup();
   },
   methods: {
+    getPicUrl(url) {
+      return url && url.startsWith('http') ? url : this.basePath + url;
+    },
     onDialogConfirm() {
       localStorage.removeItem('token');
       localStorage.removeItem('loginType');

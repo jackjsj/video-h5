@@ -114,7 +114,7 @@ const types = [
     key: 'newVideo',
   },
   {
-    name: '电影最多',
+    name: '片量最多',
     key: 'videoNum',
   },
 ];
@@ -161,11 +161,11 @@ export default {
   computed: {
     rank(index) {
       return index => (this.list[index]
-          ? this.list[index]
-          : {
-              name: '虚位以待',
-              heat: 0,
-            });
+        ? this.list[index]
+        : {
+          name: '虚位以待',
+          heat: 0,
+        });
     },
   },
   methods: {

@@ -55,7 +55,7 @@
             </div>
             <div class="flex aic video-item" v-else>
               <div class="flex flex-none jcc video-cover rel">
-                <van-image :src="basePath+item.video_cover" />
+                <van-image :src="getPicUrl(item.video_cover)" />
                 <div class="abs cover-logo flex jcc" v-if="item.logoCover">
                   <van-image :src="item.logoCover" />
                 </div>
@@ -141,6 +141,9 @@ export default {
     this.getRankList(0);
   },
   methods: {
+    getPicUrl(url) {
+      return url && url.startsWith('http') ? url : this.basePath + url;
+    },
     async getRankList(index) {
       this.overlayVisible = true;
       Toast.loading({

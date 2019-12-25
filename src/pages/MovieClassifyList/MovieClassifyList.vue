@@ -3,7 +3,7 @@
     <van-nav-bar
       class="flex-none"
       :title="title"
-      left-arrow
+      :left-arrow="$route.path !== '/banner'"
       @click-left="$router.back()"
       :border="false">
       <van-icon name="search" slot="right" color="#fff"
