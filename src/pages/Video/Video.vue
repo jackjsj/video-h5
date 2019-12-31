@@ -196,6 +196,26 @@
       </div>
       <p class="f14 fw400">快来说说你的感想吧</p>
     </div>
+    <!-- 弹出框 -->
+
+    <van-dialog
+      v-model="dialogVisible"
+      message="邀请好友或者购买vip会员，就可以无限制观看视频啦"
+      cancelButtonText='邀请好友'
+      confirmButtonText='购买vip'
+      show-cancel-button
+      @confirm="$router.push('/vipCreditAdd')"
+      @cancel="$router.push('/invitation')">
+      <template #title>
+        <div class="rel">
+          <p>非常抱歉，您的观影次数已经用完</p>
+          <p class="abs dialog-close-btn"
+            @click="dialogVisible = false;">
+            <van-icon name="cross" />
+          </p>
+        </div>
+      </template>
+    </van-dialog>
   </div>
 </template>
 
@@ -203,7 +223,12 @@
 import 'swiper/css/swiper.min.css';
 import Swiper from 'swiper';
 import { videoPlayer, setCareTimes } from 'vue-video-player';
-import { getVideoDetail, setCareHistory, setCareTimess } from '@/api';
+import {
+  getVideoDetail,
+  setCareHistory,
+  setCareTimess,
+  getMemberInfo,
+} from '@/api';
 import './css/custom-theme.css';
 
 export default {
@@ -232,8 +257,9 @@ export default {
         controls: true, // 控制条
         preload: 'auto', // 视频预加载
         loop: false, // 导致视频一结束就重新开始。 //播放速度
-        /* playbackRates: [0.7, 1.0, 1.5, 2.0], */ aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
-        fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+        /* playbackRates: [0.7, 1.0, 1.5, 2.0], */
+        // aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+        fluid: false, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
         sources: [
           {
             /* type: "video/mp4", */
@@ -259,13 +285,12 @@ export default {
       showMore: false,
       defaultAvatar: require('@/assets/images/avatar.png'),
       memberInfo: {},
+      dialogVisible: false,
     };
   },
   mounted() {
     this.videoId = this.$route.params.videoId;
     this.getVideoDetail(this.videoId);
-    this.memberInfo = JSON.parse(localStorage.getItem('memberInfo')) || {};
-    console.log(1);
   },
   computed: {
     player() {
@@ -434,12 +459,15 @@ export default {
     back() {
       this.$router.back();
     },
+    /**
+     * 播放次数用完后 0次之后 再点击视频观看，就会弹出提示
+     * 您的观影次数已经用完 然后底下显示， “邀请好友” “开通会员”
+     * 假如是vip用户 是可以无限观影，可以无视次数用完
+     */
     onPlayerTimeupdate(player) {
-      /* console.log('player Timeupdate!', player.currentTime()) */
-      // 真实使用
-      if (!(this.isVip === 1) && player.currentTime() >= this.payDuration) {
+      if (this.isVip !== 1) {
+        this.dialogVisible = true;
         player.pause();
-        this.isPermitView = true;
       }
     },
   },
@@ -453,8 +481,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.van-icon-arrow-left {
+  font-weight: bolder;
+}
 .video-wrapper {
-  height: 276px;
+  height: 211px;
   background: rgba(255, 255, 255, 0.3);
   margin-top: -50px;
 }
@@ -538,6 +569,10 @@ export default {
   overflow: hidden;
   align-items: flex-start;
 }
+.dialog-close-btn {
+  top: -15px;
+  right: 10px;
+}
 </style>
 <style lang="scss">
 .video {
@@ -573,5 +608,8 @@ export default {
   .vjs-custom-skin > .video-js {
     height: 100%;
   }
+}
+video {
+  object-fit: fill;
 }
 </style>

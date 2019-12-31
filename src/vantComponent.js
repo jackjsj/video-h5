@@ -36,6 +36,7 @@ import {
 } from "vant";
 
 window.Toast = Toast;
+window.Dialog = Dialog;
 
 Vue.use(NavBar)
   .use(Button)

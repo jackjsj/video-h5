@@ -100,8 +100,8 @@ export default {
           type: 2,
         };
         const result = await getSmsCode(params);
-        if (resp.retCode !== '1') {
-          result.computeTime = 0;
+        if (result.retCode !== '1') {
+          this.computeTime = 0;
           clearInterval(this.intervalId);
           this.intervalId = undefined;
         }

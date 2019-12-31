@@ -20,15 +20,15 @@
             :key="item.name"
             @click="onFilterBtnClick(item,'currentOrder')">{{item.name}}</div>
         </div>
-        <!-- <div class="flex ova">
+        <div class="flex ova">
           <div
-          style="border-width:1px;"
+            style="border-width:1px;"
             class="filter-btn"
-            :class="{active:item.name === currentState}"
+            :class="{active:item.name === currentState.name}"
             v-for="item in states"
             :key="item.name"
             @click="onFilterBtnClick(item,'currentState')">{{item.name}}</div>
-        </div> -->
+        </div>
         <div class="flex ova">
           <div
             style="border-width:1px;"
@@ -51,7 +51,7 @@
               <van-image :src="item.cover" />
             </div>
             <div class="num abs fw400">共{{item.chapterNum}}话</div>
-            <!-- <div class="status abs fw400">{{item.status}}</div> -->
+            <div class="status abs fw400">{{item.status}}</div>
           </div>
           <p class="cb9 f16 item-name ell">{{item.name}}</p>
         </div>
@@ -66,53 +66,18 @@
 <script>
 import { getCartoonInfo } from '@/api';
 
-const list = new Array(10).fill().map((item, index) => ({
-  name: '我的英雄学院',
-  status: '连载中',
-  chapterNum: '25',
-  cover: '',
-  id: index,
-}));
-
-const orders = [
-  {
-    name: '综合',
-  },
-  {
-    name: '最多播放',
-  },
-  {
-    name: '最近更新',
-  },
-  {
-    name: '最多喜欢',
-  },
-];
-
 const states = [
   {
     name: '全部',
+    id: undefined,
   },
   {
     name: '连载中',
+    id: '连载中',
   },
   {
     name: '已完结',
-  },
-];
-
-const types = [
-  {
-    name: '全部',
-  },
-  {
-    name: '科幻',
-  },
-  {
-    name: '剧情',
-  },
-  {
-    name: '修仙',
+    id: '已完结',
   },
 ];
 
@@ -128,9 +93,12 @@ export default {
 
       list: [],
       orders: [],
-      // states,
+      states,
       types: [],
-      // currentState: '连载中',
+      currentState: {
+        name: '全部',
+        id: undefined,
+      },
       currentOrder: {},
       currentType: {},
       overlayVisible: false,
@@ -141,10 +109,12 @@ export default {
   },
   methods: {
     onFilterBtnClick(item, target) {
+      console.log(item, target);
       this[target] = item;
       this.getCartoonInfo(
         String(this.currentType.id),
         String(this.currentOrder.type),
+        this.currentState.id,
       );
     },
     // 路由跳转
@@ -155,7 +125,7 @@ export default {
     toDetailsPage(id) {
       this.$router.push(`caricatureDetails/${id}`);
     },
-    async getCartoonInfo(classifyId, orderType) {
+    async getCartoonInfo(classifyId, orderType, status) {
       this.overlayVisible = true;
       Toast.loading({
         message: '加载中...',
@@ -165,6 +135,7 @@ export default {
       const result = await getCartoonInfo({
         classifyId,
         orderType,
+        status,
       });
       if (result.retCode === '1') {
         const { data } = result;

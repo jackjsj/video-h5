@@ -40,7 +40,7 @@ const tabbarItems = [
     to: '/home',
   },
   {
-    name: '频道',
+    name: '分类',
     icon: {
       active: require('@/assets/images/频道2.png'),
       inactive: require('@/assets/images/频道1.png'),
