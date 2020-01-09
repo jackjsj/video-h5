@@ -348,7 +348,7 @@ export default {
         this.isVip = result.isVip;
         this.payDuration = result.payDuration;
         this.videoDetails.videoCover = result.data.videoCover;
-        this.bannerList = result.data.bannerList;
+        this.bannerList = result.data.bannerListHead;
         this.$nextTick(() => {
           // 渲染轮播
           new Swiper('.swiper-container', {
@@ -556,7 +556,9 @@ export default {
   border-radius: 12px 0 12px 0;
 }
 .tag {
-  padding: 2px 7px;
+  padding: 0 7px;
+  height: 20px;
+  line-height: 20px;
   font-size: 12px;
   border-radius: 24px;
   color: #fff;
@@ -616,8 +618,5 @@ export default {
   .vjs-custom-skin > .video-js {
     height: 100%;
   }
-}
-video {
-  object-fit: fill;
 }
 </style>
