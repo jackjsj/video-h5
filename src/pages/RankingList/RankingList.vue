@@ -27,14 +27,14 @@
             <div v-if="index === 0" class="rank1-wrapper rel">
               <!-- 第一名 -->
               <div class="flex jcc rank1-image mb15">
-                <van-image :src="basePath+item.video_cover" />
+                <van-image :src="getPicUrl(item.video_cover)" />
               </div>
               <div class="rank1-name flex aic">
                 <div class="flex-auto rel">
-                  <div class="flex aic mb8">
+                  <div class="flex aic mb5">
                     <p class="rank-no wh opa5 b mr10"
                       style="border-width:1px;">NO.{{index+1}}</p>
-                    <p class="wh ell f16 fw600 rank1-video-name lh1">{{item.video_name}}</p>
+                    <p class="wh f16 fw600 rank1-video-name">{{item.video_name}}</p>
                   </div>
                   <div class="flex aic">
                     <div class="flex aic mr10">
@@ -64,7 +64,7 @@
               <div class="flex-auto">
                 <p class="rank-no wh opa5 b mb5"
                   style="border-width:1px;">NO.{{index+1}}</p>
-                <p class="wh f16 fw600 lh18 mb2">{{item.video_name}}</p>
+                <p class="wh f16 fw600 lh18 mb2 van-multi-ellipsis--l2">{{item.video_name}}</p>
                 <div class="flex aic mc-gold f12">
                   <div class="flex aic mr10">
                     <van-icon name="play-circle" />
@@ -255,6 +255,11 @@ export default {
 }
 .rank1-video-name {
   width: 270px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  line-height: 1.2;
 }
 .video-cover {
   width: 165px;
@@ -308,5 +313,6 @@ export default {
     rgba(147, 72, 255, 1) 100%
   );
   border-radius: 8px 0px 13px 0px;
+  z-index: 9;
 }
 </style>

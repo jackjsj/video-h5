@@ -36,7 +36,9 @@
           <div class="flex-auto cover-img-wrapper flex jcc">
             <van-image :src="item.cover" />
           </div>
-          <p class="result-name wh flex-none ell f16 fw600">{{item.name}}</p>
+          <p class="result-name wh flex-none f16 fw600">
+            <span class="van-multi-ellipsis--l2 mt5">{{item.name}}</span>
+          </p>
         </div>
       </div>
     </div>
@@ -54,7 +56,7 @@ export default {
       hotLabels: [],
       isSearch: false,
       searchName: '', // 搜索名称
-      searchDataList: [], //搜索数据
+      searchDataList: [], // 搜索数据
       overlayVisible: false,
     };
   },
@@ -133,7 +135,7 @@ export default {
 .result-name {
   border-radius: 0 0 9px 9px;
   height: 45px;
-  line-height: 45px;
+  line-height: 18px;
   padding: 0 13px;
   background: rgba(27, 24, 46, 1);
 }

@@ -78,7 +78,9 @@
                 </div>
                 <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
               </div>
-              <p class="cb9 f16 item-name ell">{{item.videoName}}</p>
+              <p class="cb9 item-name">
+                <span class="movie-name">{{item.videoName}}</span>
+              </p>
             </div>
             <div class="item-pad"></div>
           </div>
@@ -270,15 +272,15 @@ export default {
       Toast(result.retMsg || result.msg);
     }
     // 获取路由中的参数，设置默认属性
-    const {
-      type = -1,
-      order = -1,
-    } = this.$route.query;
+    const { type = -1, order = -1, tagType = -1 } = this.$route.query;
     this.filters.filter(item => item.name === '类型')[0].current = parseInt(
       type,
     );
     this.filters.filter(item => item.name === '排序')[0].current = parseInt(
       order,
+    );
+    this.filters.filter(item => item.name === '标签类型')[0].current = parseInt(
+      tagType,
     );
   },
   methods: {
@@ -347,7 +349,6 @@ export default {
         tagIds: this.tagIds,
         ...this.currentOrderParams, // 排序方式
       };
-      console.log(params);
       const result = await search(params);
       if (result.retCode === '1') {
         const { page } = result.data;
@@ -374,7 +375,6 @@ export default {
 
 <style lang="scss" scoped>
 .filter-item {
-  // padding: 5px 15px;
   border-radius: 30px;
   line-height: 20px;
   &.active {
@@ -437,6 +437,7 @@ export default {
 .movie-classify {
   .van-tab.van-tab--active {
     border-radius: 30px;
+    border: none;
   }
   .van-tabs__nav--card {
     border: none;
@@ -445,13 +446,16 @@ export default {
     height: auto;
   }
   .van-tab {
+    display: flex;
+    align-items: center;
     border-right: 0;
     border-radius: 30px;
     height: 30px;
-    line-height: 30px;
     flex: none !important;
-    margin-right: 8px;
+    margin-right: 5px;
     padding: 0 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-sizing: border-box;
     &.active {
       border: none;
       background: linear-gradient(#e95aa0, #a769ff);
@@ -473,6 +477,7 @@ export default {
   .van-tabs--line .van-tabs__wrap {
     height: auto;
     border-radius: 0;
+    overflow-x: auto;
   }
 }
 </style>

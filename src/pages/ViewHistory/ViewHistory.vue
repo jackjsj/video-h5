@@ -20,7 +20,8 @@
           checked-color="#B000BA"
           class="mr18 flex-none">
         </van-checkbox>
-        <div class="pct100 flex aic flex-none">
+        <div class="pct100 flex aic flex-none"
+          @click="$router.push(`/video/${item.videoId}`)">
           <div class="item-cover flex jcc mr13 flex-none ovh rel">
             <van-image
               :src="item.videoCover" />
@@ -30,7 +31,7 @@
             <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
           </div>
           <div class="flex-col jca">
-            <p class="wh f16 opa9 fw500 lh23">{{item.videoName}}</p>
+            <p class="wh f16 opa9 fw500 lh23 van-multi-ellipsis--l2">{{item.videoName}}</p>
             <p class="f12 wh opa5 fw400">{{item.viewTime}}</p>
           </div>
         </div>

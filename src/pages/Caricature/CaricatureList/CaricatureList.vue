@@ -39,25 +39,35 @@
             @click="onFilterBtnClick(item,'currentType')">{{item.name}}</div>
         </div>
       </div>
-      <div class="list flex flex-wrap jcb flex-auto ova"
-        style="align-content:flex-start;">
-        <div
-          class="item mb15"
-          v-for="item in list"
-          :key="item.id"
-          @click="$router.push(`/caricatureDetails/${item.id}`)">
-          <div class="img-wrapper rel flex aic jcc">
-            <div style="height:100%;width:100%;" class="flex jcc">
-              <van-image :src="item.cover" />
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        :error.sync="error"
+        finished-text="没有更多了"
+        @load="getCartoonInfo">
+        <div class="list flex flex-wrap jcb flex-auto ova"
+          style="align-content:flex-start;">
+          <div
+            class="item mb15"
+            v-for="item in list"
+            :key="item.id"
+            @click="$router.push(`/caricatureDetails/${item.id}`)">
+            <div class="img-wrapper rel flex aic jcc">
+              <div style="height:100%;width:100%;" class="flex jcc">
+                <van-image :src="item.cover" />
+              </div>
+              <div class="num abs fw400">共{{item.chapterNum}}话</div>
+              <div class="status abs fw400">{{item.status}}</div>
             </div>
-            <div class="num abs fw400">共{{item.chapterNum}}话</div>
-            <div class="status abs fw400">{{item.status}}</div>
+            <p class="cb9 item-name">
+              <span class="movie-name">{{item.name}}</span>
+            </p>
           </div>
-          <p class="cb9 f16 item-name ell">{{item.name}}</p>
+          <div class="item-pad"></div>
+          <div class="item-pad"></div>
         </div>
-        <div class="item-pad"></div>
-        <div class="item-pad"></div>
-      </div>
+      </van-list>
+
     </div>
     <van-overlay :show="overlayVisible" />
   </div>
@@ -102,20 +112,26 @@ export default {
       currentOrder: {},
       currentType: {},
       overlayVisible: false,
+      pageNum: 1,
+      classifyId: '-1',
+      orderType: '0',
+      loading: false,
+      finished: false,
+      error: false,
     };
   },
   mounted() {
-    this.getCartoonInfo('-1', '0');
+    this.getCartoonInfo();
   },
   methods: {
     onFilterBtnClick(item, target) {
       console.log(item, target);
       this[target] = item;
-      this.getCartoonInfo(
-        String(this.currentType.id),
-        String(this.currentOrder.type),
-        this.currentState.id,
-      );
+      this.classifyId = this.currentType.id;
+      this.orderType = this.currentOrder.type;
+      this.pageNum = 1;
+      this.finished = false;
+      this.getCartoonInfo();
     },
     // 路由跳转
     goto(path) {
@@ -125,17 +141,20 @@ export default {
     toDetailsPage(id) {
       this.$router.push(`caricatureDetails/${id}`);
     },
-    async getCartoonInfo(classifyId, orderType, status) {
-      this.overlayVisible = true;
-      Toast.loading({
-        message: '加载中...',
-        loadingType: 'spinner',
-        duration: 0,
-      });
+    async getCartoonInfo() {
+      // this.overlayVisible = true;
+      // Toast.loading({
+      //   message: '加载中...',
+      //   loadingType: 'spinner',
+      //   duration: 0,
+      // });
+      const { pageNum } = this;
       const result = await getCartoonInfo({
-        classifyId,
-        orderType,
-        status,
+        classifyId: this.classifyId,
+        orderType: this.orderType,
+        status: this.currentState.id,
+        pageNum: this.pageNum,
+        pageSize: 30,
       });
       if (result.retCode === '1') {
         const { data } = result;
@@ -147,12 +166,24 @@ export default {
         this.currentType = this.types.filter(
           item => item.id === Number(data.classifyId),
         )[0];
-        this.list = data.caricatureList;
-        Toast.clear();
-        this.overlayVisible = false;
+        this.loading = false;
+        if (pageNum === 1) {
+          this.list = data.caricatureList;
+        } else {
+          this.list.push(...data.caricatureList);
+        }
+        if (data.caricatureList.length < 30) {
+          // 说明全部加载完了
+          this.finished = true;
+        } else {
+          // 说明还有数据
+          this.pageNum++;
+        }
+        // Toast.clear();
+        // this.overlayVisible = false;
       } else {
-        Toast.clear();
-        this.overlayVisible = false;
+        // Toast.clear();
+        // this.overlayVisible = false;
         Toast('出错了');
       }
     },
@@ -199,6 +230,9 @@ export default {
     right: 4px;
     bottom: 4px;
     color: #fff;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 2px 4px;
+    border-radius: 4px;
   }
 }
 .item-pad {

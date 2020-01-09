@@ -60,7 +60,7 @@ import { getSmsCode, telRegedit } from '@/api';
 export default {
   data() {
     return {
-      extensionCode: null, //推广码
+      extensionCode: undefined, //推广码
       tel: null, //手机号码
       computeTime: 0, // 计时的时间
       smsCode: null,
@@ -70,8 +70,8 @@ export default {
       deviceCode: null,
       showToast: false,
       showToastMsg: '',
-      wx: null,
-      qq: null,
+      wx: undefined,
+      qq: undefined,
     };
   },
   mounted() {},
@@ -147,7 +147,7 @@ export default {
           localStorage.setItem('loginType', result.loginType);
           this.$router.push(`/home`);
         } else {
-          Toast(result.retMsg);
+          Toast(result.retMsg || result.msg);
           this.computeTime = 0;
           clearInterval(this.intervalId);
           this.intervalId = undefined;
