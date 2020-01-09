@@ -164,7 +164,6 @@
                         <p class="opa9 f14 fw500 mb5 van-multi-ellipsis--l2">{{item.videoName}}</p>
                         <div class="flex flex-wrap mb5 pct100 tag-box" v-if="item.tagsName && item.tagsId">
                           <p
-                            style="border-width:1px;"
                             v-for="(tag,index) in item.tagsName.split(',')"
                             :key="tag"
                             class="tag flex-none mr5 mb5"
@@ -346,7 +345,7 @@ export default {
         this.isVip = result.isVip;
         this.payDuration = result.payDuration;
         this.videoDetails.videoCover = result.data.videoCover;
-        this.bannerList = result.data.bannerList;
+        this.bannerList = result.data.bannerListHead;
         this.$nextTick(() => {
           // 渲染轮播
           new Swiper('.swiper-container', {
@@ -554,7 +553,9 @@ export default {
   border-radius: 12px 0 12px 0;
 }
 .tag {
-  padding: 2px 7px;
+  padding: 0 7px;
+  height: 20px;
+  line-height: 20px;
   font-size: 12px;
   border-radius: 24px;
   color: #fff;
@@ -571,7 +572,7 @@ export default {
   z-index: 10 !important;
 }
 .tag-box {
-  max-height: 46px;
+  max-height: 50px;
   overflow: hidden;
   align-items: flex-start;
 }
@@ -614,8 +615,5 @@ export default {
   .vjs-custom-skin > .video-js {
     height: 100%;
   }
-}
-video {
-  object-fit: fill;
 }
 </style>
