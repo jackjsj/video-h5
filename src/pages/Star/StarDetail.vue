@@ -67,7 +67,7 @@
                   :src="item.videoCover" />
               </div>
               <div class="flex-col jca">
-                <p class="wh f16 opa9 fw500 lh23 mb8">{{item.videoName}}</p>
+                <p class="wh f16 opa9 fw500 lh23 mb8 van-multi-ellipsis--l2">{{item.videoName}}</p>
                 <p class="f12 wh opa5 fw400">{{moment(item.pushTime).format('YYYY-MM-DD')}}</p>
               </div>
             </div>

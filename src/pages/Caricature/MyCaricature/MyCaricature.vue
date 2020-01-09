@@ -19,7 +19,9 @@
             <div class="num abs fw400">共{{item.chapterNum}}话</div>
             <!-- <div class="status abs fw400">{{item.status}}</div> -->
           </div>
-          <p class="cb9 f16 item-name ell">{{item.caricatureName}}</p>
+          <p class="cb9 item-name ">
+            <span class="movie-name">{{item.caricatureName}}</span>
+          </p>
         </div>
         <div class="item-pad"></div>
         <div class="item-pad"></div>
@@ -30,6 +32,7 @@
 
 <script>
 import { getCaricatureBookcaseList, delCaricatureBookcase } from '../../../api';
+
 const list = new Array(10).fill().map((item, index) => ({
   name: '我的英雄学院',
   status: '连载中',
@@ -104,15 +107,15 @@ export default {
       console.log('全选');
     },
     async deleteSelected() {
-      //点击删除
-      var ids = new Array(); //创建list集合
-      //如果全选时删除
+      // 点击删除
+      let ids = new Array(); // 创建list集合
+      // 如果全选时删除
       if (this.myAllSelect) {
-        this.caricatures.forEach((caricature) => {
+        this.caricatures.forEach(caricature => {
           ids.push(caricature.caricatureId);
         });
       } else {
-        this.deleteItem.forEach((value) => {
+        this.deleteItem.forEach(value => {
           ids.push(value);
         });
       }
@@ -130,28 +133,28 @@ export default {
       if (
         !(this.myAllSelect || (!this.myAllSelect && this.deleteItem.length > 0))
       ) {
-        //提示请选择要删除
+        // 提示请选择要删除
         this.showToastMsg = '请选择';
         this.showToast = true;
         return;
       }
 
-      let params = ids;
+      const params = ids;
       this.$vux.loading.show({
         text: '删除中',
       });
       const result = await delCaricatureBookcase(params);
       if (result.retCode === '1') {
         this.$vux.loading.hide();
-        this.showToastMsg = '删除了' + ids.length + '条记录';
-        /*this.showToastMsg = '删除了选择的记录'*/
+        this.showToastMsg = `删除了${  ids.length  }条记录`;
+        /*this.showToastMsg = '删除了选择的记录' */
         this.showToast = true;
         this.getCaricatureBookcaseList();
 
-        //强制刷新页面
-        //this.$forceUpdate();
-        //location.reload()
-        /*this.$router.go(0)*/
+        // 强制刷新页面
+        // this.$forceUpdate();
+        // location.reload()
+        /* this.$router.go(0)*/
       } else {
         this.$vux.loading.hide();
         this.showToastMsg = '删除失败';
@@ -159,9 +162,9 @@ export default {
       }
     },
     selectDelItem(id) {
-      //选择单个删除
-      //如果已经存在删除
-      var isContains = false;
+      // 选择单个删除
+      // 如果已经存在删除
+      let isContains = false;
 
       for (let i = 0; i < this.deleteItem.length; i++) {
         if (this.deleteItem[i] === id) {
@@ -169,7 +172,7 @@ export default {
           isContains = true;
         }
       }
-      //不存在，添加
+      // 不存在，添加
       if (!isContains) {
         this.deleteItem.push(id);
       }

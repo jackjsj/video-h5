@@ -46,7 +46,8 @@
               </div>
               <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
             </div>
-            <p class="result-name wh flex-none ell f16 fw600">{{item.name}}</p>
+            <p class="result-name wh flex-none f16 fw600">
+              <span class="van-multi-ellipsis--l2 mt5">{{item.name}}</span></p>
           </div>
         </van-list>
       </div>
@@ -189,7 +190,7 @@ export default {
 .result-name {
   border-radius: 0 0 9px 9px;
   height: 45px;
-  line-height: 45px;
+  line-height: 18px;
   padding: 0 13px;
   background: rgba(27, 24, 46, 1);
 }

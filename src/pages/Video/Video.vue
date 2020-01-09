@@ -15,7 +15,7 @@
         @timeupdate="onPlayerTimeupdate($event)">
       </video-player>
     </div>
-    <div class="flex-auto ova bg-2">
+    <div class="flex-auto ova bg-2" ref="scroll">
       <!-- 信息 -->
       <div class="wh video-info">
         <p class="f18 fw500 mb10">{{videoDetails.videoName}}</p>
@@ -117,29 +117,29 @@
               </div>
               <!-- 影片类型、标签、番号 -->
               <div class="lh16 mb15">
-                <div class="flex mb5">
-                  <span class="opa5 flex-none">影片类型：</span>
-                  <div class="flex flex-wrap" v-if="videoDetails.classifyName">
+                <div class="flex mb5 aic">
+                  <span class="opa5 flex-none mb5">影片类型：</span>
+                  <div class="flex flex-wrap" v-if="videoDetails.tagTypeName">
                     <p
                       style="border-width:1px;"
-                      v-for="type in videoDetails.classifyName.split(',')"
-                      :key="type"
-                      class="tag flex-none mr5 mb5">{{type}}</p>
+                      class="tag flex-none mr5 mb5"
+                      @click="$router.push('/movieClassifyList?tagType='+videoDetails.tagTypeId)">{{videoDetails.tagTypeName}}</p>
                   </div>
                 </div>
-                <div class="flex mb5">
-                  <span class="opa5 flex-none">影片标签：</span>
-                  <div class="flex flex-wrap" v-if="videoDetails.tags">
+                <div class="flex mb5 aic">
+                  <span class="opa5 flex-none mb5">影片标签：</span>
+                  <div class="flex flex-wrap" v-if="videoDetails.tags && videoDetails.tagsId">
                     <p
                       style="border-width:1px;"
-                      v-for="(item) in videoDetails.tags.split(',')"
+                      v-for="(item,index) in videoDetails.tags.split(',')"
                       :key="item"
-                      class="tag flex-none mr5 mb5">{{item}}</p>
+                      class="tag flex-none mr5 mb5"
+                      @click="$router.push(`/movieTagList/${videoDetails.tagsId.split(',')[index]}/${Base64.encode(item)}`)">{{item}}</p>
                   </div>
                 </div>
                 <div class="flex aic mb5">
                   <span class="opa5 flex-none">影片番号：</span>
-                  <span class="opa5">{{videoDetails.id}}</span>
+                  <span class="opa5">{{videoDetails.identifier}}</span>
                 </div>
               </div>
               <!-- 猜你喜欢 -->
@@ -159,19 +159,22 @@
                       </div>
                       <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
                     </div>
-                    <div class="flex-auto ovh">
-                      <p class="opa9 f16 fw500 mb5 ell">{{item.videoName}}</p>
-                      <div class="flex flex-wrap mb5 pct100 tag-box" v-if="item.tagsName">
-                        <p
-                          style="border-width:1px;"
-                          v-for="tag in item.tagsName.split(',')"
-                          :key="tag"
-                          class="tag flex-none mr5 mb5">{{tag}}</p>
+                    <div class="flex-auto ovh jcb flex-col">
+                      <div class="flex-none">
+                        <p class="opa9 f14 fw500 mb5 van-multi-ellipsis--l2">{{item.videoName}}</p>
+                        <div class="flex flex-wrap mb5 pct100 tag-box" v-if="item.tagsName && item.tagsId">
+                          <p
+                            style="border-width:1px;"
+                            v-for="(tag,index) in item.tagsName.split(',')"
+                            :key="tag"
+                            class="tag flex-none mr5 mb5"
+                            @click.stop="$router.push(`/movieTagList/${item.tagsId.split(',')[index]}/${Base64.encode(tag)}`)">{{tag}}</p>
+                        </div>
                       </div>
                       <div class="flex jcb opa5">
                         <div class="flex aic">
                           <van-icon name="play-circle" />
-                          <span class="ml5">播放{{item.playNum}}次</span>
+                          <span class="ml5">{{item.playNum}}</span>
                         </div>
                         <div class="flex aic">
                           <van-icon name="clock-o" />
@@ -220,6 +223,7 @@
 </template>
 
 <script>
+import { Base64 } from 'js-base64';
 import 'swiper/css/swiper.min.css';
 import Swiper from 'swiper';
 import { videoPlayer, setCareTimes } from 'vue-video-player';
@@ -237,6 +241,7 @@ export default {
   },
   data() {
     return {
+      Base64,
       banner: {},
       payDuration: 60,
       isVip: 1,
@@ -473,6 +478,7 @@ export default {
   },
   watch: {
     $route(to, from) {
+      this.$refs.scroll.scrollTop = 0;
       this.videoId = this.$route.params.videoId;
       this.getVideoDetail(this.videoId);
     },
@@ -537,8 +543,8 @@ export default {
   }
 }
 .guess-item-cover {
-  width: 126px;
-  height: 71px;
+  width: 170px;
+  height: 110px;
   border-radius: 12px;
   // background-color: rgba(255, 255, 255, 0.1);
   overflow: hidden;
@@ -565,7 +571,7 @@ export default {
   z-index: 10 !important;
 }
 .tag-box {
-  max-height: 50px;
+  max-height: 46px;
   overflow: hidden;
   align-items: flex-start;
 }

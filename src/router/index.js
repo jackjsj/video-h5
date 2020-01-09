@@ -219,6 +219,8 @@ router.beforeEach(async (to, from, next) => {
   const loginType = localStorage.getItem('loginType');
   const resultSetting = store.state.Setting;
   const resultOpenPay = store.state.OpenPay;
+  // next();
+  // return;
   /**
    * 用户没有手机号登陆，点击账户管理跳转到登陆页面
    */

@@ -40,7 +40,7 @@
       <!-- 会员中心 -->
       <div class="mt30">
         <p class="wh f16 fw400 pl20">会员中心</p>
-        <div class="bar rel" v-if="!memberInfo.tel"
+        <div class="bar rel"
           @click="$router.push('/register')">
           <img src="@/assets/images/bar.png" />
           <div class="abs register-bar wh flex-col jcc aic">
@@ -54,9 +54,9 @@
         <div
           class="flex1 tc count-item flex-col jcb fw500"
           style="border-width:1px;"
-          v-for="item in countItems"
+          v-for="(item,index) in countItems"
           :key="item.name">
-          <p class="wh f24">{{item.count>0?item.count:0}}</p>
+          <p class="wh f24">{{(index === 0 && isVip)? '无限':item.count}}</p>
           <p class="g9 f12 ">{{item.name}}</p>
         </div>
       </div>
@@ -304,12 +304,13 @@ export default {
         this.memberInfo = this.personal.memberInfo;
         this.bannerList = this.personal.bannerList;
         this.qqUrl = result.data.qqurl;
+        localStorage.setItem('qqUrl', this.qqUrl);
         this.isVip = result.data.memberInfo.isVip;
         this.vipDate = result.data.memberInfo.vipDate;
         this.countItems[0].count =
           this.memberInfo.viewNum - this.memberInfo.usedViewNum;
-        this.countItems[1].count = this.memberInfo.tmpViewNum;
-        this.countItems[2].count = this.memberInfo.usedCacheNum;
+        this.countItems[1].count = this.memberInfo.tmpViewNum || 0;
+        this.countItems[2].count = this.memberInfo.usedCacheNum || 0;
         // 保存用户id
         localStorage.setItem('memberInfo', JSON.stringify(this.memberInfo));
         this.$store.dispatch('saveUserId', this.personal.memberInfo.id);

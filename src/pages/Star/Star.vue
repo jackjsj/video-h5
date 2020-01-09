@@ -170,19 +170,21 @@ export default {
   },
   methods: {
     onCupClick(item) {
+      this.list = [];
       this.currentCup = item.value;
-      this.loading = false;
+      this.loading = true;
       this.finished = false;
       this.error = false;
       this.pageNum = 1;
-      // this.getStarList();
+      this.getStarList();
     },
     onTabChange() {
-      this.loading = false;
+      this.list = [];
+      this.loading = true;
       this.finished = false;
       this.error = false;
       this.pageNum = 1;
-      // this.getStarList();
+      this.getStarList();
     },
     showStarDetail(item) {
       if (item.id) {
@@ -191,14 +193,12 @@ export default {
       }
     },
     async getStarList() {
-      console.log(1);
       this.overlayVisible = true;
-      Toast.loading({
-        message: '加载中...',
-        loadingType: 'spinner',
-        duration: 0,
-      });
-
+      // Toast.loading({
+      //   message: '加载中...',
+      //   loadingType: 'spinner',
+      //   duration: 0,
+      // });
       // 请求参数
       const result = await getStarList({
         [this.currentType]: '1',

@@ -36,7 +36,7 @@
       <div class="type-wrapper flex flex-wrap jcb">
         <div
           class="type-item flex-col jcc aic"
-          v-for="item in types"
+          v-for="item in types.slice(0,8)"
           :key="item.name"
           @click="$router.push(`/movieClassifyList?type=${item.id}`)">
           <div class="type-icon flex jcc rel">
@@ -47,13 +47,13 @@
       </div>
       <!-- 最新片源 -->
       <div class="video-list-wrapper wh">
-        <!-- 标题 换一换 更多 -->
+        <!-- 标题 换一批 更多 -->
         <div class="flex jcb video-list-header">
           <p class="f16">最新片源</p>
           <div class="flex aic f14">
             <div class="flex aic mr20"
               @click="roll('newVideo')">
-              <p class="mr5">换一换</p>
+              <p class="mr5">换一批</p>
               <van-icon name="replay" />
             </div>
             <div class="flex aic"
@@ -77,20 +77,21 @@
               </div>
               <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
             </div>
-            <p class="cb9 f16 item-name ell">{{item.videoName}}</p>
+            <p class="cb9 item-name">
+              <span class="movie-name">{{item.videoName}}</span></p>
           </div>
           <div class="item-pad"></div>
         </div>
       </div>
       <!-- 重磅热播 -->
       <div class="video-list-wrapper wh">
-        <!-- 标题 换一换 更多 -->
+        <!-- 标题 换一批 更多 -->
         <div class="flex jcb video-list-header">
           <p class="f16">重磅热播</p>
           <div class="flex aic f14">
             <div class="flex aic mr20"
               @click="roll('mostPlay')">
-              <p class="mr5">换一换</p>
+              <p class="mr5">换一批</p>
               <van-icon name="replay" />
             </div>
             <div class="flex aic"
@@ -114,7 +115,9 @@
               </div>
               <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
             </div>
-            <p class="cb9 f16 item-name ell">{{item.videoName}}</p>
+            <p class="cb9 item-name">
+              <span class="movie-name">{{item.videoName}}</span>
+            </p>
           </div>
           <div class="item-pad"></div>
         </div>
@@ -124,13 +127,13 @@
         v-for="item in classifyListCollect"
         :key="item.id">
         <div v-if="item.name !=='全部'">
-          <!-- 标题 换一换 更多 -->
+          <!-- 标题 换一批 更多 -->
           <div class="flex jcb video-list-header">
             <p class="f16">{{item.name}}</p>
             <div class="flex aic f14">
               <div class="flex aic mr20"
                 @click="roll(item.id, item)">
-                <p class="mr5">换一换</p>
+                <p class="mr5">换一批</p>
                 <van-icon name="replay" />
               </div>
               <div class="flex aic"
@@ -154,7 +157,8 @@
                 </div>
                 <p class="abs movie-duration" v-if="video.duration">{{video.duration}}</p>
               </div>
-              <p class="cb9 f16 item-name ell">{{video.videoName}}</p>
+              <p class="cb9 item-name ">
+                <span class="movie-name">{{video.videoName}}</span></p>
             </div>
             <div class="item-pad"></div>
           </div>
@@ -435,7 +439,7 @@ export default {
 .type-icon {
   width: 45px;
   height: 45px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0);
   border-radius: 10px;
   overflow: hidden;
 }

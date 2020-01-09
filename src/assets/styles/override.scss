@@ -220,7 +220,7 @@ p {
 .movie-duration {
   bottom: 5px;
   right: 5px;
-  background: #616161;
+  background: rgba(0, 0, 0, 0.4);
   padding: 0 5px;
   color: #fff;
   font-size: 14px;
@@ -230,7 +230,23 @@ p {
 }
 .van-toast {
   background: linear-gradient(
-    rgba(233, 90, 160, .88),
-    rgba(167, 105, 255, .88)
+    rgba(233, 90, 160, 0.88),
+    rgba(167, 105, 255, 0.88)
   );
 }
+.movie-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  line-height: 16px;
+  font-size: 14px;
+  vertical-align: middle;
+  padding-top: 1px;
+}
+// .van-image {
+//   img {
+//     z-index: 2;
+//     position: relative;
+//   }
+// }

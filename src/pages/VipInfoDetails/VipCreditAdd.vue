@@ -37,56 +37,76 @@
           <div class="card-pad"></div>
           <div class="card-pad"></div>
         </div>
-        <van-tabs
-          :border="false"
-          title-active-color="#fff"
-          title-inactive-color="#A7ADB6">
-          <van-tab title="在线支付">
-            <van-radio-group v-model="payWay">
-              <van-cell-group :border="false">
-                <van-cell
-                  v-for="item in payWays"
-                  :key="item.name"
-                  :title="item.name"
-                  clickable
-                  @click="payWay = item.name">
-                  <template #icon>
-                    <div class="pay-icon">
-                      <img :src="item.icon" />
-                    </div>
+        <div class="rel">
+          <van-tabs
+            v-model="tabActive"
+            :border="false"
+            title-active-color="#fff"
+            title-inactive-color="#A7ADB6">
+            <van-tab title="在线支付">
+              <van-radio-group v-model="payWay">
+                <van-cell-group :border="false">
+                  <van-cell
+                    v-for="item in payWays"
+                    :key="item.name"
+                    :title="item.name"
+                    clickable
+                    @click="payWay = item.name">
+                    <template #icon>
+                      <div class="pay-icon">
+                        <img :src="item.icon" />
+                      </div>
+                    </template>
+                    <van-radio slot="right-icon" :name="item.name" />
+                  </van-cell>
+                </van-cell-group>
+              </van-radio-group>
+            </van-tab>
+            <van-tab title="客服支付">
+              <van-radio-group value="官方客服支付">
+                <van-cell-group :border="false">
+                  <van-cell
+                    title="官方客服支付"
+                    clickable>
+                    <template #icon>
+                      <div class="pay-icon">
+                        <img src="@/assets/images/客服.png" />
+                      </div>
+                    </template>
+                    <van-radio slot="right-icon" name="官方客服支付" />
+                  </van-cell>
+                </van-cell-group>
+              </van-radio-group>
+              <div class="f13 opa7 fw400 lh21 pt15"
+                style="border-top:1px solid rgba(255, 255, 255,.06)">
+                <p>1.香蕉视频官方客服1V1充值服务，方便快捷；</p>
+                <p>2.订单查询，可以查询未完成订单；</p>
+                <p>3.提示：订单有时限，请联系官方客服获取有效充值方式，切勿直接转账</p>
+              </div>
+            </van-tab>
+            <!-- <van-tab title="卡密兑换">
+              <van-cell-group
+                :border="false">
+                <van-field v-model="vipCardPwd"
+                  placeholder="请输入兑换码">
+                  <template #left-icon>
+                    <img class="vip-card-icon mr15" src="@/assets/images/兑换码.png" />
                   </template>
-                  <van-radio slot="right-icon" :name="item.name" />
-                </van-cell>
+                </van-field>
               </van-cell-group>
-            </van-radio-group>
-          </van-tab>
-          <van-tab title="客服支付">
-            <van-radio-group value="官方客服支付">
-              <van-cell-group :border="false">
-                <van-cell
-                  title="官方客服支付"
-                  clickable>
-                  <template #icon>
-                    <div class="pay-icon">
-                      <img src="@/assets/images/客服.png" />
-                    </div>
-                  </template>
-                  <van-radio slot="right-icon" name="官方客服支付" />
-                </van-cell>
-              </van-cell-group>
-            </van-radio-group>
-            <div class="f13 opa7 fw400 lh21 pt15"
-              style="border-top:1px solid rgba(255, 255, 255,.06)">
-              <p>1.香蕉视频官方客服1V1充值服务，方便快捷；</p>
-              <p>2.订单查询，可以查询未完成订单；</p>
-              <p>3.提示：订单有时限，请联系官方客服获取有效充值方式，切勿直接转账</p>
-            </div>
-          </van-tab>
-        </van-tabs>
+            </van-tab> -->
+          </van-tabs>
+          <p class="abs tab-help flex aic f14" style="color:#A7ADB6"
+            @click="toCustomerService">
+            <van-icon name="question-o" />
+            <span>充值帮助</span>
+          </p>
+        </div>
       </div>
       <div class="card flex aic jcb fw400">
         <div class="f16">付款未收到账？</div>
-        <div class="f14 opa7 flex aic lh1">
+        <div class="f14 opa7 flex aic lh1"
+          @click="toCustomerService">
           <span class="mr5">客服24小时内解决</span>
           <van-icon name="arrow" />
         </div>
@@ -94,15 +114,19 @@
     </div>
     <div class="flex-none flex aic btn-group wh f14 fw400">
       <div class="flex1 tc btn-group-item"
-        style="border-right:1px solid rgba(255, 255, 255, 0.2);">订单查询</div>
-      <div class="flex1 tc btn-group-item">充值反馈</div>
-      <div class="flex1 tc btn-group-item">确认支付</div>
+        style="border-right:1px solid rgba(255, 255, 255, 0.2);"
+        @click="toCustomerService">订单查询</div>
+      <div class="flex1 tc btn-group-item"
+        @click="toCustomerService">充值反馈</div>
+      <div class="flex1 tc btn-group-item"
+        @click="pay">{{tabActive === 2 ?'确认兑换':'确认支付'}}</div>
     </div>
   </div>
 </template>
 
 <script>
-import { getPayType, getVipList } from '../../api';
+import { getPayType, getVipList, getAcTurn, useRechargeCode } from '../../api';
+
 const products = [
   {
     name: '2个月',
@@ -141,9 +165,13 @@ export default {
       selected: 1,
       payTypes: [],
       cardTypes: [],
+      vipCardPwd: '',
+      tabActive: 0,
+      qqUrl: '',
     };
   },
   async mounted() {
+    this.qqUrl = localStorage.getItem('qqUrl');
     Toast.loading({
       message: '加载中...',
       loadingType: 'spinner',
@@ -155,6 +183,38 @@ export default {
     // this.getPayType();
   },
   methods: {
+    toCustomerService() {
+      this.$router.push('/personalCenter');
+      window.location.href = this.qqUrl;
+    },
+    async pay() {
+      // 原版不需要此功能
+      this.toCustomerService();
+      return;
+      if (this.tabActive === 2) {
+        Toast.loading({
+          message: '兑换中...',
+          loadingType: 'spinner',
+          duration: 0,
+          overlay: true,
+        });
+        // 兑换卡密
+        const result = await useRechargeCode(this.vipCardPwd);
+        if (result.retCode === '1') {
+          this.vipCardPwd = '';
+        }
+        Toast(result.retMsg);
+      } else {
+        const result = await getAcTurn();
+        if (result.retCode === '1') {
+          result.data.turn_url.startsWith('http')
+            ? window.open(result.data.turn_url)
+            : window.open(`http://${result.data.turn_url}`);
+        } else {
+          Toast(result.retMsg);
+        }
+      }
+    },
     async getPayType() {
       const result = await getPayType();
       if (result.retCode === '1') {
@@ -258,6 +318,13 @@ export default {
 .van-radio {
   flex: none;
   margin-right: 10px;
+}
+.tab-help {
+  top: 15px;
+  right: 0;
+}
+.vip-card-icon {
+  width: 20px;
 }
 </style>
 <style lang="scss">
