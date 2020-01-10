@@ -70,6 +70,7 @@ export default {
         Toast(`${result.retMsg}setting`);
         return;
       }
+
       if (resultOpenPay.retCode === '1') {
         this.$store.dispatch('saveUserOpenPay', { openpay: resultOpenPay });
       } else {

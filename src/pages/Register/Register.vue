@@ -145,7 +145,7 @@ export default {
           clearInterval(this.intervalId);
           localStorage.setItem('token', result.token);
           localStorage.setItem('loginType', result.loginType);
-          this.$router.push('/home');
+          this.$router.push(`/home`);
         } else {
           Toast(result.retMsg || result.msg);
           this.computeTime = 0;

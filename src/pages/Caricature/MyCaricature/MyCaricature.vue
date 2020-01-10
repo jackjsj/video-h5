@@ -146,7 +146,7 @@ export default {
       const result = await delCaricatureBookcase(params);
       if (result.retCode === '1') {
         this.$vux.loading.hide();
-        this.showToastMsg = `删除了${  ids.length  }条记录`;
+        this.showToastMsg = `删除了${ids.length}条记录`;
         /*this.showToastMsg = '删除了选择的记录' */
         this.showToast = true;
         this.getCaricatureBookcaseList();

@@ -84,7 +84,7 @@
                 <p>3.提示：订单有时限，请联系官方客服获取有效充值方式，切勿直接转账</p>
               </div>
             </van-tab>
-            <!-- <van-tab title="卡密兑换">
+            <van-tab title="卡密兑换">
               <van-cell-group
                 :border="false">
                 <van-field v-model="vipCardPwd"
@@ -94,7 +94,7 @@
                   </template>
                 </van-field>
               </van-cell-group>
-            </van-tab> -->
+            </van-tab>
           </van-tabs>
           <p class="abs tab-help flex aic f14" style="color:#A7ADB6"
             @click="toCustomerService">
@@ -121,6 +121,18 @@
       <div class="flex1 tc btn-group-item"
         @click="pay">{{tabActive === 2 ?'确认兑换':'确认支付'}}</div>
     </div>
+    <van-dialog
+      v-model="dialogVisible"
+      confirmButtonText="知道了"
+      @confirm="dialogVisible = false">
+      <div class="flex-col aic">
+        <div class="warn-icon">
+          <img src="@/assets/images/warn.png" />
+        </div>
+        <!-- <p class="g0 mb8 f18 lh24">请下载app进行操作或使用客服支付</p> -->
+        <p class="g0 mb20 f15">请下载app进行操作或使用客服支付</p>
+      </div>
+    </van-dialog>
   </div>
 </template>
 
@@ -167,7 +179,7 @@ export default {
       cardTypes: [],
       vipCardPwd: '',
       tabActive: 0,
-      qqUrl: '',
+      dialogVisible: false,
     };
   },
   async mounted() {
@@ -188,9 +200,9 @@ export default {
       window.location.href = this.qqUrl;
     },
     async pay() {
-      // 原版不需要此功能
       this.toCustomerService();
       return;
+      // uu版需要此功能
       if (this.tabActive === 2) {
         Toast.loading({
           message: '兑换中...',
@@ -204,15 +216,32 @@ export default {
           this.vipCardPwd = '';
         }
         Toast(result.retMsg);
+      } else if (this.tabActive === 1) {
+        this.toCustomerService();
       } else {
-        const result = await getAcTurn();
-        if (result.retCode === '1') {
-          result.data.turn_url.startsWith('http')
-            ? window.open(result.data.turn_url)
-            : window.open(`http://${result.data.turn_url}`);
-        } else {
-          Toast(result.retMsg);
-        }
+        // 弹出提示
+        // 请下载app进行操作或使用客服支付
+        this.dialogVisible = true;
+        // Toast.loading({
+        //   message: '跳转中...',
+        //   loadingType: 'spinner',
+        //   duration: 0,
+        //   overlay: true,
+        // });
+        // const result = await getAcTurn();
+        // if (result.retCode === '1') {
+        //   setTimeout(() => {
+        //     Toast.clear();
+        //     window.open(
+        //       result.data.turn_url.startsWith('http')
+        //         ? result.data.turn_url
+        //         : `http://${result.data.turn_url}`,
+        //       '_blank',
+        //     );
+        //   }, 500);
+        // } else {
+        //   Toast(result.retMsg);
+        // }
       }
     },
     async getPayType() {
@@ -325,6 +354,15 @@ export default {
 }
 .vip-card-icon {
   width: 20px;
+}
+.warn-icon {
+  width: 70px;
+  height: 70px;
+  margin-top: 28px;
+  margin-bottom: 16px;
+  img {
+    width: 100%;
+  }
 }
 </style>
 <style lang="scss">

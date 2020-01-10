@@ -148,7 +148,7 @@ export default {
       //   loadingType: 'spinner',
       //   duration: 0,
       // });
-      const {pageNum} = this;
+      const { pageNum } = this;
       const result = await getCartoonInfo({
         classifyId: this.classifyId,
         orderType: this.orderType,

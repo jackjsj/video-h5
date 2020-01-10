@@ -160,12 +160,13 @@ export default {
   },
   computed: {
     rank(index) {
-      return index => (this.list[index]
-        ? this.list[index]
-        : {
-          name: '虚位以待',
-          heat: 0,
-        });
+      return index =>
+        this.list[index]
+          ? this.list[index]
+          : {
+              name: '虚位以待',
+              heat: 0,
+            };
     },
   },
   methods: {
@@ -199,6 +200,7 @@ export default {
       //   loadingType: 'spinner',
       //   duration: 0,
       // });
+
       // 请求参数
       const result = await getStarList({
         [this.currentType]: '1',

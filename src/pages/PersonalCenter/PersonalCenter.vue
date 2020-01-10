@@ -40,7 +40,7 @@
       <!-- 会员中心 -->
       <div class="mt30">
         <p class="wh f16 fw400 pl20">会员中心</p>
-        <div class="bar rel"
+        <div class="bar rel" v-if="!memberInfo.tel"
           @click="$router.push('/register')">
           <img src="@/assets/images/bar.png" />
           <div class="abs register-bar wh flex-col jcc aic">
