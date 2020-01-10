@@ -34,22 +34,24 @@
         <div class="flex aic jca">
           <div class="flex-col aic"
             @click="upPraise">
-            <div class="op-icon">
-              <van-icon name="good-job-o" :color="videoDetails.isLike === '1'?'#FC386F':'#fff'" />
+            <div class="op-icon f18">
+              <van-icon :name="videoDetails.isLike === '1' ? 'good-job':'good-job-o'" />
             </div>
             <div class="opa3">{{videoDetails.careNum}}</div>
+            <!-- <div class="opa3">点赞</div> -->
           </div>
           <div class="flex-col aic"
             @click="downPraise">
-            <div class="op-icon" style="transform:rotate(180deg);">
-              <van-icon name="good-job-o" :color="videoDetails.isLike === '2'?'#FC386F':'#fff'" />
+            <div class="op-icon f18" style="transform:rotate(180deg);">
+              <van-icon :name="videoDetails.isLike === '2' ? 'good-job':'good-job-o'" />
             </div>
             <div class="opa3">{{videoDetails.dislikeNum}}</div>
+            <!-- <div class="opa3">差评</div> -->
           </div>
           <div class="flex-col aic"
             @click="collection">
-            <div class="op-icon">
-              <van-icon name="star-o" :color="videoDetails.isCare !=='0' ?'#FC386F':'#fff'" />
+            <div class="op-icon f18">
+              <van-icon :name="videoDetails.isCare !=='0' ? 'star' :'star-o'" />
             </div>
             <div class="opa3">收藏</div>
           </div>
@@ -98,11 +100,12 @@
         </div>
       </div>
       <!-- tabs -->
-      <div class="p15">
+      <div class="p15 rel">
         <van-tabs
           :border="false"
           title-active-color="#fff"
-          title-inactive-color="#A7ADB6">
+          title-inactive-color="#A7ADB6"
+          @change="onTabChange">
           <van-tab title="简介">
             <div class="wh">
               <p class="f13 opa7 lh21"
@@ -186,17 +189,39 @@
               </div>
             </div>
           </van-tab>
-          <van-tab title="评论(0)">
+          <van-tab :title="`评论(${videoDetails.videoCommentNum || 0})`">
+            <div class="mt-15">
+              <div class="flex pb15 pt15"
+                style="border-bottom:1px solid rgba(216, 216, 216,.1);"
+                v-for="item in comments" :key="item.id">
+                <div class="flex jcc avatar comment-avatar ovh mr12 flex-none">
+                  <van-image fit="cover" :src="item.headpic ? item.headpic : defaultAvatar" />
+                </div>
+                <div class="flex-auto wh f400">
+                  <p class="f14">{{item.nickName || '游客'}}</p>
+                  <p style="color:#BBBBC4;" class="mb5 lh1">{{item.comTime}}</p>
+                  <p class="f15">{{item.comContent}}</p>
+                </div>
+              </div>
+            </div>
+
           </van-tab>
         </van-tabs>
+        <!-- <div class="abs comment-btn"
+          @click="showCommentBox">
+          <img src="@/assets/images/edit.png" />
+        </div> -->
       </div>
     </div>
     <!-- 评论 -->
     <div class="flex-none comment-box flex aic wh">
-      <div class="flex jcc avatar ovh mr12">
+      <div class="flex flex-none jcc avatar ovh mr12">
         <van-image fit="cover" :src="memberInfo.headpic ? memberInfo.headpic : defaultAvatar" />
       </div>
-      <p class="f14 fw400">快来说说你的感想吧</p>
+      <div class="flex-auto">
+        <van-field class="f14 fw400 comment-input" v-model="commentContent" placeholder="快来说说你的感想吧"
+          @keydown.enter="commentOn" ref="commentInput" />
+      </div>
     </div>
     <!-- 弹出框 -->
 
@@ -218,6 +243,32 @@
         </div>
       </template>
     </van-dialog>
+    <van-dialog
+      class="comment-box-dialog"
+      v-model="commentBoxVisible"
+      cancelButtonText='取消'
+      confirmButtonText='确定'
+      show-cancel-button>
+      <div class="flex-col jcb aic cb-dialog-content">
+        <p class="f16 b">提示</p>
+        <p class="f16">请填写您的评论</p>
+        <div class="pct100">
+          <input class="comment-input" />
+        </div>
+      </div>
+    </van-dialog>
+    <van-popup
+      class="tip-popup"
+      v-model="tipVisible"
+      position="center"
+      closeable>
+      <p class="mb10">用户等级2级或开通VIP才可发表评论，邀请好友就可以升级啦！
+      </p>
+      <div>
+        <van-button class="tip-popup-btn"
+          @click="$router.push('/invitation')">邀请好友</van-button>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -231,8 +282,18 @@ import {
   setCareHistory,
   setCareTimess,
   getMemberInfo,
+  commentOn,
+  getComments,
 } from '@/api';
 import './css/custom-theme.css';
+
+const comments = Array.from({ length: 10 }, (item, index) => ({
+  id: index,
+  name: '会说话的鱼',
+  avatar: '',
+  createtime: '2012-01-05',
+  content: '这部电影很早之前就看过了，很精彩这部电影很早之前就看过了，很精彩',
+}));
 
 export default {
   components: {
@@ -240,6 +301,10 @@ export default {
   },
   data() {
     return {
+      tipVisible: false,
+      comments: [],
+      commentContent: '',
+      commentBoxVisible: false,
       Base64,
       banner: {},
       payDuration: 60,
@@ -295,6 +360,8 @@ export default {
   mounted() {
     this.videoId = this.$route.params.videoId;
     this.getVideoDetail(this.videoId);
+    // 获取当前用户信息
+    this.memberInfo = JSON.parse(localStorage.getItem('memberInfo') || {});
   },
   computed: {
     player() {
@@ -302,6 +369,44 @@ export default {
     },
   },
   methods: {
+    async getComments() {
+      const resp = await getComments({
+        videoId: this.videoId,
+        lastNew: '1',
+      });
+      if (resp.retCode === '1') {
+        this.comments = resp.data;
+      }
+    },
+    onTabChange(name) {
+      if (name === 1) {
+        // 加载评论
+        this.getComments();
+      }
+    },
+    async commentOn() {
+      const comContent = this.commentContent;
+      this.commentContent = '';
+      this.$refs.commentInput.blur();
+      const { sortNo, isVip } = this.memberInfo;
+      if (sortNo >= 2 || isVip === 1) {
+        if (comContent.trim()) {
+          const resp = await commentOn({
+            videoId: this.videoId,
+            comContent,
+          });
+          Toast(resp.retMsg);
+        } else {
+          Toast('评论不能为空');
+        }
+      } else {
+        this.tipVisible = true;
+      }
+    },
+    // 显示评论输入框
+    showCommentBox() {
+      this.commentBoxVisible = true;
+    },
     // 处理广告跳转
     onSwiperClick(item) {
       switch (item.linkType) {
@@ -328,7 +433,6 @@ export default {
     },
     // 发送请求获取影片数据
     async getVideoDetail(videoId) {
-      console.log(videoId);
       Toast.loading({
         message: '加载中...',
         loadingType: 'spinner',
@@ -345,7 +449,7 @@ export default {
         this.isVip = result.isVip;
         this.payDuration = result.payDuration;
         this.videoDetails.videoCover = result.data.videoCover;
-        this.bannerList = result.data.bannerListHead;
+        this.bannerList = result.data.bannerList;
         this.$nextTick(() => {
           // 渲染轮播
           new Swiper('.swiper-container', {
@@ -505,12 +609,6 @@ export default {
     width: 100%;
   }
 }
-.van-icon-good-job-o {
-  font-size: 18px;
-}
-.van-icon-star-o {
-  font-size: 18px;
-}
 .bg {
   background: #21203c;
 }
@@ -580,9 +678,81 @@ export default {
   top: -15px;
   right: 10px;
 }
+.comment-btn {
+  top: 32px;
+  right: 20px;
+  img {
+    width: 17px;
+    height: 17px;
+  }
+}
+.comment-avatar {
+  width: 35px;
+  height: 35px;
+}
+.comment-input {
+  background: transparent;
+}
+.tip-popup {
+  border-radius: 8px;
+  padding: 40px 40px 20px;
+  box-sizing: border-box;
+  width: 80%;
+  font-size: 14px;
+}
+.tip-popup-btn {
+  height: 50px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(232, 86, 157, 1) 0%,
+    rgba(147, 72, 255, 1) 100%
+  );
+  border-radius: 25px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 400;
+  border: none;
+  outline: none;
+  margin-top: 10px;
+
+  &:active {
+    opacity: 0.7;
+  }
+}
 </style>
 <style lang="scss">
 .video {
+  .comment-box-dialog {
+    width: 318px;
+    background: #1b1e23;
+    color: #aaa;
+    border-radius: 0;
+    .comment-input {
+      width: 100%;
+      border-radius: 5px;
+      padding: 0 5px;
+      box-sizing: border-box;
+      height: 30px;
+      color: #333;
+      font-size: 14px;
+    }
+    .cb-dialog-content {
+      height: 170px;
+      padding: 25px 18px 35px;
+      box-sizing: border-box;
+      line-height: 1;
+    }
+    button.van-button {
+      color: #aaa;
+      height: 40px;
+      line-height: 40px;
+      background: transparent !important;
+      &.van-dialog__confirm {
+        color: #ae4a64;
+      }
+    }
+  }
   .van-tabs__nav {
     background: transparent;
   }

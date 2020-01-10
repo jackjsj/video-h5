@@ -6,8 +6,8 @@
       left-text="书架"
       :border="false"
       @click-left="$router.push('/myCaricature')">
-      <van-icon name="search" slot="right" color="#fff"
-        @click="$router.push('/caricatureSearch')" />
+      <!-- <van-icon name="search" slot="right" color="#fff"
+        @click="$router.push('/caricatureSearch')" /> -->
     </van-nav-bar>
     <div class="content flex-col flex-auto ova">
       <div class="ctrl-bar flex-none mb10">

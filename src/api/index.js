@@ -195,3 +195,9 @@ export const search = options => ajax(`${BASE_URL}/openapi/search`, options, POS
 
 // 支付
 export const getAcTurn = () => ajax(`${BASE_URL}/openapi/acTurn/getAcTurn`, {}, POST_JSON);
+
+// 评论
+export const commentOn = options => ajax(`${BASE_URL}/ying/saveVideoCommon`, options, POST_JSON);
+
+// 获取评论列表
+export const getComments = options => ajax(`${BASE_URL}/ying/getVideoCommon`, options, POST_JSON);
