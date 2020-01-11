@@ -13,7 +13,8 @@
         <div
           class="item mb15"
           v-for="item in caricatures"
-          :key="item.id">
+          :key="item.id"
+          @click="$router.push(`/caricatureDetails/${item.id}`)">
           <div class="img-wrapper rel flex aic jcc">
             <van-image fit="contain" :src="item.cover" />
             <div class="num abs fw400">共{{item.chapterNum}}话</div>

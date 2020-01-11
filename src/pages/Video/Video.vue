@@ -195,7 +195,7 @@
                 style="border-bottom:1px solid rgba(216, 216, 216,.1);"
                 v-for="item in comments" :key="item.id">
                 <div class="flex jcc avatar comment-avatar ovh mr12 flex-none">
-                  <van-image fit="cover" :src="item.headpic ? item.headpic : defaultAvatar" />
+                  <van-image fit="cover" :src="defaultAvatar" />
                 </div>
                 <div class="flex-auto wh f400">
                   <p class="f14">{{item.nickName || '游客'}}</p>
