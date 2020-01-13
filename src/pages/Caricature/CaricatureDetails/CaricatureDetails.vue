@@ -59,6 +59,7 @@ import {
   getCaricatureInfo,
   addCaricatureCollect,
   delCaricatureCollect,
+  checkInAddIntegral,
 } from '@/api';
 
 export default {
@@ -86,11 +87,19 @@ export default {
         `/caricaturePictureList/${this.caricatureInfo.chapterId}`,
       );
     },
-
+    async addIntegral() {
+      const id = 3;
+      const result = await checkInAddIntegral(id);
+      if (result.retCode === '1') {
+        Toast('任务完成');
+      } else {
+        Toast(`任务失败:${result.retMsg}`);
+      }
+    },
     // 跳转
     onSwiperClick(index) {
+      this.addIntegral(3);
       // 获取当前广告类型
-      debugger;
       const banner = this.bannerList[index];
       /**
        *  判断是否已经完成当前任务

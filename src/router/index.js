@@ -25,7 +25,16 @@ import store from '../store';
 
 Vue.use(Router);
 
+let scrollTop = 0;
 const router = new Router({
+  scrollBehavior(to, from, savedPosition) {
+    if (from.path === '/movieClassifyList') {
+      scrollTop = document.getElementById('scrollBox').scrollTop;
+    }
+    if (to.path === '/movieClassifyList') {
+      document.getElementById('scrollBox').scrollTop = scrollTop;
+    }
+  },
   routes: [
     {
       name: 'index',

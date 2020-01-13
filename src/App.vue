@@ -1,7 +1,9 @@
 <template>
   <div id="app" class="bg-2 vh100">
     <transition name="slide">
-      <router-view v-if="$store.state.isAuthLogin" />
+      <keep-alive include="movieClassifyList">
+        <router-view v-if="$store.state.isAuthLogin" />
+      </keep-alive>
     </transition>
   </div>
 </template>

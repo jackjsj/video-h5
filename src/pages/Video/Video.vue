@@ -284,6 +284,7 @@ import {
   getMemberInfo,
   commentOn,
   getComments,
+  checkInAddIntegral,
 } from '@/api';
 import './css/custom-theme.css';
 
@@ -407,8 +408,18 @@ export default {
     showCommentBox() {
       this.commentBoxVisible = true;
     },
+    async addIntegral() {
+      const id = 3;
+      const result = await checkInAddIntegral(id);
+      if (result.retCode === '1') {
+        Toast('任务完成');
+      } else {
+        Toast(`任务失败:${result.retMsg}`);
+      }
+    },
     // 处理广告跳转
     onSwiperClick(item) {
+      this.addIntegral(3);
       switch (item.linkType) {
         case 1: {
           // 外部链接
@@ -573,7 +584,7 @@ export default {
      * 假如是vip用户 是可以无限观影，可以无视次数用完
      */
     onPlayerTimeupdate(player) {
-      if (this.isVip !== 1) {
+      if (this.isVip !== 1 && player.currentTime() >= this.payDuration) {
         this.dialogVisible = true;
         player.pause();
       }

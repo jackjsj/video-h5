@@ -9,7 +9,7 @@
       <van-icon name="search" slot="right" color="#fff"
         @click="$router.push('/movieSearch')" />
     </van-nav-bar>
-    <div class="flex-auto ova">
+    <div class="flex-auto ova" id="scrollBox">
       <!-- 过滤条件 -->
       <div class="f14 pt15 pl15 pr15" style="color:#fffaff">
         <!-- 条件项 -->
@@ -109,6 +109,7 @@ const orders = [
 ];
 
 export default {
+  name: 'movieClassifyList',
   computed: {
     // 获取当前类型
     classifyId() {
