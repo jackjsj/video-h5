@@ -3,7 +3,7 @@
     <van-nav-bar
       class="flex-none"
       left-arrow
-      @click-left="$router.back()"
+      @click-left="back()"
       :border="false">
     </van-nav-bar>
     <!-- 视频 -->
@@ -23,7 +23,7 @@
         <div class="flex aic f14 fw400 mb20">
           <div class="flex aic mr18">
             <van-icon name="fire" color="#9348FF" />
-            <p class="ml5 opa7">热度{{videoDetails.playNum}}</p>
+            <p class="ml5 opa7">播放次数{{videoDetails.playNum}}</p>
           </div>
           <div class="flex aic opa7">
             <van-icon name="clock-o" />
@@ -122,11 +122,13 @@
               <div class="lh16 mb15">
                 <div class="flex mb5 aic">
                   <span class="opa5 flex-none mb5">影片类型：</span>
-                  <div class="flex flex-wrap" v-if="videoDetails.tagTypeName">
+                  <div class="flex flex-wrap" v-if="videoDetails.tagTypes && videoDetails.tagTypeIds">
                     <p
                       style="border-width:1px;"
+                      v-for="(item,index) in videoDetails.tagTypes.split(',')"
+                      :key="item"
                       class="tag flex-none mr5 mb5"
-                      @click="$router.push('/movieClassifyList?tagType='+videoDetails.tagTypeId)">{{videoDetails.tagTypeName}}</p>
+                      @click="$router.push(`/movieClassifyList?tagType=${videoDetails.tagTypeIds.split(',')[index]}`)">{{item}}</p>
                   </div>
                 </div>
                 <div class="flex mb5 aic">
@@ -288,20 +290,13 @@ import {
 } from '@/api';
 import './css/custom-theme.css';
 
-const comments = Array.from({ length: 10 }, (item, index) => ({
-  id: index,
-  name: '会说话的鱼',
-  avatar: '',
-  createtime: '2012-01-05',
-  content: '这部电影很早之前就看过了，很精彩这部电影很早之前就看过了，很精彩',
-}));
-
 export default {
   components: {
     videoPlayer,
   },
   data() {
     return {
+      routerFrom: {},
       tipVisible: false,
       comments: [],
       commentContent: '',
@@ -358,7 +353,15 @@ export default {
       dialogVisible: false,
     };
   },
+  watch: {
+    $route(to, from) {
+      this.$refs.scroll.scrollTop = 0;
+      this.videoId = this.$route.params.videoId;
+      this.getVideoDetail(this.videoId);
+    },
+  },
   mounted() {
+    this.$route.meta.isBack = false;
     this.videoId = this.$route.params.videoId;
     this.getVideoDetail(this.videoId);
     // 获取当前用户信息
@@ -370,6 +373,10 @@ export default {
     },
   },
   methods: {
+    back() {
+      this.$route.meta.isBack = true;
+      this.$router.back();
+    },
     async getComments() {
       const resp = await getComments({
         videoId: this.videoId,
@@ -575,9 +582,6 @@ export default {
     showMoreMovie(flag) {
       this.isShowMoreMovie = !this.isShowMoreMovie;
     },
-    back() {
-      this.$router.back();
-    },
     /**
      * 播放次数用完后 0次之后 再点击视频观看，就会弹出提示
      * 您的观影次数已经用完 然后底下显示， “邀请好友” “开通会员”
@@ -590,13 +594,6 @@ export default {
       }
     },
   },
-  watch: {
-    $route(to, from) {
-      this.$refs.scroll.scrollTop = 0;
-      this.videoId = this.$route.params.videoId;
-      this.getVideoDetail(this.videoId);
-    },
-  },
 };
 </script>
 
@@ -607,7 +604,7 @@ export default {
 .video-wrapper {
   height: 211px;
   background: rgba(255, 255, 255, 0.3);
-  margin-top: -50px;
+  // margin-top: -50px;
 }
 .video-info {
   padding: 12px 15px;

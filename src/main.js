@@ -9,6 +9,7 @@ import store from './store';
 import router from './router';
 import './vantComponent';
 import '@/assets/styles/override.scss';
+import '@/assets/styles/theme/white.scss';
 
 const hls = require('videojs-contrib-hls');
 Vue.use(VueClipboard)
@@ -16,7 +17,6 @@ Vue.use(VueClipboard)
   .use(VueVideoPlayer);
 
 Vue.config.productionTip = false;
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

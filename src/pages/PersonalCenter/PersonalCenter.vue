@@ -201,10 +201,13 @@ export default {
           },
         },
         {
-          name: '手势密码',
-          icon: require('@/assets/images/手势密码.png'),
-          to: '/gestureLock',
+          name: '',
         },
+        // {
+        //   name: '手势密码',
+        //   icon: require('@/assets/images/手势密码.png'),
+        //   to: '/gestureLock',
+        // },
       ],
       qqUrl: '', // 客服地址
       gcGroup: '', // 聊天群地址

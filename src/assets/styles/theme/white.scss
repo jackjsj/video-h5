@@ -1,0 +1,39 @@
+.theme-white {
+  .bg {
+    background: white no-repeat;
+    // background-size: 100% 100%;
+    background-size: cover;
+  }
+  .bg-1 {
+    background-color: #21203c;
+    background-image: url(~@/assets/images/bg-1.png);
+    background-repeat: no-repeat;
+    background-size: 100%;
+  }
+  .bg-2 {
+    background-color: #21203c;
+    background-image: url(~@/assets/images/bg-2.png);
+    background-repeat: no-repeat;
+    background-size: 100%;
+  }
+  .bg-3 {
+    background-color: #21203c;
+    background-image: url(~@/assets/images/bg-3.png);
+    background-repeat: no-repeat;
+    background-size: 100%;
+  }
+  .van-nav-bar__title {
+    font-size: 19px;
+    color: #333;
+    font-weight: 400;
+  }
+  .van-nav-bar .van-icon {
+    color: #333;
+    font-size: 19px;
+  }
+  .van-nav-bar__text {
+    font-size: 14px;
+    font-weight: 400;
+    color: #333;
+  }
+}

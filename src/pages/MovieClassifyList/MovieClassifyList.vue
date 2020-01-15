@@ -4,7 +4,7 @@
       class="flex-none"
       :title="title"
       :left-arrow="$route.path !== '/banner'"
-      @click-left="$router.back()"
+      @click-left="$router.replace('/home')"
       :border="false">
       <van-icon name="search" slot="right" color="#fff"
         @click="$router.push('/movieSearch')" />
@@ -108,17 +108,72 @@ const orders = [
   { name: '最多好评', id: 3, key: 'careNum' },
 ];
 
+const initData = {
+  movieList: [], // 电影数据
+  classifyList: [], // 分类数据
+  //
+  pageNum: 1,
+  loading: false,
+  finished: true,
+  error: false,
+  filters: [
+    {
+      name: '类型',
+      current: -1,
+      items: [],
+      all: '全部馆别',
+      key: 'classifyList',
+    },
+    {
+      name: '标签类型',
+      current: -1,
+      items: [],
+      key: 'tagTypeList',
+      all: '全部类型',
+    },
+    {
+      name: '时长',
+      current: -1,
+      items: [],
+      key: 'durationTypeTagList',
+      all: '全部时长',
+    },
+    {
+      name: '规格',
+      current: -1,
+      items: [],
+      key: 'videoClassifyTagList',
+      all: '全部规格',
+    },
+    {
+      name: '语言',
+      current: -1,
+      items: [],
+      key: 'languageTagList',
+      all: '全部语言',
+    },
+    {
+      name: '排序',
+      current: -1,
+      items: orders,
+    },
+  ],
+  overlayVisible: false,
+  currentTags: [],
+  isExpandTag: false,
+};
+let scrollTop = 0;
 export default {
   name: 'movieClassifyList',
   computed: {
     // 获取当前类型
     classifyId() {
-      return this.filters.filter(item => item.name === '类型')[0].current;
+      return this.filters.find(item => item.name === '类型').current;
     },
     currentOrderParams() {
-      const currentOrder = this.filters.filter(item => item.name === '排序')[0]
+      const currentOrder = this.filters.find(item => item.name === '排序')
         .current;
-      const { key } = orders.filter(item => item.id === currentOrder)[0];
+      const { key } = orders.find(item => item.id === currentOrder);
       if (key) {
         return {
           [key]: '1',
@@ -136,19 +191,19 @@ export default {
     // },
     // 时长
     durationTypeId() {
-      return this.filters.filter(item => item.name === '时长')[0].current;
+      return this.filters.find(item => item.name === '时长').current;
     },
     // 规格
     videoClassifyId() {
-      return this.filters.filter(item => item.name === '规格')[0].current;
+      return this.filters.find(item => item.name === '规格').current;
     },
     // 语言
     languageId() {
-      return this.filters.filter(item => item.name === '语言')[0].current;
+      return this.filters.find(item => item.name === '语言').current;
     },
     // 标签类型
     tagTypeId() {
-      return this.filters.filter(item => item.name === '标签类型')[0].current;
+      return this.filters.find(item => item.name === '标签类型').current;
     },
     tagIds() {
       const tagIds = this.currentTags
@@ -157,134 +212,74 @@ export default {
       return tagIds.length > 0 ? tagIds : undefined;
     },
     title() {
-      const typeFilter = this.filters.filter(item => item.name === '类型')[0];
-      const target = typeFilter.items.filter(
+      const typeFilter = this.filters.find(item => item.name === '类型');
+      const target = typeFilter.items.find(
         item => item.id === typeFilter.current,
       );
-      return target[0] && target[0].name;
+      return target && target.name;
     },
+  },
+  activated() {
+    document.getElementById('scrollBox').scrollTop = scrollTop;
+  },
+  beforeRouteEnter(to, from, next) {
+    console.log(from);
+    next(vm => {
+      if (to.path === '/movieClassifyList' && !from.meta.isBack) {
+        vm.init();
+      }
+    });
+  },
+  deactivated() {
+    ({ scrollTop } = document.getElementById('scrollBox'));
   },
   data() {
     return {
-      onFetching: false, // 分页查询上锁
-      dataOnNull: false,
-      pageParams: {
-        pageNum: 1, // 当前页
-        classifyId: null, // 分类id
-        orderStr: '', // 排序字段
-      },
-      orderList: [],
-      orderIndex: 0,
-      movieList: [], // 电影数据
-      classifyList: [], // 分类数据
-      classifyIndex: null,
-      isInit: true, // 是否为初始化
-      //
-      list: [],
-      pageNum: 1,
-      loading: false,
-      finished: true,
-      error: false,
-      filters: [
-        // {
-        //   name: '地区',
-        //   current: -1,
-        //   items: [],
-        //   key: 'districTagList',
-        //   all: '全部地区',
-        // },
-        {
-          name: '类型',
-          current: -1,
-          items: [],
-          all: '全部馆别',
-          key: 'classifyList',
-        },
-        {
-          name: '标签类型',
-          current: -1,
-          items: [],
-          key: 'tagTypeList',
-          all: '全部类型',
-        },
-        // {
-        //   name: '年代',
-        //   current: -1,
-        //   items: [],
-        //   key: 'yearsTagList',
-        //   all: '全部年代',
-        // },
-        {
-          name: '时长',
-          current: -1,
-          items: [],
-          key: 'durationTypeTagList',
-          all: '全部时长',
-        },
-        {
-          name: '规格',
-          current: -1,
-          items: [],
-          key: 'videoClassifyTagList',
-          all: '全部规格',
-        },
-        {
-          name: '语言',
-          current: -1,
-          items: [],
-          key: 'languageTagList',
-          all: '全部语言',
-        },
-        {
-          name: '排序',
-          current: -1,
-          items: orders,
-        },
-      ],
-      overlayVisible: false,
-      currentTags: [],
-      isExpandTag: false,
+      ...initData,
     };
   },
-  async mounted() {
-    // 先获取所有的类型
-    Toast.loading({
-      message: '加载中...',
-      loadingType: 'spinner',
-      duration: 0,
-    });
-    const result = await search();
-    if (result.retCode === '1' && result.httpCode === 200) {
-      const { data } = result;
-      this.filters.forEach(filter => {
-        if (filter.key) {
-          if (filter.all) {
-            filter.items.push({
-              id: -1,
-              name: filter.all,
-            });
-          }
-          filter.items.push(...data[filter.key]);
-        }
-      });
-      this.finished = false;
-      Toast.clear();
-    } else {
-      Toast(result.retMsg || result.msg);
-    }
-    // 获取路由中的参数，设置默认属性
-    const { type = -1, order = -1, tagType = -1 } = this.$route.query;
-    this.filters.filter(item => item.name === '类型')[0].current = parseInt(
-      type,
-    );
-    this.filters.filter(item => item.name === '排序')[0].current = parseInt(
-      order,
-    );
-    this.filters.filter(item => item.name === '标签类型')[0].current = parseInt(
-      tagType,
-    );
+  mounted() {
+    this.init();
   },
   methods: {
+    async init() {
+      Object.assign(this, initData);
+      // 先获取所有的类型
+      Toast.loading({
+        message: '加载中...',
+        loadingType: 'spinner',
+        duration: 0,
+      });
+      const result = await search();
+      if (result.retCode === '1' && result.httpCode === 200) {
+        const { data } = result;
+        this.filters.forEach(filter => {
+          if (filter.key) {
+            filter.items = [];
+            filter.current = -1;
+            if (filter.all) {
+              filter.items.push({
+                id: -1,
+                name: filter.all,
+              });
+            }
+            filter.items.push(...data[filter.key]);
+          }
+        });
+        this.finished = false;
+        Toast.clear();
+      } else {
+        Toast(result.retMsg || result.msg);
+      }
+      // 获取路由中的参数，设置默认属性
+      const { type = -1, order = -1, tagType = -1 } = this.$route.query;
+      this.queryStr = JSON.stringify(this.$route.query);
+      this.filters.find(item => item.name === '类型').current = parseInt(type);
+      this.filters.find(item => item.name === '排序').current = parseInt(order);
+      this.filters.find(item => item.name === '标签类型').current = parseInt(
+        tagType,
+      );
+    },
     onTagClick(tag) {
       tag.checked = !tag.checked;
       this.pageNum = 1;

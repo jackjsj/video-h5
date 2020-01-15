@@ -1,15 +1,14 @@
 <template>
-  <div class="bg flex-col vh100">
+  <!-- 小说列表 -->
+  <div class="bg flex-col vh100 novel-list">
     <van-nav-bar
       class="flex-none"
-      title="漫画"
+      title="小说"
       left-arrow
-      right-text="书架"
+      right-text=""
       :border="false"
       @click-right="$router.push('/myCaricature')"
       @click-left="$router.back()">
-      <!-- <van-icon name="search" slot="right" color="#fff"
-        @click="$router.push('/caricatureSearch')" /> -->
     </van-nav-bar>
     <div class="content flex-col flex-auto ova">
       <div class="ctrl-bar flex-none mb10">
@@ -46,23 +45,23 @@
         :finished="finished"
         :error.sync="error"
         finished-text="没有更多了"
-        @load="getCartoonInfo">
+        @load="getMore">
         <div class="list flex flex-wrap jcb flex-auto ova"
           style="align-content:flex-start;">
           <div
             class="item mb15"
             v-for="item in list"
             :key="item.id"
-            @click="$router.push(`/caricatureDetails/${item.id}`)">
+            @click="$router.push(`/novelChapters?id=${item.id}`)">
             <div class="img-wrapper rel flex aic jcc">
               <div style="height:100%;width:100%;" class="flex jcc">
                 <van-image :src="item.cover" />
               </div>
-              <div class="num abs fw400">共{{item.chapterNum}}话</div>
+              <div class="num abs fw400">共{{item.chapterNum || 0}}话</div>
               <div class="status abs fw400">{{item.status}}</div>
             </div>
             <p class="cb9 item-name">
-              <span class="movie-name">{{item.name}}</span>
+              <span class="movie-name">{{item.NAME}}</span>
             </p>
           </div>
           <div class="item-pad"></div>
@@ -71,123 +70,95 @@
       </van-list>
 
     </div>
-    <van-overlay :show="overlayVisible" />
   </div>
 </template>
 
 <script>
-import { getCartoonInfo } from '@/api';
-
-const states = [
-  {
-    name: '全部',
-    id: undefined,
-  },
-  {
-    name: '连载中',
-    id: '连载中',
-  },
-  {
-    name: '已完结',
-    id: '已完结',
-  },
-];
+import { getNovelInfo } from '@/api';
 
 export default {
-  name: 'Bannel',
   data() {
     return {
-      orderTypes: [],
-      classifyList: [],
-      caricatureList: [],
-      classifyIndex: 0, // 选中的是哪一个
-      orderTypeIndex: 0,
-
       list: [],
       orders: [],
-      states,
+      states: [],
       types: [],
-      currentState: {
-        name: '全部',
-        id: undefined,
-      },
+      currentState: {},
       currentOrder: {},
       currentType: {},
-      overlayVisible: false,
-      pageNum: 1,
-      classifyId: '-1',
-      orderType: '0',
       loading: false,
       finished: false,
       error: false,
+      pageNum: 1,
+      pageSize: 30,
     };
   },
   mounted() {
-    this.getCartoonInfo();
+    this.getNovels({}, true);
   },
   methods: {
-    onFilterBtnClick(item, target) {
-      console.log(item, target);
-      this[target] = item;
-      this.classifyId = this.currentType.id;
-      this.orderType = this.currentOrder.type;
-      this.pageNum = 1;
-      this.finished = false;
-      this.getCartoonInfo();
+    getMore() {
+      this.getNovels();
     },
-    // 路由跳转
-    goto(path) {
-      this.$router.push(path);
-    },
-    // 跳转详情页面
-    toDetailsPage(id) {
-      this.$router.push(`caricatureDetails/${id}`);
-    },
-    async getCartoonInfo() {
-      // this.overlayVisible = true;
-      // Toast.loading({
-      //   message: '加载中...',
-      //   loadingType: 'spinner',
-      //   duration: 0,
-      // });
-      const { pageNum } = this;
-      const result = await getCartoonInfo({
-        classifyId: this.classifyId,
-        orderType: this.orderType,
-        status: this.currentState.id,
-        pageNum: this.pageNum,
-        pageSize: 30,
+    /**
+     * 获取筛选方式数据,同时获取初始数据
+     */
+    async getNovels(options = {}, isInit = false) {
+      isInit &&
+        Toast.loading({
+          message: '加载中...',
+          loadingType: 'spinner',
+          duration: 0,
+        });
+      const {
+        pageNum,
+        currentType,
+        currentOrder,
+        currentState,
+        pageSize,
+      } = this;
+      const resp = await getNovelInfo({
+        pageNum,
+        classifyId: currentType.id,
+        orderType: currentOrder.type,
+        status: currentState.type,
+        pageSize,
+        ...options,
       });
-      if (result.retCode === '1') {
-        const { data } = result;
-        this.types = data.classifyList;
-        this.orders = data.orderTypes;
-        this.currentOrder = this.orders.find(
-          item => item.type === Number(data.orderType),
-        );
-        this.currentType = this.types.find(
-          item => item.id === Number(data.classifyId),
-        );
+      if (resp.retCode === '1') {
+        const { data } = resp;
+        const { novelList } = data;
         this.loading = false;
-        if (pageNum === 1) {
-          this.list = data.caricatureList;
-        } else {
-          this.list.push(...data.caricatureList);
+        if (isInit) {
+          this.orders = data.orderTypes;
+          this.states = data.novelStatusTypes;
+          this.types = data.classifyList;
+          [this.currentOrder] = this.orders;
+          [this.currentType] = this.types;
+          [this.currentState] = this.states;
         }
-        if (data.caricatureList.length < 30) {
-          // 说明全部加载完了
+        if (pageNum === 1) {
+          this.list = novelList;
+        } else {
+          this.list.push(...novelList);
+        }
+        if (novelList.length < this.pageSize) {
           this.finished = true;
         } else {
-          // 说明还有数据
           this.pageNum++;
         }
-        // Toast.clear();
-        // this.overlayVisible = false;
+        Toast.clear();
       } else {
-        // Toast.clear();
-        // this.overlayVisible = false;
-        Toast('出错了');
+        Toast(resp.retMsg || resp.msg);
       }
+    },
+    onFilterBtnClick(item, target) {
+      console.log({ item, target });
+      this[target] = item;
+      this.pageNum = 1;
+      this.finished = false;
+      this.list = [];
+      this.getNovels();
     },
   },
 };
@@ -197,7 +168,6 @@ export default {
 .content {
   padding: 20px 15px;
 }
-
 .filter-btn {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;

@@ -53,7 +53,7 @@ const tabbarItems = [
       active: require('@/assets/images/漫画2.png'),
       inactive: require('@/assets/images/漫画1.png'),
     },
-    to: '/caricatureList',
+    to: '/comicNovel',
   },
   {
     name: '明星',

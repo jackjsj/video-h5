@@ -45,6 +45,42 @@
           <p class="f14 lh20 mt8 wh">{{item.name}}</p>
         </div>
       </div>
+      <!-- 今日推荐 -->
+      <div class="video-list-wrapper wh">
+        <div class="flex jcb video-list-header">
+          <p class="f16">今日推荐</p>
+          <div class="flex aic f14">
+            <!-- <div class="flex aic mr20"
+              @click="roll('newVideo')">
+              <p class="mr5">换一批</p>
+              <van-icon name="replay" />
+            </div> -->
+            <div class="flex aic"
+              @click="$router.push('/movieClassifyList')">
+              <p class="mr5">更多</p>
+              <van-icon name="arrow" />
+            </div>
+          </div>
+        </div>
+        <div class="list flex flex-wrap jcb">
+          <div
+            class="item mb15 wide-wrapper"
+            v-for="(item) in recommendVideoList"
+            :key="item.id"
+            @click="$router.push(`/video/${item.id}`)">
+            <div class="img-wrapper rel flex jcc">
+              <van-image :src="item.videoCover" />
+              <div class="abs cover-logo flex jcc" v-if="item.logoCover">
+                <van-image :src="item.logoCover" />
+              </div>
+              <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
+            </div>
+            <p class="cb9 item-name">
+              <span class="movie-name">{{item.videoName}}</span></p>
+          </div>
+          <div class="item-pad"></div>
+        </div>
+      </div>
       <!-- 最新片源 -->
       <div class="video-list-wrapper wh">
         <!-- 标题 换一批 更多 -->
@@ -67,7 +103,8 @@
         <div class="list flex flex-wrap jcb">
           <div
             class="item mb15"
-            v-for="item in newVideoList"
+            :class="{'wide-wrapper':index === 4}"
+            v-for="(item,index) in newVideoList"
             :key="item.id"
             @click="$router.push(`/video/${item.id}`)">
             <div class="img-wrapper rel flex jcc">
@@ -84,8 +121,7 @@
         </div>
       </div>
       <!-- 重磅热播 -->
-      <div class="video-list-wrapper wh">
-        <!-- 标题 换一批 更多 -->
+      <!-- <div class="video-list-wrapper wh">
         <div class="flex jcb video-list-header">
           <p class="f16">重磅热播</p>
           <div class="flex aic f14">
@@ -101,11 +137,11 @@
             </div>
           </div>
         </div>
-        <!-- 列表 -->
         <div class="list flex flex-wrap jcb">
           <div
             class="item mb15"
-            v-for="item in mostVideoList"
+            v-for="(item,index) in mostVideoList"
+            :class="{'wide-wrapper':index === 4}"
             :key="item.id"
             @click="$router.push(`/video/${item.id}`);">
             <div class="img-wrapper rel flex jcc">
@@ -121,7 +157,7 @@
           </div>
           <div class="item-pad"></div>
         </div>
-      </div>
+      </div> -->
       <!-- 各类型 -->
       <div class="video-list-wrapper wh"
         v-for="item in classifyListCollect"
@@ -147,7 +183,8 @@
           <div class="list flex flex-wrap jcb">
             <div
               class="item mb15"
-              v-for="video in item.videoList"
+              :class="{'wide-wrapper':index === 4}"
+              v-for="(video,index) in item.videoList.slice(0,5)"
               :key="video.id"
               @click="$router.push(`/video/${video.id}`);">
               <div class="img-wrapper rel flex jcc">
@@ -252,6 +289,7 @@ export default {
       types: [],
       newVideoList: [],
       mostVideoList: [],
+      recommendVideoList: [], //今日推荐
       classifyListCollect: [],
       bannerList: [],
       overlayVisible: false,
@@ -282,7 +320,7 @@ export default {
         case 'newVideo':
           result = await getMovieList({
             newVideo: '1',
-            pageSize: 6, // 一次换6个
+            pageSize: 5, // 一次换5个
             pageNum: this.newVideoPageNum || 2,
           });
           this.newVideoList = result.data;
@@ -295,7 +333,7 @@ export default {
         case 'mostPlay':
           result = await getMovieList({
             newVideo: '1',
-            pageSize: 6, // 一次换6个
+            pageSize: 5, // 一次换5个
             pageNum: this.mostPlayPageNum || 2,
           });
           this.mostVideoList = result.data;
@@ -308,7 +346,7 @@ export default {
         default:
           result = await getMovieList({
             classifyId: String(type),
-            pageSize: 6, // 一次换6个
+            pageSize: 5, // 一次换5个
             pageNum: this.classifyPageNum[type] || 2,
           });
           if (result.data.length > 0) {
@@ -381,8 +419,9 @@ export default {
       const result = await getIndexInfo();
       if (result.retCode === '1') {
         const { data } = result;
-        this.newVideoList = data.newVideoList;
-        this.mostVideoList = data.mostVideoList;
+        this.newVideoList = data.newVideoList.slice(0, 5);
+        this.mostVideoList = data.mostVideoList.slice(0, 5);
+        this.recommendVideoList = data.recommendVideoList.slice(0, 3);
         this.types = data.classifyList;
         this.classifyListCollect = data.classifyListCollect;
         this.bannerList = data.bannerList;
@@ -414,6 +453,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.wide-wrapper {
+  .img-wrapper {
+    width: 345px;
+    height: 156px;
+  }
+  .item-name {
+    width: 345px;
+  }
+}
 .search-bar {
   width: 240px;
 }

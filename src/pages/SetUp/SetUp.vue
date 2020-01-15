@@ -23,7 +23,7 @@
             </div>
           </template>
         </van-cell>
-        <van-switch-cell v-model="checked" title="开启手势密码" />
+        <!-- <van-switch-cell v-model="checked" title="开启手势密码" /> -->
       </van-cell-group>
     </div>
   </div>
@@ -53,12 +53,12 @@ const items = [
     icon: require('@/assets/images/用户协议.png'),
     to: '/userProtocol',
   },
-  {
-    title: '修改手势密码',
-    isLink: true,
-    icon: require('@/assets/images/修改手势密码.png'),
-    to:'/gestureLock'
-  },
+  // {
+  //   title: '修改手势密码',
+  //   isLink: true,
+  //   icon: require('@/assets/images/修改手势密码.png'),
+  //   to:'/gestureLock'
+  // },
 ];
 
 export default {

@@ -12,44 +12,70 @@
         @click="$router.back()">取消</p>
     </div>
     <div class="ova flex-auto">
-      <!-- 热门搜索 -->
-      <div class="wh p20"
-        v-if="!searching">
-        <p class="f18 fw500 mb10">热门搜索</p>
-        <div class="flex flex-wrap ">
-          <p
-            class="tag-item mr8 mb8"
-            v-for="(item,index) in hotLabels"
-            :key="index"
-            @click="search(item)">
-            {{item}}
-          </p>
+      <div class="wh p15" v-if="!searching">
+        <!-- 热门搜索 -->
+        <div class="mb20">
+          <p class="f18 fw500 mb10">热门搜索</p>
+          <div class="flex flex-wrap ">
+            <p
+              class="tag-item mr8 mb8"
+              v-for="(item,index) in hotLabels"
+              :key="index"
+              @click="search(item)">
+              {{item}}
+            </p>
+          </div>
         </div>
+        <!-- 热门推荐 -->
+        <div>
+          <p class="f18 fw500 mb10">热门推荐</p>
+          <div class="list flex flex-wrap jcb">
+            <div
+              class="item mb15"
+              v-for="(item,index) in recommands"
+              :key="item.id"
+              @click="$router.push(`/video/${item.id}`)">
+              <div class="img-wrapper rel flex jcc">
+                <van-image :src="item.videoCover" />
+                <div class="abs cover-logo flex jcc" v-if="item.logoCover">
+                  <van-image :src="item.logoCover" />
+                </div>
+                <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
+              </div>
+              <p class="cb9 item-name">
+                <span class="movie-name">{{item.videoName}}</span></p>
+            </div>
+            <div class="item-pad"></div>
+          </div>
+        </div>
+
       </div>
+
       <!-- 搜索结果 -->
       <div v-else>
-        <van-list
+        <!-- <van-list
           v-model="loading"
           :finished="finished"
           :error.sync="error"
           finished-text="没有更多了"
-          @load="search">
-          <div
-            class="flex-col rel result-item"
-            v-for="item in searchDataList"
-            :key="item.id"
-            @click="$router.push(`/video/${item.id}`);">
-            <div class="flex-auto cover-img-wrapper flex jcc ovh rel">
-              <van-image style="width:100%;height:100%;" :src="item.cover" />
-              <div class="abs cover-logo flex jcc" v-if="item.logoCover">
-                <van-image :src="item.logoCover" />
-              </div>
-              <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
+          @load="search"> -->
+        <div
+          class="flex-col rel result-item"
+          v-for="item in searchDataList"
+          :key="item.id"
+          @click="$router.push(`/video/${item.id}`);">
+          <div class="flex-auto cover-img-wrapper flex jcc ovh rel">
+            <van-image style="width:100%;height:100%;" :src="item.cover" />
+            <div class="abs cover-logo flex jcc" v-if="item.logoCover">
+              <van-image :src="item.logoCover" />
             </div>
-            <p class="result-name wh flex-none f16 fw600">
-              <span class="van-multi-ellipsis--l2 mt5">{{item.name}}</span></p>
+            <p class="abs movie-duration" v-if="item.duration">{{item.duration}}</p>
           </div>
-        </van-list>
+          <p class="result-name wh flex-none f16 fw600">
+            <span class="van-multi-ellipsis--l2 mt5">{{item.name}}</span></p>
+        </div>
+        <p class="tc mt20 gc f14" v-if="searchDataList.length===0">无搜索结果</p>
+        <!-- </van-list> -->
       </div>
     </div>
     <!-- 弹框 -->
@@ -68,9 +94,10 @@ export default {
       searchName: '', // 搜索名称
       searchDataList: [], // 搜索数据
       overlayVisible: false,
-      loading: true,
-      finished: false,
-      error: false,
+      recommands: [],
+      // loading: true,
+      // finished: false,
+      // error: false,
     };
   },
   mounted() {
@@ -93,17 +120,17 @@ export default {
     },
     // 搜索
     onSearch() {
-      this.finished = false;
-      this.error = false;
-      this.loading = false;
+      // this.finished = false;
+      // this.error = false;
+      // this.loading = false;
       this.search();
     },
     async search(searchName) {
       this.searching = true;
       if (searchName) {
-        this.finished = false;
-        this.error = false;
-        this.loading = false;
+        // this.finished = false;
+        // this.error = false;
+        // this.loading = false;
         this.searchName = searchName;
       }
       if (this.searchName) {
@@ -116,32 +143,36 @@ export default {
         const result = await searchVideo(this.searchName);
         if (result.retCode === '1') {
           const { current, pages, data } = result;
-
-          this.loading = false;
-          if (current === pages || pages === 0) {
-            // 最后一页了
-            this.finished = true;
-          } else {
-            this.pageNum++;
-          }
-          if (current === 1) {
-            this.searchDataList = data.map(i => ({
-              name: i.videoName,
-              cover: i.videoCover,
-              id: i.id,
-            }));
-          } else {
-            this.movieList.push(
-              ...data.map(i => ({
-                name: i.videoName,
-                cover: i.videoCover,
-                id: i.id,
-              })),
-            );
-          }
+          this.searchDataList = data.map(i => ({
+            name: i.videoName,
+            cover: i.videoCover,
+            id: i.id,
+          }));
+          // this.loading = false;
+          // if (current === pages || pages === 0) {
+          //   // 最后一页了
+          //   this.finished = true;
+          // } else {
+          //   this.pageNum++;
+          // }
+          // if (current === 1) {
+          //   this.searchDataList = data.map(i => ({
+          //     name: i.videoName,
+          //     cover: i.videoCover,
+          //     id: i.id,
+          //   }));
+          // } else {
+          //   this.movieList.push(
+          //     ...data.map(i => ({
+          //       name: i.videoName,
+          //       cover: i.videoCover,
+          //       id: i.id,
+          //     })),
+          //   );
+          // }
         } else {
           Toast(result.retMsg);
-          this.error = true;
+          // this.error = true;
         }
         // this.overlayVisible = false;
       } else {
@@ -159,7 +190,11 @@ export default {
       // });
       const result = await getMovieHotLabel();
       if (result.retCode === '1') {
-        this.hotLabels = result.data.map(item => item.searchName);
+        const {
+          data: { popularSearches, randVideoList },
+        } = result;
+        this.hotLabels = popularSearches.map(item => item.searchName);
+        this.recommands = randVideoList;
         // Toast.clear();
       } else {
         Toast(result.retMsg);
@@ -193,6 +228,34 @@ export default {
   line-height: 18px;
   padding: 0 13px;
   background: rgba(27, 24, 46, 1);
+}
+.list {
+  .item {
+    border-radius: 4px;
+    overflow: hidden;
+  }
+}
+.item-pad {
+  width: 168px;
+}
+.img-wrapper {
+  width: 168px;
+  height: 95px;
+  background: rgba(204, 204, 204, 0.1);
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  img {
+    width: 100%;
+  }
+}
+.item-name {
+  background: #161616;
+  height: 34px;
+  line-height: 34px;
+  padding: 0 6px;
+  width: 168px;
+  border-radius: 0 0 12px 12px;
+  box-sizing: border-box;
 }
 </style>
 <style lang="scss">

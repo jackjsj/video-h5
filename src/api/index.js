@@ -201,3 +201,15 @@ export const commentOn = options => ajax(`${BASE_URL}/ying/saveVideoCommon`, opt
 
 // 获取评论列表
 export const getComments = options => ajax(`${BASE_URL}/ying/getVideoCommon`, options, POST_JSON);
+
+// 获取小说查询接口
+export const getNovelInfo = options =>
+  ajax(`${BASE_URL}/openapi/novel/getNovelInfo`, options, POST_JSON);
+
+// 获取小说章节列表
+export const getNovelChapters = options =>
+  ajax(`${BASE_URL}/openapi/novelChapter/getChapterList`, options, POST_JSON);
+
+// 获取小说内容
+export const getChapterDetail = options =>
+  ajax(`${BASE_URL}/ying/novelChapter/getChapterDetail`, options, POST_JSON);

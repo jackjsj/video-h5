@@ -25,39 +25,28 @@ import store from '../store';
 
 Vue.use(Router);
 
-let scrollTop = 0;
 const router = new Router({
-  scrollBehavior(to, from, savedPosition) {
-    if (from.path === '/movieClassifyList') {
-      scrollTop = document.getElementById('scrollBox').scrollTop;
-    }
-    if (to.path === '/movieClassifyList') {
-      document.getElementById('scrollBox').scrollTop = scrollTop;
-    }
-  },
   routes: [
     {
       name: 'index',
       path: '/',
       redirect: '/home',
-      meta: {
-        keepAlive: true,
-      },
       component: () => import('@/pages/index'),
       children: [
         {
           path: '/home',
           name: 'home',
           component: Home,
-          meta: {
-            keepAlive: true,
-          },
         },
         {
           path: '/Banner',
           name: 'banner',
           // component: Banner,
-          component: MovieClassifyList,
+          // component: () => import('@/pages/Banner/BannerNew'),
+          component: () => import('@/pages/MovieClassifyList/MovieClassifyList'),
+          // meta: {
+          //   keepAlive: true,
+          // },
         },
         {
           path: '/star',
@@ -69,10 +58,11 @@ const router = new Router({
           name: 'rankingList',
           component: RankingList,
         },
+
         {
-          path: '/caricatureList',
-          name: 'caricatureList',
-          component: CaricatureList,
+          path: '/comicNovel',
+          name: 'comicNovel',
+          component: () => import('@/pages/Caricature/'),
         },
         {
           path: '/personalCenter',
@@ -80,6 +70,26 @@ const router = new Router({
           component: PersonalCenter,
         },
       ],
+    },
+    {
+      path: '/caricatureList',
+      name: 'caricatureList',
+      component: CaricatureList,
+    },
+    {
+      path: '/novelList',
+      name: 'novelList',
+      component: () => import('@/pages/Caricature/NovelList'),
+    },
+    {
+      path: '/novelChapters',
+      name: 'novelChapters',
+      component: () => import('@/pages/Caricature/NovelChapters'),
+    },
+    {
+      path: '/novelContent',
+      name: 'novelContent',
+      component: () => import('@/pages/Caricature/NovelContent'),
     },
     {
       path: '/user',
@@ -100,7 +110,10 @@ const router = new Router({
     {
       path: '/movieClassifyList',
       name: 'MovieClassifyList',
-      component: MovieClassifyList,
+      component: () => import('@/pages/MovieClassifyList/MovieClassifyList'),
+      meta: {
+        keepAlive: true,
+      },
     },
     {
       path: '/offlineCache',
